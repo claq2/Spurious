@@ -1,0 +1,42 @@
+For each area we need:
+- count of beer
+- count of wine
+- count of spirits
+
+Count of x =
+- inventory of a in all stores in area
+
+Get all stores in an area
+Get inventories of all stores
+
+Need all inventory in all stores
+Need all x inventory in all areas.
+
+Options:
+1. Precompute
+- weekly/daily get stores and inventory
+- compute 3 values for each area
+- cache maybe, if PostGres doesn't, which is probably does
+
+2. Realtime
+- get all stores and record their locations
+- loop through areas to get
+	- all stores in that areas
+	- inventories for those stores
+- stores come in pages
+- inventories come in pages?
+
+Hybrid:
+1. Preload inventories
+2. Figure out for each area the inventory levels
+
+stores.csv is 206168 bytes
+Starting stores at 07:53:45.462
+Finished stores at 07:53:51.259, taking 00:00:05.7980948
+products.csv is 17813930 bytes
+Starting products at 07:53:51.259
+Finished products at 07:55:54.185, taking 00:02:02.9242317
+inventories.csv is 189550995 bytes
+Starting inventories at 07:55:54.186
+Finished inventories at 11:22:29.250, taking 03:26:35.0702294
+Press any key to continue . . .
