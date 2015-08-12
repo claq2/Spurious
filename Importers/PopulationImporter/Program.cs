@@ -14,6 +14,8 @@ namespace PopulationImporter
 {
     class Program
     {
+        static Stopwatch populationStopwatch = new Stopwatch();
+
         //declare @p geometry
         //set @p = geometry::Point(1.5, 1.1, 0)
         ///****** Script for SelectTopNRows command from SSMS  ******/
@@ -31,7 +33,6 @@ namespace PopulationImporter
             // Census Profile -Census Subdivisions(CSDs)
             // Geo_Code,Prov_Name,CD_Name,CSD_Name,CSD_Type,Topic,Characteristics,Note,Total,Flag_Total,Male,Flag_Male,Female,Flag_Female
             // 1001101,Newfoundland and Labrador,Division No.  1,"Division No.  1, Subd. V",Subdivision of unorganized,Population and dwelling counts, Population in 2011,1,62,,,...,,...
-            var populationStopwatch = new Stopwatch();
             populationStopwatch.Start();
             var fileStream = File.OpenText(ConfigurationManager.AppSettings["PopulationFile"]);
             // Advance rader 1 line to skip stupid non-CSV first line.
@@ -64,7 +65,6 @@ namespace PopulationImporter
         /// <param name="addItemToSerializer"></param>
         private static void BulkImport<T>(string databaseName, string targetTable, string fieldsToPopulateCsv, IEnumerable<T> itemsToImport, Action<T, NpgsqlCopySerializer> addItemToSerializer, List<string> idFieldsToImport = null, List<string> nonIdFieldsToImport = null)
         {
-            // TODO: Add List<string> Ids
             // TODO: Turn fieldsToPopulate into List<string>
             using (var conn = new NpgsqlConnection(ConfigurationManager.ConnectionStrings[databaseName].ConnectionString))
             {
@@ -77,9 +77,8 @@ namespace PopulationImporter
                 }
 
                 var copyCmd = CreateCommandWithTimeout(conn);
-                // TODO: concat ids and non-id fields to make full list
-                var allFieldsToImport = string.Join(", ", idFieldsToImport);
-                allFieldsToImport += ", " + string.Join(", ", nonIdFieldsToImport);
+                var idsCsv = string.Join(", ", idFieldsToImport.ToArray());
+                var allFieldsToImport = idsCsv + ", " + string.Join(", ", nonIdFieldsToImport);
                 copyCmd.CommandText = string.Format("copy import_temp({0}) from stdin", allFieldsToImport);
                 var serializer = new NpgsqlCopySerializer(conn);
                 var copyIn = new NpgsqlCopyIn(copyCmd, conn, serializer.ToStream);
@@ -115,10 +114,11 @@ namespace PopulationImporter
                     throw;
                 }
 
+                Console.WriteLine("Finished temp table fill after {0}", populationStopwatch.Elapsed);
+
                 using (var createIndexOnTemp = CreateCommandWithTimeout(conn))
                 {
-                    var targetTableId = "id";
-                    createIndexOnTemp.CommandText = string.Format("create index import_temp_idx on import_temp ({0})", targetTableId);
+                    createIndexOnTemp.CommandText = string.Format("create index import_temp_idx on import_temp ({0})", idsCsv);
                     createIndexOnTemp.ExecuteNonQuery();
                 }
 
@@ -128,22 +128,19 @@ namespace PopulationImporter
                     analyzeTemp.ExecuteNonQuery();
                 }
 
-                var ids = new List<string> { "id" };
-                StringBuilder idMatchClause = new StringBuilder(string.Format(" it.{0} = t.{0} ", ids[0]));
-                ids.Skip(1).ToList().ForEach((id) =>
+                //var ids = new List<string> { "id" };
+                StringBuilder idMatchClause = new StringBuilder(string.Format(" it.{0} = t.{0} ", idFieldsToImport[0]));
+                idFieldsToImport.Skip(1).ToList().ForEach((id) =>
                 {
                     idMatchClause.AppendFormat(" and it.{0} = t.{0} ", id);
                 });
 
                 using (var deleteCmd = CreateCommandWithTimeout(conn))
                 {
-                    // TODO: use ID from params
                     deleteCmd.CommandText = string.Format(@"delete from {0} t
                                                     where not exists (
                                                     select 1 from import_temp it
                                                     where {1}
-                                                    --it.id = t.id
-                                                    --and it.store_id = t.store_id
                                                     )", targetTable, idMatchClause.ToString());
                     var rowsDeleted = deleteCmd.ExecuteNonQuery();
                     Console.WriteLine("Deleted {0} rows", rowsDeleted);
@@ -151,7 +148,6 @@ namespace PopulationImporter
 
                 using (var updateCmd = CreateCommandWithTimeout(conn))
                 {
-                    // TODO: use ID from params
                     // TODO: use non ID fields from params
                     updateCmd.CommandText = string.Format(@"update {0} t
                                                     set population = it.population
@@ -166,7 +162,6 @@ namespace PopulationImporter
 
                 using (var insertCmd = CreateCommandWithTimeout(conn))
                 {
-                    // TODO: use ID from params
                     // TODO: use non ID fields from params
                     // insertCmd.CommandText = @"insert into inventories (product_id, store_id, quantity)
                     //                             select x.product_id, x.store_id, x.quantity
@@ -174,13 +169,12 @@ namespace PopulationImporter
                     //                             left join inventories i using (product_id, store_id)
                     //                             where i.product_id is null";
 
-                    var idsCsv = string.Join(", ", ids.ToArray());
-                    var idsCsvWithItPrefix = string.Join(", ", ids.Select(id => "it." + id));
+                    var idsCsvWithItPrefix = string.Join(", ", idFieldsToImport.Select(id => "it." + id));
                     insertCmd.CommandText = string.Format(@"insert into {0} ({2}, population)
                                                     select {3}, it.population
                                                     from import_temp it
                                                     left join {0} t using ({1})
-                                                    where t.{1} is null", targetTable, ids.First(), idsCsv, idsCsvWithItPrefix);
+                                                    where t.{1} is null", targetTable, idFieldsToImport.First(), idsCsv, idsCsvWithItPrefix);
                     var insertedRows = insertCmd.ExecuteNonQuery();
                     Console.WriteLine("Added {0} rows", insertedRows);
                 }
