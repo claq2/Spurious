@@ -16,7 +16,7 @@ namespace Importers.DataLayer
         /// <summary>
         /// Initializes a new instance of the <see cref="BulkImporter"/> class.
         /// </summary>
-        public BulkImporter(Stopwatch stopwatch) : this(new NonQueryCommandRunner(), stopwatch)
+        public BulkImporter(Stopwatch stopwatch) : this(stopwatch, new NonQueryCommandRunner())
         {
         }
 
@@ -24,7 +24,7 @@ namespace Importers.DataLayer
         /// Initializes a new instance of the <see cref="BulkImporter"/> class.
         /// </summary>
         /// <param name="commandRunner"></param>
-        public BulkImporter(INonQueryCommandRunner commandRunner, Stopwatch stopwatch)
+        public BulkImporter(Stopwatch stopwatch, INonQueryCommandRunner commandRunner)
         {
             this.commandRunner = commandRunner;
             this.stopwatch = stopwatch;
