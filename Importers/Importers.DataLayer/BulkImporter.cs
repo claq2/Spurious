@@ -133,4 +133,49 @@ namespace Importers.DataLayer
             }
         }
     }
+
+    public class NpgSerialer
+    {
+        public void Import<T>(NpgsqlConnection conn, INonQueryCommandRunner commandRunner, string allFieldsToImport, IEnumerable<T> itemsToImport, Action<T, NpgsqlCopySerializer> addItemToSerializer, Stopwatch stopwatch)
+        {
+            var copyCmd = conn.CreateCommand();
+            copyCmd.CommandTimeout = commandRunner.Timeout;
+            copyCmd.CommandText = string.Format("copy import_temp({0}) from stdin", allFieldsToImport);
+            var serializer = new NpgsqlCopySerializer(conn);
+            var copyIn = new NpgsqlCopyIn(copyCmd, conn, serializer.ToStream);
+
+            try
+            {
+                copyIn.Start();
+
+                List<T> itemsToImportToList = itemsToImport.ToList();
+                Console.WriteLine("Finished query for CSV records after {0}", stopwatch.Elapsed);
+                itemsToImportToList.ForEach(p =>
+                {
+                    addItemToSerializer(p, serializer);
+                    serializer.EndRow();
+                    serializer.Flush();
+                });
+
+                copyIn.End();
+                serializer.Close();
+            }
+            catch (Exception e)
+            {
+                try
+                {
+                    copyIn.Cancel("Cancel copy on exception");
+                }
+                catch (NpgsqlException se)
+                {
+                    if (!se.BaseMessage.Contains("Cancel copy on exception"))
+                    {
+                        throw new Exception(string.Format("Failed to cancel copy: {0} upon failure: {1}", se, e));
+                    }
+                }
+
+                throw;
+            }
+        }
+    }
 }
