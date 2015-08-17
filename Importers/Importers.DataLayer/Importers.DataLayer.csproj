@@ -51,7 +51,9 @@
   <ItemGroup>
     <Compile Include="BulkImporter.cs" />
     <Compile Include="INonQueryCommandRunner.cs" />
+    <Compile Include="INpgTempTableFiller.cs" />
     <Compile Include="NonQueryCommandRunner.cs" />
+    <Compile Include="NpgTempTableFiller.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
