@@ -89,7 +89,7 @@ namespace Importers.DataLayer
                 //                             left join inventories i using (product_id, store_id)
                 //                             where i.product_id is null";
                 var idsCsvWithItPrefix = string.Join(", ", idFieldsToImport.Select(id => "it." + id));
-                var insertedRows = commandRunner.Execute(string.Format(@"insert into {0} ({2}, population) select {3}, it.population from {4} it left join {0} t using ({1}) where t.{1} is null", 
+                var insertedRows = commandRunner.Execute(string.Format(@"insert into {0} ({2}, population) select {3}, it.population from {4} it left join {0} t using ({2}) where t.{1} is null", 
                                                              targetTable, 
                                                              idFieldsToImport.First(), 
                                                              idsCsv, 
