@@ -36,8 +36,8 @@ namespace Importers.DataLayer.UnitTests
             Assert.That(issuedSqlCommands[0], Is.EqualTo("create index import_temp_idx on import_temp (id1)"));
             Assert.That(issuedSqlCommands[1], Is.EqualTo("analyze import_temp"));
             Assert.That(issuedSqlCommands[2], Is.EqualTo("delete from targettable t where not exists (select 1 from import_temp it where it.id1 = t.id1)"));
-            Assert.That(issuedSqlCommands[3], Is.EqualTo("update targettable t set population = it.population from import_temp it where it.id1 = t.id1 and it.population <> t.population"));
-            Assert.That(issuedSqlCommands[4], Is.EqualTo("insert into targettable (id1, population) select it.id1, it.population from import_temp it left join targettable t using (id1) where t.id1 is null"));
+            Assert.That(issuedSqlCommands[3], Is.EqualTo("update targettable t set field1 = it.field1 from import_temp it where it.id1 = t.id1 and it.field1 <> t.field1"));
+            Assert.That(issuedSqlCommands[4], Is.EqualTo("insert into targettable (id1, field1) select it.id1, it.field1 from import_temp it left join targettable t using (id1) where t.id1 is null"));
         }
 
         [Test]

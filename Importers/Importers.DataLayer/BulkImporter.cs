@@ -49,6 +49,7 @@ namespace Importers.DataLayer
         {
             var tempTableName = "import_temp";
             var idsCsv = string.Join(", ", idFieldsToImport.ToArray());
+            var nonIdsCsv = string.Join(", ", nonIdFieldsToImport.ToArray());
             var allFieldsToImport = string.Format("{0}, {1}", idsCsv, string.Join(", ", nonIdFieldsToImport));
 
             using (var conn = new NpgsqlConnection(ConfigurationManager.ConnectionStrings[databaseName].ConnectionString))
@@ -76,6 +77,7 @@ namespace Importers.DataLayer
                 Console.WriteLine("Deleted {0} rows", rowsDeleted);
 
                 // TODO: use non ID fields from params
+                //nonI
                 var updatedRows = commandRunner.Execute(string.Format(@"update {0} t set population = it.population from {2} it where {1} and it.population <> t.population", 
                                                             targetTable, 
                                                             idMatchClause, 
@@ -88,13 +90,17 @@ namespace Importers.DataLayer
                 //                             from inv_temp x
                 //                             left join inventories i using (product_id, store_id)
                 //                             where i.product_id is null";
-                var idsCsvWithItPrefix = string.Join(", ", idFieldsToImport.Select(id => "it." + id));
-                var insertedRows = commandRunner.Execute(string.Format(@"insert into {0} ({2}, population) select {3}, it.population from {4} it left join {0} t using ({2}) where t.{1} is null", 
+                Func<string, string> formatWithItPrefix = id => string.Format("it.{0}", id);
+                var idsCsvWithItPrefix = string.Join(", ", idFieldsToImport.Select(formatWithItPrefix));
+                var nonIdsCsvWithItPrefix = string.Join(", ", nonIdFieldsToImport.Select(formatWithItPrefix));
+                var insertedRows = commandRunner.Execute(string.Format(@"insert into {0} ({2}, {5}) select {3}, {6} from {4} it left join {0} t using ({2}) where t.{1} is null", 
                                                              targetTable, 
                                                              idFieldsToImport.First(), 
                                                              idsCsv, 
                                                              idsCsvWithItPrefix, 
-                                                             tempTableName));
+                                                             tempTableName,
+                                                             nonIdsCsv,
+                                                             nonIdsCsvWithItPrefix));
                 Console.WriteLine("Added {0} rows", insertedRows);
             }
         }
