@@ -6,18 +6,19 @@ using System.Diagnostics;
 
 namespace Importers.DataLayer
 {
-    public class NpgTempTableFiller : INpgTempTableFiller
+    public class NpgsqlTempTableFiller : INpgTempTableFiller
     {
         private readonly INonQueryCommandRunner commandRunner;
         private readonly Stopwatch stopwatch;
+        private readonly INpgsqlConnectionWrapper connectionWrapper;
 
         public NpgsqlConnection Connection { get; set; }
 
-        public NpgTempTableFiller(Stopwatch stopwatch) : this(stopwatch, new NonQueryCommandRunner())
+        public NpgsqlTempTableFiller(Stopwatch stopwatch) : this(stopwatch, new NonQueryCommandRunner())
         {
         }
 
-        public NpgTempTableFiller(Stopwatch stopwatch, INonQueryCommandRunner commandRunner)
+        public NpgsqlTempTableFiller(Stopwatch stopwatch, INonQueryCommandRunner commandRunner)
         {
             this.stopwatch = stopwatch;
             this.commandRunner = commandRunner;
@@ -39,11 +40,20 @@ namespace Importers.DataLayer
                     prototypeTable,
                     tempTableName));
 
+            //this.connectionWrapper.CommandRunner.Execute(string.Format("create temp table {1} as (select * from {0} where 0 = 1)",
+            //        prototypeTable,
+            //        tempTableName));
+
+            var copyCmd2 = this.connectionWrapper.CommandRunner.CreateCommandWithDefaultTimeout(string.Format("copy {0}({1}) from stdin", tempTableName, allFieldsToImport));
+
             var copyCmd = this.Connection.CreateCommand();
-            copyCmd.CommandTimeout = commandRunner.Timeout;
+            copyCmd.CommandTimeout = commandRunner.DefaultTimeout;
             copyCmd.CommandText = string.Format("copy {0}({1}) from stdin", tempTableName, allFieldsToImport);
             var serializer = new NpgsqlCopySerializer(this.Connection);
             var copyIn = new NpgsqlCopyIn(copyCmd, this.Connection, serializer.ToStream);
+
+            var serializer2 = this.connectionWrapper.CreateSerializer();
+            var copyIn2 = serializer2.CreateCopyIn(copyCmd2);
 
             try
             {

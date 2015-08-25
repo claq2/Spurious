@@ -7,7 +7,8 @@ namespace Importers.DataLayer
 {
     public interface INonQueryCommandRunner
     {
-        int Timeout { get; }
+        IDbCommand CreateCommandWithDefaultTimeout(string commandText);
+        int DefaultTimeout { get; }
         IDbConnection Connection { get; set; }
         int Execute(string commandText);
     }

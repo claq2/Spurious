@@ -17,7 +17,7 @@ namespace Importers.DataLayer
         /// <summary>
         /// Initializes a new instance of the <see cref="BulkImporter"/> class.
         /// </summary>
-        public BulkImporter(Stopwatch stopwatch) : this(stopwatch, new NonQueryCommandRunner(), new NpgTempTableFiller(stopwatch))
+        public BulkImporter(Stopwatch stopwatch) : this(stopwatch, new NonQueryCommandRunner(), new NpgsqlTempTableFiller(stopwatch))
         {
         }
 
