@@ -45,6 +45,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IItem.cs" />
+    <Compile Include="INpgsqlConnectionWrapper.cs" />
+    <Compile Include="NpgsqlConnectionWrapper.cs" />
     <Compile Include="NpgsqlTempTableFiller.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

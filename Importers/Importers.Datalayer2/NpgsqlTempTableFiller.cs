@@ -17,10 +17,8 @@ namespace Importers.Datalayer2
         /// <typeparam name="T"></typeparam>
         /// <param name="tempTableName"></param>
         /// <param name="prototypeTable"></param>
-        /// <param name="allFieldsToImport"></param>
         /// <param name="itemsToImport"></param>
-        /// <param name="writeItemAsCsv">Writes an item from itemsToImport as CSV with the same order as allFieldsToImport.</param>
-        public void Fill<T>(string tempTableName, string prototypeTable, List<string> allFieldsToImport, IEnumerable<T> itemsToImport, Func<T, string> writeItemAsCsv) where T : IItem
+        public void Fill<T>(string tempTableName, string prototypeTable,  IEnumerable<T> itemsToImport) where T : IItem
         {
             if (this.Connection.State == System.Data.ConnectionState.Closed)
             {

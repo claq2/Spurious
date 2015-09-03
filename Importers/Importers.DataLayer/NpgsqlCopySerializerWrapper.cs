@@ -50,38 +50,4 @@ namespace Importers.DataLayer
         void End();
         void Cancel(string message);
     }
-
-    public interface INpgsqlConnectionWrapper
-    {
-        IDbConnection Connection { get; }
-        ICopySerializer CreateSerializer();
-        INonQueryCommandRunner CommandRunner { get; }
-    }
-
-    public class NpgsqlConnectionWrapper : INpgsqlConnectionWrapper, IDisposable
-    {
-        public IDbConnection Connection { get; private set; }
-
-        public NpgsqlConnectionWrapper(string connectionString)
-        {
-            this.Connection = new NpgsqlConnection(connectionString);
-            this.CommandRunner = new NonQueryCommandRunner() { Connection = this.Connection };
-        }
-
-        public ICopySerializer CreateSerializer()
-        {
-            return new NpgsqlCopySerializerWrapper(this.Connection);
-        }
-
-        public INonQueryCommandRunner CommandRunner { get; private set; }
-
-        public void Dispose()
-        {
-            if (this.Connection != null)
-            {
-                this.Connection.Dispose();
-                this.Connection = null;
-            }
-        }
-    }
 }

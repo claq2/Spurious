@@ -23,9 +23,8 @@ namespace Importers.DataLayer2.UnitTests
                 var items = new List<PopulationItem>();
                 items.Add(new PopulationItem { GeoCode = 12345, Total = 456.7M });
                 items.Add(new PopulationItem { GeoCode = 12346, Total = 78.1M });
-                Func<PopulationItem, string> toCsv = (i) => string.Format("{0},{1}\n", i.GeoCode, Convert.ToInt32(i.Total));
 
-                filler.Fill("temp_test", "subdivisions", null, items, null);
+                filler.Fill("temp_test", "subdivisions", items);
 
                 var cmd = conn.CreateCommand();
                 cmd.CommandText = "select id, population from temp_test";
