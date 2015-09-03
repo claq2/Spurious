@@ -44,7 +44,7 @@ namespace Importers.DataLayer
             //        prototypeTable,
             //        tempTableName));
 
-            var copyCmd2 = this.connectionWrapper.CommandRunner.CreateCommandWithDefaultTimeout(string.Format("copy {0}({1}) from stdin", tempTableName, allFieldsToImport));
+            //var copyCmd2 = this.connectionWrapper.CommandRunner.CreateCommandWithDefaultTimeout(string.Format("copy {0}({1}) from stdin", tempTableName, allFieldsToImport));
 
             var copyCmd = this.Connection.CreateCommand();
             copyCmd.CommandTimeout = commandRunner.DefaultTimeout;
@@ -52,8 +52,8 @@ namespace Importers.DataLayer
             var serializer = new NpgsqlCopySerializer(this.Connection);
             var copyIn = new NpgsqlCopyIn(copyCmd, this.Connection, serializer.ToStream);
 
-            var serializer2 = this.connectionWrapper.CreateSerializer();
-            var copyIn2 = serializer2.CreateCopyIn(copyCmd2);
+            //var serializer2 = this.connectionWrapper.CreateSerializer();
+            //var copyIn2 = serializer2.CreateCopyIn(copyCmd2);
 
             try
             {

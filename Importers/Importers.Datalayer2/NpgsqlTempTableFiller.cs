@@ -19,42 +19,48 @@ namespace Importers.Datalayer2
         /// <param name="prototypeTable"></param>
         /// <param name="allFieldsToImport"></param>
         /// <param name="itemsToImport"></param>
-        /// <param name="writeItemAsCsv"></param>
-        public void Fill<T>(string tempTableName, string prototypeTable, string allFieldsToImport, IEnumerable<T> itemsToImport, Func<T, string> writeItemAsCsv)
+        /// <param name="writeItemAsCsv">Writes an item from itemsToImport as CSV with the same order as allFieldsToImport.</param>
+        public void Fill<T>(string tempTableName, string prototypeTable, List<string> allFieldsToImport, IEnumerable<T> itemsToImport, Func<T, string> writeItemAsCsv) where T : IItem
         {
+            if (this.Connection.State == System.Data.ConnectionState.Closed)
+            {
+                this.Connection.Open();
+            }
+
             var command = this.Connection.CreateCommand();
             command.CommandText = string.Format("create temp table {1} as (select * from {0} where 0 = 1)",
                                       prototypeTable,
                                       tempTableName);
             command.ExecuteNonQuery();
+            string fields = string.Join(",", itemsToImport.First().DbIdFields.Concat(itemsToImport.First().DbDataFields));
+            var copyCommand = string.Format("copy {0}({1}) from stdin with csv", tempTableName, string.Join(",", fields));
 
-            var copyCommand = string.Format("copy {0}({1}) from stdin", tempTableName, allFieldsToImport);
-
-            NpgsqlCopyTextWriter writer = (NpgsqlCopyTextWriter)this.Connection.BeginTextImport(copyCommand);
-            try
-            {
-                foreach (T t in itemsToImport)
-                {
-                    writer.Write(writeItemAsCsv(t));
-                }
-            }
-            catch (Exception e)
+            using (NpgsqlCopyTextWriter writer = (NpgsqlCopyTextWriter)this.Connection.BeginTextImport(copyCommand))
             {
                 try
                 {
-                    writer.Cancel();
-                }
-                catch (NpgsqlException se)
-                {
-                    if (se.Message.Contains("Expected ErrorResponse when cancelling COPY but got"))
+                    foreach (T t in itemsToImport)
                     {
-                        throw new Exception(string.Format("Failed to cancel copy: {0} upon failure: {1}", se, e));
+                        writer.Write(t.IdAndDataFieldsAsCsv);
+                        writer.Write("\n");
                     }
                 }
-            }
-            finally
-            {
-                writer.Dispose();
+                catch (Exception e)
+                {
+                    try
+                    {
+                        writer.Cancel();
+                    }
+                    catch (NpgsqlException se)
+                    {
+                        if (se.Message.Contains("Expected ErrorResponse when cancelling COPY but got"))
+                        {
+                            throw new Exception(string.Format("Failed to cancel copy: {0} upon failure: {1}", se, e));
+                        }
+                    }
+
+                    throw;
+                }
             }
 
         }
