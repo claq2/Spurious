@@ -5,7 +5,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 
-namespace Importers.DataLayer2
+namespace Importers.Datalayer2
 {
     public class NpgsqlConnectionWrapper : INpgsqlConnectionWrapper, IDisposable
     {
@@ -16,10 +16,22 @@ namespace Importers.DataLayer2
             this.Connection = new NpgsqlConnection(connectionString);
         }
 
-        public TextWriter BeginTextImport(string copyFromCommand)
+        public INpgsqlCopyTextWriterWrapper BeginTextImport(string copyFromCommand)
         {
             return ((NpgsqlConnection)this.Connection).BeginTextImport(copyFromCommand);
         }
+
+        public IDbCommand CreateCommand()
+        {
+            return this.Connection.CreateCommand();
+        }
+
+        public void Open()
+        {
+            this.Connection.Open();
+        }
+
+        public ConnectionState State { get { return this.Connection.State; } }
 
         public void Dispose()
         {
@@ -31,7 +43,12 @@ namespace Importers.DataLayer2
         }
     }
 
-    public class NpgsqlCopyTextWriterWrapper:IDisposable
+    public interface INpgsqlCopyTextWriterWrapper
+    {
+        void Cancel();
+        void Write(string value);
+    }
+    public class NpgsqlCopyTextWriterWrapper : IDisposable, INpgsqlCopyTextWriterWrapper
     {
         readonly NpgsqlCopyTextWriter writer;
         public NpgsqlCopyTextWriterWrapper(NpgsqlCopyTextWriter writer)

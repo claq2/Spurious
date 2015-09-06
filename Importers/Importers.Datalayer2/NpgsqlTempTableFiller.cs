@@ -37,9 +37,9 @@ namespace Importers.Datalayer2
             {
                 try
                 {
-                    foreach (T t in itemsToImport)
+                    foreach (T item in itemsToImport)
                     {
-                        writer.Write(t.IdAndDataFieldsAsCsv);
+                        writer.Write(item.IdAndDataFieldsAsCsv);
                         writer.Write("\n");
                     }
                 }
