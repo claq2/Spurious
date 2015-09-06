@@ -8,17 +8,17 @@ using Dapper;
 
 namespace Importers.Datalayer2
 {
-    class NpgsqlBulkImporter
+    public class NpgsqlBulkImporter
     {
         INpgsqlConnectionWrapper wrapper;
 
         INpgsqlTempTableFiller tempTableFiller;
 
-        Stopwatch stopwatch;
+        Stopwatch stopwatch = new Stopwatch();
 
         public NpgsqlBulkImporter(string connectionString) : this(new NpgsqlConnectionWrapper(connectionString), new NpgsqlTempTableFiller())
         {
-
+            
         }
 
         public NpgsqlBulkImporter(INpgsqlConnectionWrapper wrapper, INpgsqlTempTableFiller filler)
@@ -26,6 +26,7 @@ namespace Importers.Datalayer2
             this.wrapper = wrapper;
             this.tempTableFiller = filler;
             this.tempTableFiller.Connection = wrapper;
+            stopwatch.Start();
         }
 
         public void BulkImport<T>(string databaseName, string targetTable, IEnumerable<T> itemsToImport) where T : IItem

@@ -41,5 +41,10 @@ namespace Importers.Datalayer2
                 this.Connection = null;
             }
         }
+
+        public int ExecuteNonQuery(string command, int timeoutInSeconds)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
