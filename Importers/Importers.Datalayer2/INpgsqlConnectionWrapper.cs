@@ -7,7 +7,7 @@ namespace Importers.Datalayer2
 {
     public interface INpgsqlConnectionWrapper
     {
-        System.IO.TextWriter BeginTextImport(string copyFromCommand);
+        INpgsqlCopyTextWriterWrapper BeginTextImport(string copyFromCommand);
         ConnectionState State { get; }
         void Open();
         IDbCommand CreateCommand();

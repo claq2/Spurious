@@ -2,7 +2,6 @@ using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
 using System.Linq;
 
 namespace Importers.Datalayer2
@@ -18,7 +17,8 @@ namespace Importers.Datalayer2
 
         public INpgsqlCopyTextWriterWrapper BeginTextImport(string copyFromCommand)
         {
-            return ((NpgsqlConnection)this.Connection).BeginTextImport(copyFromCommand);
+            var writer = ((NpgsqlConnection)this.Connection).BeginTextImport(copyFromCommand) as NpgsqlCopyTextWriter;
+            return new NpgsqlCopyTextWriterWrapper(writer);
         }
 
         public IDbCommand CreateCommand()
@@ -40,38 +40,6 @@ namespace Importers.Datalayer2
                 this.Connection.Dispose();
                 this.Connection = null;
             }
-        }
-    }
-
-    public interface INpgsqlCopyTextWriterWrapper
-    {
-        void Cancel();
-        void Write(string value);
-    }
-    public class NpgsqlCopyTextWriterWrapper : IDisposable, INpgsqlCopyTextWriterWrapper
-    {
-        readonly NpgsqlCopyTextWriter writer;
-        public NpgsqlCopyTextWriterWrapper(NpgsqlCopyTextWriter writer)
-        {
-            this.writer = writer;
-        }
-
-        public void Cancel()
-        {
-            this.writer.Cancel();
-        }
-
-        public void Dispose()
-        {
-            if (this.writer != null)
-            {
-                this.writer.Dispose();
-            }
-        }
-
-        public void Write(string value)
-        {
-            this.writer.Write(value);
         }
     }
 }
