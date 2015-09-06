@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Importers.Datalayer2
 {
-    public interface INpgsqlConnectionWrapper
+    public interface INpgsqlConnectionWrapper : IDisposable
     {
         INpgsqlCopyTextWriterWrapper BeginTextImport(string copyFromCommand);
         ConnectionState State { get; }

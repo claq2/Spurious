@@ -7,9 +7,18 @@ using System.Threading.Tasks;
 
 namespace Importers.Datalayer2
 {
-    public class NpgsqlTempTableFiller
+    public class NpgsqlTempTableFiller : INpgsqlTempTableFiller
     {
-        public NpgsqlConnection Connection { get; set; }
+        public INpgsqlConnectionWrapper Connection { get; set; }
+
+        public NpgsqlTempTableFiller()
+        {
+        }
+
+        public NpgsqlTempTableFiller(INpgsqlConnectionWrapper wrapper)
+        {
+            this.Connection = wrapper;
+        }
 
         /// <summary>
         /// Set this instance's Connection property before calling this method.
@@ -20,11 +29,6 @@ namespace Importers.Datalayer2
         /// <param name="itemsToImport"></param>
         public void Fill<T>(string tempTableName, string prototypeTable,  IEnumerable<T> itemsToImport) where T : IItem
         {
-            if (this.Connection.State == System.Data.ConnectionState.Closed)
-            {
-                this.Connection.Open();
-            }
-
             var command = this.Connection.CreateCommand();
             command.CommandText = string.Format("create temp table {1} as (select * from {0} where 0 = 1)",
                                       prototypeTable,
@@ -33,7 +37,7 @@ namespace Importers.Datalayer2
             string fields = string.Join(",", itemsToImport.First().DbIdFields.Concat(itemsToImport.First().DbDataFields));
             var copyCommand = string.Format("copy {0}({1}) from stdin with csv", tempTableName, string.Join(",", fields));
 
-            using (NpgsqlCopyTextWriter writer = (NpgsqlCopyTextWriter)this.Connection.BeginTextImport(copyCommand))
+            using (var writer = this.Connection.BeginTextImport(copyCommand))
             {
                 try
                 {

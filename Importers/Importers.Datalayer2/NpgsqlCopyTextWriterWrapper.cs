@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Importers.Datalayer2
 {
-    public class NpgsqlCopyTextWriterWrapper : IDisposable, INpgsqlCopyTextWriterWrapper
+    public class NpgsqlCopyTextWriterWrapper : INpgsqlCopyTextWriterWrapper
     {
         readonly NpgsqlCopyTextWriter writer;
 

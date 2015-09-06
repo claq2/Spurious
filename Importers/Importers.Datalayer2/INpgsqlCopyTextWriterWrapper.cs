@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Importers.Datalayer2
 {
-    public interface INpgsqlCopyTextWriterWrapper
+    public interface INpgsqlCopyTextWriterWrapper : IDisposable
     {
         void Cancel();
         void Write(string value);

@@ -16,9 +16,10 @@ namespace Importers.DataLayer2.UnitTests
         [Test]
         public void FillRealTempTable()
         {
-            using (var conn = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["spurious"].ConnectionString))
+            using (INpgsqlConnectionWrapper conn = new NpgsqlConnectionWrapper(ConfigurationManager.ConnectionStrings["spurious"].ConnectionString))
             {
-                var filler = new NpgsqlTempTableFiller() { Connection = conn };
+                conn.Open();
+                INpgsqlTempTableFiller filler = new NpgsqlTempTableFiller() { Connection = conn };
 
                 var items = new List<PopulationItem>();
                 items.Add(new PopulationItem { GeoCode = 12345, Total = 456.7M });
