@@ -12,14 +12,18 @@ namespace Importers.DataLayer2.UnitTests
     public class NpgsqlBulkImporterTests
     {
         [Test]
-        public void Test()
+        public void OneIdOneNonIdBulkImport()
         {
             var conn = new Mock<IDbConnection>();
             conn.Setup(c => c.Open());
             var wrapper = new Mock<INpgsqlConnectionWrapper>(MockBehavior.Strict);
             wrapper.Setup(w => w.Connection).Returns(conn.Object);
+
             wrapper.Setup(w => w.ExecuteNonQuery("create index import_temp_idx on import_temp (id)", 9001)).Returns(0);
             wrapper.Setup(w => w.ExecuteNonQuery("analyze import_temp", 9001)).Returns(0);
+            wrapper.Setup(w => w.ExecuteNonQuery("delete from targetTable t where not exists (select 1 from import_temp it where it.id = t.id)", 9001)).Returns(0);
+            wrapper.Setup(w => w.ExecuteNonQuery("update targetTable t set total = it.total from import_temp it where it.id = t.id and it.total <> t.total", 9001)).Returns(0);
+
             var tableFiller = new Mock<INpgsqlTempTableFiller>();
             var importer = new NpgsqlBulkImporter(wrapper.Object, tableFiller.Object);
             var items = new List<PopulationItem>
@@ -35,7 +39,7 @@ namespace Importers.DataLayer2.UnitTests
         {
             public List<string> DbDataFields
             {
-                get { return new List<string> { "population" }; }
+                get { return new List<string> { "total" }; }
             }
 
             public List<string> DbIdFields

@@ -55,6 +55,13 @@ namespace Importers.Datalayer2
                                                             idMatchClause,
                                                             tempTableName));
                 Console.WriteLine("Deleted {0} rows", rowsDeleted);
+
+                // TODO: use non ID fields from params
+                var updatedRows = wrapper.ExecuteNonQuery(string.Format(@"update {0} t set population = it.population from {2} it where {1} and it.population <> t.population",
+                                                            targetTable,
+                                                            idMatchClause,
+                                                            tempTableName));
+                Console.WriteLine("Updated {0} rows", updatedRows);
             }
         }
     }
