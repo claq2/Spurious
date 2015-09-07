@@ -19,7 +19,7 @@ namespace Importers.DataLayer2.UnitTests
             using (INpgsqlConnectionWrapper conn = new NpgsqlConnectionWrapper(ConfigurationManager.ConnectionStrings["spurious"].ConnectionString))
             {
                 conn.Open();
-                INpgsqlTempTableFiller filler = new NpgsqlTempTableFiller() { Connection = conn };
+                INpgsqlTempTableFiller filler = new NpgsqlTempTableFiller() { Wrapper = conn };
 
                 var items = new List<PopulationItem>();
                 items.Add(new PopulationItem { GeoCode = 12345, Total = 456.7M });

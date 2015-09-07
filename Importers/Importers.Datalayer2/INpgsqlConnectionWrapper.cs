@@ -12,6 +12,6 @@ namespace Importers.Datalayer2
         void Open();
         IDbCommand CreateCommand();
         IDbConnection Connection { get; }
-        int ExecuteNonQuery(string command, int timeoutInSeconds);
+        int ExecuteNonQuery(string commandText, int timeoutInSeconds = 9001);
     }
 }

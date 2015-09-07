@@ -42,9 +42,12 @@ namespace Importers.Datalayer2
             }
         }
 
-        public int ExecuteNonQuery(string command, int timeoutInSeconds)
+        public int ExecuteNonQuery(string commandText, int timeoutInSeconds = 9001)
         {
-            throw new NotImplementedException();
+            var command = this.CreateCommand();
+            command.CommandText = commandText;
+            command.CommandTimeout = timeoutInSeconds;
+            return command.ExecuteNonQuery();
         }
     }
 }

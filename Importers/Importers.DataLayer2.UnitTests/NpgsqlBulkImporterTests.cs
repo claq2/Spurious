@@ -9,15 +9,17 @@ using System.Data;
 namespace Importers.DataLayer2.UnitTests
 {
     [TestFixture]
-    public class BulkImporterTests
+    public class NpgsqlBulkImporterTests
     {
         [Test]
         public void Test()
         {
             var conn = new Mock<IDbConnection>();
             conn.Setup(c => c.Open());
-            var wrapper = new Mock<INpgsqlConnectionWrapper>();
+            var wrapper = new Mock<INpgsqlConnectionWrapper>(MockBehavior.Strict);
             wrapper.Setup(w => w.Connection).Returns(conn.Object);
+            wrapper.Setup(w => w.ExecuteNonQuery("create index import_temp_idx on import_temp (id)", 9001)).Returns(0);
+            wrapper.Setup(w => w.ExecuteNonQuery("analyze import_temp", 9001)).Returns(0);
             var tableFiller = new Mock<INpgsqlTempTableFiller>();
             var importer = new NpgsqlBulkImporter(wrapper.Object, tableFiller.Object);
             var items = new List<PopulationItem>
@@ -26,7 +28,7 @@ namespace Importers.DataLayer2.UnitTests
                 new PopulationItem { GeoCode = 1235, Total = 123.9M }
             };
 
-            importer.BulkImport("targetDb", "targetTable", items);
+            importer.BulkImport("targetTable", items);
         }
 
         private class PopulationItem : IItem

@@ -9,7 +9,7 @@ namespace Importers.Datalayer2
 {
     public class NpgsqlTempTableFiller : INpgsqlTempTableFiller
     {
-        public INpgsqlConnectionWrapper Connection { get; set; }
+        public INpgsqlConnectionWrapper Wrapper { get; set; }
 
         public NpgsqlTempTableFiller()
         {
@@ -17,7 +17,7 @@ namespace Importers.Datalayer2
 
         public NpgsqlTempTableFiller(INpgsqlConnectionWrapper wrapper)
         {
-            this.Connection = wrapper;
+            this.Wrapper = wrapper;
         }
 
         /// <summary>
@@ -29,15 +29,14 @@ namespace Importers.Datalayer2
         /// <param name="itemsToImport"></param>
         public void Fill<T>(string tempTableName, string prototypeTable,  IEnumerable<T> itemsToImport) where T : IItem
         {
-            var command = this.Connection.CreateCommand();
-            command.CommandText = string.Format("create temp table {1} as (select * from {0} where 0 = 1)",
+            this.Wrapper.ExecuteNonQuery(string.Format("create temp table {1} as (select * from {0} where 0 = 1)",
                                       prototypeTable,
-                                      tempTableName);
-            command.ExecuteNonQuery();
+                                      tempTableName));
+
             string fields = string.Join(",", itemsToImport.First().DbIdFields.Concat(itemsToImport.First().DbDataFields));
             var copyCommand = string.Format("copy {0}({1}) from stdin with csv", tempTableName, string.Join(",", fields));
 
-            using (var writer = this.Connection.BeginTextImport(copyCommand))
+            using (var writer = this.Wrapper.BeginTextImport(copyCommand))
             {
                 try
                 {

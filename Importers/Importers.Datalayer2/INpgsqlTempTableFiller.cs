@@ -6,7 +6,7 @@ namespace Importers.Datalayer2
 {
     public interface INpgsqlTempTableFiller
     {
-        INpgsqlConnectionWrapper Connection { get; set; }
+        INpgsqlConnectionWrapper Wrapper { get; set; }
 
         /// <summary>
         /// Set this instance's Connection property before calling this method.
