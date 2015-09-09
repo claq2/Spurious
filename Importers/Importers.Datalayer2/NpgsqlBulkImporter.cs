@@ -36,7 +36,6 @@ namespace Importers.Datalayer2
             var tempTableName = "import_temp";
             var idsCsv = string.Join(", ", itemsToImport.First().DbIdFields);
             var nonIdsCsv = string.Join(", ", itemsToImport.First().DbDataFields);
-            var allFieldsToImport = itemsToImport.First().IdAndDataFieldsAsCsv;
 
             using (var conn = wrapper.Connection)
             {
@@ -59,17 +58,16 @@ namespace Importers.Datalayer2
                                                             tempTableName));
                 Console.WriteLine("Deleted {0} rows", rowsDeleted);
 
-                // TODO: use non ID fields from params
                 Func<string, string> formatWithItPrefix = id => string.Format("it.{0}", id);
                 var nonIdsCsvWithItPrefix = string.Join(", ", itemsToImport.First().DbDataFields.Select(formatWithItPrefix));
 
                 StringBuilder nonIdNotMatchClause = new StringBuilder(string.Format("it.{0} <> t.{0}", itemsToImport.First().DbDataFields[0]));
                 itemsToImport.First().DbDataFields.Skip(1).ToList().ForEach((id) =>
                 {
-                    nonIdNotMatchClause.AppendFormat(" and it.{0} <> t.{0}", id);
+                    nonIdNotMatchClause.AppendFormat(" or it.{0} <> t.{0}", id);
                 });
 
-                var updatedRows = wrapper.ExecuteNonQuery(string.Format(@"update {0} t set ({3}) = ({4}) from {2} it where {1} and {5}",
+                var updatedRows = wrapper.ExecuteNonQuery(string.Format(@"update {0} t set ({3}) = ({4}) from {2} it where {1} and ({5})",
                                                             targetTable,
                                                             idMatchClause,
                                                             tempTableName,
@@ -77,6 +75,17 @@ namespace Importers.Datalayer2
                                                             nonIdsCsvWithItPrefix,
                                                             nonIdNotMatchClause));
                 Console.WriteLine("Updated {0} rows", updatedRows);
+
+                var idsCsvWithItPrefix = string.Join(", ", itemsToImport.First().DbIdFields.Select(formatWithItPrefix));
+                var insertedRows = wrapper.ExecuteNonQuery(string.Format(@"insert into {0} ({2}, {5}) select {3}, {6} from {4} it left join {0} t using ({2}) where t.{1} is null",
+                                                             targetTable,
+                                                             itemsToImport.First().DbIdFields.First(),
+                                                             idsCsv,
+                                                             idsCsvWithItPrefix,
+                                                             tempTableName,
+                                                             nonIdsCsv,
+                                                             nonIdsCsvWithItPrefix));
+                Console.WriteLine("Added {0} rows", insertedRows);
             }
         }
     }
