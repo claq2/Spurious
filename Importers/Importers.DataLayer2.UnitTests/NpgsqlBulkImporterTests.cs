@@ -16,13 +16,12 @@ namespace Importers.DataLayer2.UnitTests
         {
             var conn = new Mock<IDbConnection>();
             conn.Setup(c => c.Open());
-            var wrapper = new Mock<INpgsqlConnectionWrapper>(MockBehavior.Strict);
+            var wrapper = new Mock<INpgsqlConnectionWrapper>();
             wrapper.Setup(w => w.Connection).Returns(conn.Object);
-
-            wrapper.Setup(w => w.ExecuteNonQuery("create index import_temp_idx on import_temp (id)", 9001)).Returns(0);
-            wrapper.Setup(w => w.ExecuteNonQuery("analyze import_temp", 9001)).Returns(0);
-            wrapper.Setup(w => w.ExecuteNonQuery("delete from targetTable t where not exists (select 1 from import_temp it where it.id = t.id)", 9001)).Returns(0);
-            wrapper.Setup(w => w.ExecuteNonQuery("update targetTable t set total = it.total from import_temp it where it.id = t.id and it.total <> t.total", 9001)).Returns(0);
+            var issuedSqlCommands = new List<string>();
+            wrapper.Setup(w => w.ExecuteNonQuery(It.IsAny<string>(), 9001))
+            .Callback<string, int>((c, t)=>issuedSqlCommands.Add(c))
+            .Returns(0);
 
             var tableFiller = new Mock<INpgsqlTempTableFiller>();
             var importer = new NpgsqlBulkImporter(wrapper.Object, tableFiller.Object);
@@ -33,6 +32,12 @@ namespace Importers.DataLayer2.UnitTests
             };
 
             importer.BulkImport("targetTable", items);
+
+            Assert.That(issuedSqlCommands.Count, Is.EqualTo(4));
+            Assert.That(issuedSqlCommands[0], Is.EqualTo("create index import_temp_idx on import_temp (id)"));
+            Assert.That(issuedSqlCommands[1], Is.EqualTo("analyze import_temp"));
+            Assert.That(issuedSqlCommands[2], Is.EqualTo("delete from targetTable t where not exists (select 1 from import_temp it where it.id = t.id)"));
+            Assert.That(issuedSqlCommands[3], Is.EqualTo("update targetTable t set (total) = (it.total) from import_temp it where it.id = t.id and it.total <> t.total"));
         }
 
         private class PopulationItem : IItem
