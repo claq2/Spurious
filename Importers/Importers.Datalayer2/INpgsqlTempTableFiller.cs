@@ -15,7 +15,6 @@ namespace Importers.Datalayer2
         /// <param name="tempTableName"></param>
         /// <param name="prototypeTable"></param>
         /// <param name="itemsToImport"></param>
-        void Fill<T>(string tempTableName, string prototypeTable, IEnumerable<T> itemsToImport)
-            where T : IItem;
+        void Fill<T>(string tempTableName, string prototypeTable, IItemCollection<T> itemsToImport) where T : IItem;
     }
 }

@@ -10,7 +10,7 @@ using System.Data;
 using System.Xml;
 using CsvHelper;
 using System.Diagnostics;
-using Importers.DataLayer;
+using Importers.Datalayer2;
 
 namespace PopulationImporter
 {
@@ -32,15 +32,15 @@ namespace PopulationImporter
 
             csv.Configuration.RegisterClassMap(new PopulationLineMap());
             var populationLinesx = csv.GetRecords<PopulationLine>().Where(pl => pl.Characteristics == "Population in 2011");
-            Action<PopulationLine, NpgsqlCopySerializer> addPopulationItemToSerializer = (p, s) =>
-                {
-                    s.AddInt32(p.GeoCode);
-                    s.AddInt32(Convert.ToInt32(p.Total));
-                };
+            //Action<PopulationLine, NpgsqlCopySerializer> addPopulationItemToSerializer = (p, s) =>
+            //    {
+            //        s.AddInt32(p.GeoCode);
+            //        s.AddInt32(Convert.ToInt32(p.Total));
+            //    };
 
-            var bulkImporter = new BulkImporter(populationStopwatch);
+            var bulkImporter = new NpgsqlBulkImporter(ConfigurationManager.ConnectionStrings["spurious"].ConnectionString);
             
-            bulkImporter.BulkImport("spurious", "subdivisions", populationLinesx, addPopulationItemToSerializer, new List<string> { "id" }, new List<string> { "population" });
+            bulkImporter.BulkImport("subdivisions", populationLinesx);
 
             populationStopwatch.Stop();
             Console.WriteLine("Imported population data in {0}", populationStopwatch.Elapsed);

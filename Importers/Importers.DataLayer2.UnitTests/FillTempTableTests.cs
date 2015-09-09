@@ -25,7 +25,12 @@ namespace Importers.DataLayer2.UnitTests
                 items.Add(new PopulationItem { GeoCode = 12345, Total = 456.7M });
                 items.Add(new PopulationItem { GeoCode = 12346, Total = 78.1M });
 
-                filler.Fill("temp_test", "subdivisions", items);
+                var itemCollection = new PopulationItemCollection
+                {
+                    Items = items
+                };
+
+                filler.Fill("temp_test", "subdivisions", itemCollection);
 
                 var cmd = conn.CreateCommand();
                 cmd.CommandText = "select id, population from temp_test";
@@ -44,7 +49,7 @@ namespace Importers.DataLayer2.UnitTests
             }
         }
 
-        private class PopulationItem : IItem
+        private class PopulationItemCollection:IItemCollection<PopulationItem>
         {
             public List<string> DbDataFields
             {
@@ -56,6 +61,11 @@ namespace Importers.DataLayer2.UnitTests
                 get { return new List<string> { "id" }; }
             }
 
+            public IEnumerable<PopulationItem> Items { get; set; }
+        }
+
+        private class PopulationItem : IItem
+        {
             public int GeoCode { get; set; }
 
             public string IdAndDataFieldsAsCsv { get { return string.Format("{0},{1}", this.GeoCode, Convert.ToInt32(this.Total)); } }
