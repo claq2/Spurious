@@ -37,7 +37,7 @@ namespace Importers.DataLayer2.UnitTests
             .Returns(0);
 
             var tableFiller = new Mock<INpgsqlTempTableFiller>();
-            tableFiller.Setup(tf => tf.Fill("import_temp", "targetTable", items));
+            tableFiller.Setup(tf => tf.Fill("import_temp", "targetTable", itemCollection));
 
             var importer = new NpgsqlBulkImporter(wrapper.Object, tableFiller.Object);
             importer.BulkImport("targetTable", itemCollection);
@@ -77,7 +77,7 @@ namespace Importers.DataLayer2.UnitTests
             .Returns(0);
 
             var tableFiller = new Mock<INpgsqlTempTableFiller>();
-            tableFiller.Setup(tf => tf.Fill("import_temp", "targetTable", items));
+            tableFiller.Setup(tf => tf.Fill("import_temp", "targetTable", itemCollection));
 
             var importer = new NpgsqlBulkImporter(wrapper.Object, tableFiller.Object);
             importer.BulkImport("targetTable", itemCollection);

@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="PopulationLine.cs" />
+    <Compile Include="PopulationLineCollection.cs" />
     <Compile Include="PopulationLineMap.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -1,13 +1,7 @@
-﻿using Npgsql;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Configuration;
-using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Data;
-using System.Xml;
 using CsvHelper;
 using System.Diagnostics;
 using Importers.Datalayer2;
@@ -31,16 +25,12 @@ namespace PopulationImporter
             var csv = new CsvReader(fileStream);
 
             csv.Configuration.RegisterClassMap(new PopulationLineMap());
-            var populationLinesx = csv.GetRecords<PopulationLine>().Where(pl => pl.Characteristics == "Population in 2011");
-            //Action<PopulationLine, NpgsqlCopySerializer> addPopulationItemToSerializer = (p, s) =>
-            //    {
-            //        s.AddInt32(p.GeoCode);
-            //        s.AddInt32(Convert.ToInt32(p.Total));
-            //    };
+            var populationLines = csv.GetRecords<PopulationLine>().Where(pl => pl.Characteristics == "Population in 2011");
+            var populationLineCollection = new PopulationLineCollection() { Items = populationLines };
 
             var bulkImporter = new NpgsqlBulkImporter(ConfigurationManager.ConnectionStrings["spurious"].ConnectionString);
             
-            bulkImporter.BulkImport("subdivisions", populationLinesx);
+            bulkImporter.BulkImport("subdivisions", populationLineCollection);
 
             populationStopwatch.Stop();
             Console.WriteLine("Imported population data in {0}", populationStopwatch.Elapsed);
