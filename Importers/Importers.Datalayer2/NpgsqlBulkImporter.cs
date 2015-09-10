@@ -9,15 +9,19 @@ namespace Importers.Datalayer2
 {
     public class NpgsqlBulkImporter
     {
-        INpgsqlConnectionWrapper wrapper;
+        private readonly INpgsqlConnectionWrapper wrapper;
 
-        INpgsqlTempTableFiller tempTableFiller;
+        private readonly INpgsqlTempTableFiller tempTableFiller;
 
-        Stopwatch stopwatch = new Stopwatch();
+        private readonly Stopwatch stopwatch = new Stopwatch();
 
-        public NpgsqlBulkImporter(string connectionString) : this(new NpgsqlConnectionWrapper(connectionString), new NpgsqlTempTableFiller())
+        public NpgsqlBulkImporter(string connectionString, Stopwatch stopwatch = null)
+            : this(new NpgsqlConnectionWrapper(connectionString), new NpgsqlTempTableFiller())
         {
-
+            if (this.stopwatch != null)
+            {
+                this.stopwatch = stopwatch;
+            }
         }
 
         public NpgsqlBulkImporter(INpgsqlConnectionWrapper wrapper, INpgsqlTempTableFiller filler)
@@ -41,7 +45,7 @@ namespace Importers.Datalayer2
             {
                 conn.Open();
                 this.tempTableFiller.Fill(tempTableName, targetTable, itemCollectionToImport);
-                Console.WriteLine("Finished temp table fill after {0}", stopwatch.Elapsed);
+                Console.WriteLine($"Finished temp table fill after {stopwatch.Elapsed}");
 
                 wrapper.ExecuteNonQuery(string.Format("create index {1}_idx on {1} ({0})", idsCsv, tempTableName));
                 wrapper.ExecuteNonQuery(string.Format("analyze {0}", tempTableName));
@@ -56,7 +60,7 @@ namespace Importers.Datalayer2
                                                             targetTable,
                                                             idMatchClause,
                                                             tempTableName));
-                Console.WriteLine("Deleted {0} rows", rowsDeleted);
+                Console.WriteLine($"Deleted {rowsDeleted} rows after {stopwatch.Elapsed}");
 
                 Func<string, string> formatWithItPrefix = id => string.Format("it.{0}", id);
                 var nonIdsCsvWithItPrefix = string.Join(", ", itemCollectionToImport.DbDataFields.Select(formatWithItPrefix));
@@ -74,7 +78,7 @@ namespace Importers.Datalayer2
                                                             nonIdsCsv,
                                                             nonIdsCsvWithItPrefix,
                                                             nonIdNotMatchClause));
-                Console.WriteLine("Updated {0} rows", updatedRows);
+                Console.WriteLine($"Updated {updatedRows} rows after {stopwatch.Elapsed}");
 
                 var idsCsvWithItPrefix = string.Join(", ", itemCollectionToImport.DbIdFields.Select(formatWithItPrefix));
                 var insertedRows = wrapper.ExecuteNonQuery(string.Format(@"insert into {0} ({2}, {5}) select {3}, {6} from {4} it left join {0} t using ({2}) where t.{1} is null",
@@ -85,7 +89,7 @@ namespace Importers.Datalayer2
                                                              tempTableName,
                                                              nonIdsCsv,
                                                              nonIdsCsvWithItPrefix));
-                Console.WriteLine("Added {0} rows", insertedRows);
+                Console.WriteLine($"Added {insertedRows} rows after {stopwatch.Elapsed}");
             }
         }
     }

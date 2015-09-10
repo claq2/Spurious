@@ -28,7 +28,7 @@ namespace PopulationImporter
             var populationLines = csv.GetRecords<PopulationLine>().Where(pl => pl.Characteristics == "Population in 2011");
             var populationLineCollection = new PopulationLineCollection() { Items = populationLines };
 
-            var bulkImporter = new NpgsqlBulkImporter(ConfigurationManager.ConnectionStrings["spurious"].ConnectionString);
+            var bulkImporter = new NpgsqlBulkImporter(ConfigurationManager.ConnectionStrings["spurious"].ConnectionString, populationStopwatch);
             
             bulkImporter.BulkImport("subdivisions", populationLineCollection);
 
