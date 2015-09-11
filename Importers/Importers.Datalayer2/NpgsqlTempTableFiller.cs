@@ -29,12 +29,10 @@ namespace Importers.Datalayer2
         /// <param name="itemsToImport"></param>
         public void Fill<T>(string tempTableName, string prototypeTable,  IItemCollection<T> itemsToImport) where T : IItem
         {
-            this.Wrapper.ExecuteNonQuery(string.Format("create temp table {1} as (select * from {0} where 0 = 1)",
-                                      prototypeTable,
-                                      tempTableName));
+            this.Wrapper.ExecuteNonQuery($"create temp table {tempTableName} as (select * from {prototypeTable} where 0 = 1)");
 
             string fields = string.Join(",", itemsToImport.DbIdFields.Concat(itemsToImport.DbDataFields));
-            var copyCommand = string.Format("copy {0}({1}) from stdin with csv", tempTableName, string.Join(",", fields));
+            var copyCommand = $"copy {tempTableName}({string.Join(",", fields)}) from stdin with csv";
 
             using (var writer = this.Wrapper.BeginTextImport(copyCommand))
             {
@@ -63,7 +61,6 @@ namespace Importers.Datalayer2
                     throw;
                 }
             }
-
         }
     }
 }

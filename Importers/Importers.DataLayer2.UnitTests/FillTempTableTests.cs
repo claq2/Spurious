@@ -49,7 +49,7 @@ namespace Importers.DataLayer2.UnitTests
             }
         }
 
-        private class PopulationItemCollection:IItemCollection<PopulationItem>
+        private class PopulationItemCollection : IItemCollection<PopulationItem>
         {
             public List<string> DbDataFields
             {
@@ -68,7 +68,7 @@ namespace Importers.DataLayer2.UnitTests
         {
             public int GeoCode { get; set; }
 
-            public string IdAndDataFieldsAsCsv { get { return string.Format("{0},{1}", this.GeoCode, Convert.ToInt32(this.Total)); } }
+            public string IdAndDataFieldsAsCsv { get { return string.Format("{0}, {1}", this.GeoCode, Convert.ToInt32(this.Total)); } }
 
             public decimal Total { get; set; }
         }
