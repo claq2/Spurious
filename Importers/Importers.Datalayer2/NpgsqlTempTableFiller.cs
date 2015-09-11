@@ -31,8 +31,8 @@ namespace Importers.Datalayer2
         {
             this.Wrapper.ExecuteNonQuery($"create temp table {tempTableName} as (select * from {prototypeTable} where 0 = 1)");
 
-            string fields = string.Join(",", itemsToImport.DbIdFields.Concat(itemsToImport.DbDataFields));
-            var copyCommand = $"copy {tempTableName}({string.Join(",", fields)}) from stdin with csv";
+            string fields = string.Join(", ", itemsToImport.DbIdFields.Concat(itemsToImport.DbDataFields));
+            var copyCommand = $"copy {tempTableName} ({fields}) from stdin with csv";
 
             using (var writer = this.Wrapper.BeginTextImport(copyCommand))
             {

@@ -33,8 +33,8 @@ namespace Importers.DataLayer2.UnitTests
             var wrapper = new Mock<INpgsqlConnectionWrapper>();
             wrapper.Setup(w => w.Connection).Returns(conn.Object);
             wrapper.Setup(w => w.ExecuteNonQuery(It.IsAny<string>(), 9001))
-            .Callback<string, int>((c, t) => issuedSqlCommands.Add(c))
-            .Returns(0);
+                .Callback<string, int>((c, t) => issuedSqlCommands.Add(c))
+                .Returns(0);
 
             var tableFiller = new Mock<INpgsqlTempTableFiller>();
             tableFiller.Setup(tf => tf.Fill("import_temp", "targetTable", itemCollection));
@@ -73,8 +73,8 @@ namespace Importers.DataLayer2.UnitTests
             var wrapper = new Mock<INpgsqlConnectionWrapper>();
             wrapper.Setup(w => w.Connection).Returns(conn.Object);
             wrapper.Setup(w => w.ExecuteNonQuery(It.IsAny<string>(), 9001))
-            .Callback<string, int>((c, t) => issuedSqlCommands.Add(c))
-            .Returns(0);
+                .Callback<string, int>((c, t) => issuedSqlCommands.Add(c))
+                .Returns(0);
 
             var tableFiller = new Mock<INpgsqlTempTableFiller>();
             tableFiller.Setup(tf => tf.Fill("import_temp", "targetTable", itemCollection));
