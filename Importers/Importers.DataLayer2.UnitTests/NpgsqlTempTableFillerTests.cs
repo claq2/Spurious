@@ -82,9 +82,9 @@ namespace Importers.DataLayer2.UnitTests
             Assert.That(issuedSqlCommands[0], Is.EqualTo("create temp table tempTable as (select * from prototypeTable where 0 = 1)"));
             Assert.That(issuedSqlCommands[1], Is.EqualTo("copy tempTable (id, population) from stdin with csv"));
             Assert.That(writtenLines.Count, Is.EqualTo(4)); // 2 CSV lines and 2 \n
-            Assert.That(writtenLines[0], Is.EqualTo("12345, 457"));
+            Assert.That(writtenLines[0], Is.EqualTo("12345,457"));
             Assert.That(writtenLines[1], Is.EqualTo("\n"));
-            Assert.That(writtenLines[2], Is.EqualTo("12346, 78"));
+            Assert.That(writtenLines[2], Is.EqualTo("12346,78"));
             Assert.That(writtenLines[3], Is.EqualTo("\n"));
         }
 
@@ -122,9 +122,9 @@ namespace Importers.DataLayer2.UnitTests
             Assert.That(issuedSqlCommands[0], Is.EqualTo("create temp table tempTable as (select * from prototypeTable where 0 = 1)"));
             Assert.That(issuedSqlCommands[1], Is.EqualTo("copy tempTable (id1, id2, field1, field2) from stdin with csv"));
             Assert.That(writtenLines.Count, Is.EqualTo(4)); // 2 CSV lines and 2 \n
-            Assert.That(writtenLines[0], Is.EqualTo("12345, 12, 457, 555"));
+            Assert.That(writtenLines[0], Is.EqualTo("12345,12,457,555"));
             Assert.That(writtenLines[1], Is.EqualTo("\n"));
-            Assert.That(writtenLines[2], Is.EqualTo("12346, 22, 444, 78"));
+            Assert.That(writtenLines[2], Is.EqualTo("12346,22,444,78"));
             Assert.That(writtenLines[3], Is.EqualTo("\n"));
         }
 
@@ -147,7 +147,7 @@ namespace Importers.DataLayer2.UnitTests
         {
             public int GeoCode { get; set; }
 
-            public string IdAndDataFieldsAsCsv { get { return string.Format("{0}, {1}", this.GeoCode, Convert.ToInt32(this.Total)); } }
+            public string IdAndDataFieldsAsCsv { get { return string.Format("{0},{1}", this.GeoCode, Convert.ToInt32(this.Total)); } }
 
             public decimal Total { get; set; }
         }
@@ -173,7 +173,7 @@ namespace Importers.DataLayer2.UnitTests
 
             public int Id2 { get; set; }
 
-            public string IdAndDataFieldsAsCsv { get { return $"{Id1}, {Id2}, {Convert.ToInt32(this.Field1)}, {Convert.ToInt32(this.Field2)}"; } }
+            public string IdAndDataFieldsAsCsv { get { return $"{Id1},{Id2},{Convert.ToInt32(this.Field1)},{Convert.ToInt32(this.Field2)}"; } }
 
             public decimal Field1 { get; set; }
 

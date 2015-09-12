@@ -46,7 +46,7 @@ namespace Importers.DataLayer2.UnitTests
             Assert.That(issuedSqlCommands[0], Is.EqualTo("create index import_temp_idx on import_temp (id)"));
             Assert.That(issuedSqlCommands[1], Is.EqualTo("analyze import_temp"));
             Assert.That(issuedSqlCommands[2], Is.EqualTo("delete from targetTable t where not exists (select 1 from import_temp it where it.id = t.id)"));
-            Assert.That(issuedSqlCommands[3], Is.EqualTo("update targetTable t set (total) = (it.total) from import_temp it where it.id = t.id and (it.total <> t.total)"));
+            Assert.That(issuedSqlCommands[3], Is.EqualTo("update targetTable t set (total) = (it.total) from import_temp it where it.id = t.id and (it.total is distinct from t.total)"));
             Assert.That(issuedSqlCommands[4], Is.EqualTo("insert into targetTable (id, total) select it.id, it.total from import_temp it left join targetTable t using (id) where t.id is null"));
             tableFiller.VerifyAll();
         }
@@ -86,7 +86,7 @@ namespace Importers.DataLayer2.UnitTests
             Assert.That(issuedSqlCommands[0], Is.EqualTo("create index import_temp_idx on import_temp (id1, id2)"));
             Assert.That(issuedSqlCommands[1], Is.EqualTo("analyze import_temp"));
             Assert.That(issuedSqlCommands[2], Is.EqualTo("delete from targetTable t where not exists (select 1 from import_temp it where it.id1 = t.id1 and it.id2 = t.id2)"));
-            Assert.That(issuedSqlCommands[3], Is.EqualTo("update targetTable t set (total1, total2) = (it.total1, it.total2) from import_temp it where it.id1 = t.id1 and it.id2 = t.id2 and (it.total1 <> t.total1 or it.total2 <> t.total2)"));
+            Assert.That(issuedSqlCommands[3], Is.EqualTo("update targetTable t set (total1, total2) = (it.total1, it.total2) from import_temp it where it.id1 = t.id1 and it.id2 = t.id2 and (it.total1 is distinct from t.total1 or it.total2 is distinct from t.total2)"));
             Assert.That(issuedSqlCommands[4], Is.EqualTo("insert into targetTable (id1, id2, total1, total2) select it.id1, it.id2, it.total1, it.total2 from import_temp it left join targetTable t using (id1, id2) where t.id1 is null"));
             tableFiller.VerifyAll();
         }
@@ -95,7 +95,7 @@ namespace Importers.DataLayer2.UnitTests
         {
             public int Id { get; set; }
             public decimal Total { get; set; }
-            public string IdAndDataFieldsAsCsv { get { return string.Format("{0}, {1}", this.Id, Convert.ToInt32(this.Total)); } }
+            public string IdAndDataFieldsAsCsv { get { return string.Format("{0},{1}", this.Id, Convert.ToInt32(this.Total)); } }
         }
 
         private class ItemWithOneIdOneNonIdCollection : IItemCollection<ItemWithOneIdOneNonId>
@@ -134,7 +134,7 @@ namespace Importers.DataLayer2.UnitTests
 
             public int Id2 { get; set; }
 
-            public string IdAndDataFieldsAsCsv { get { return string.Format("{0}, {1}, {2}, {3}", this.Id1, this.Id2, Convert.ToInt32(this.Total1), Convert.ToInt32(this.Total2)); } }
+            public string IdAndDataFieldsAsCsv { get { return string.Format("{0},{1},{2},{3}", this.Id1, this.Id2, Convert.ToInt32(this.Total1), Convert.ToInt32(this.Total2)); } }
 
             public decimal Total1 { get; set; }
 
