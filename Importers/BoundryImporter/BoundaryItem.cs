@@ -13,7 +13,7 @@ namespace BoundryImporter
 
         public string IdAndDataFieldsAsCsv
         {
-            get { return $"{GeoCode},{BoundaryGml}"; }
+            get { return $"{GeoCode},\"{BoundaryGml.Replace("\"", "\"\"")}\""; }
         }
 
         public BoundaryItem(XmlNamespaceManager ns, XmlNode node)

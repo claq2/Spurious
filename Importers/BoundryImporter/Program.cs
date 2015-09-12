@@ -17,6 +17,7 @@ namespace BoundryImporter
     {
         static void Main(string[] args)
         {
+            // Massive mem use here somewhere - about 1 GB
             var userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             var gmlDoc = new XmlDocument();
             gmlDoc.Load(Path.Combine(userProfile, ConfigurationManager.AppSettings["GeographyFile"]));
@@ -34,45 +35,13 @@ namespace BoundryImporter
             var collection = new BoundaryItemCollection { Items = boundaries };
             var importer = new NpgsqlBulkImporter(ConfigurationManager.ConnectionStrings["spurious"].ConnectionString);
             importer.BulkImport("subdivisions", collection);
+            Console.WriteLine("Bulk update complete");
 
-            // Amend table to have a gmltext field
-            // Populate gmltext field with importer
-            // Run over whole table to update boundry column from gmltext
-
-            foreach (XmlNode node in nodes)
+            using (var wrapper = new NpgsqlConnectionWrapper(ConfigurationManager.ConnectionStrings["spurious"].ConnectionString))
             {
-                var csidNode = node.SelectSingleNode("fme:gcsd000a11g_e/fme:CSDUID", ns);
-                var csdid = Convert.ToInt32(csidNode.InnerText);
-                var surfaceNode = node.SelectSingleNode("fme:gcsd000a11g_e/gml:surfaceProperty/gml:Surface", ns);
-                var multiSurfaceNode = node.SelectSingleNode("fme:gcsd000a11g_e/gml:multiSurfaceProperty/gml:MultiSurface", ns);
-                var gmlNode = surfaceNode != null ? surfaceNode : multiSurfaceNode;
-                var gmlText = gmlNode.OuterXml;
-                using (var conn = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["spurious"].ConnectionString))
-                {
-                    conn.Open();
-                    var selectCommand = conn.CreateCommand();
-                    selectCommand.CommandType = CommandType.Text;
-                    selectCommand.CommandText = "select id from subdivisions where id = " + csdid;
-                    var existingId = selectCommand.ExecuteScalar();
-
-                    if (existingId == null)
-                    {
-                        var insertCommand = conn.CreateCommand();
-                        insertCommand.CommandText = @"INSERT INTO subdivisions(
-                                                        id, boundry)
-                                                        VALUES (" + csdid + ", ST_FlipCoordinates(ST_GeomFromGML('" + gmlText + "')));";
-                        insertCommand.CommandType = CommandType.Text;
-                        var rowCount = insertCommand.ExecuteNonQuery();
-                        Console.WriteLine("Added subdivision {0}.", csdid);
-                    }
-                    else
-                    {
-                        var updateCommand = conn.CreateCommand();
-                        updateCommand.CommandText = @"update subdivisions set boundry = ST_FlipCoordinates(ST_GeomFromGML('" + gmlText + "')) where id = " + csdid;
-                        var rowCount = updateCommand.ExecuteNonQuery();
-                        Console.WriteLine("Updated subdivision {0}.", csdid);
-                    }
-                }
+                wrapper.Connection.Open();
+                var rowsGeoUpdated = wrapper.ExecuteNonQuery("update subdivisions s set (boundry) = ((select ST_FlipCoordinates(ST_GeomFromGML(boundary_gml)) from subdivisions ss where s.id = ss.id))");
+                Console.WriteLine($"Updated {rowsGeoUpdated} rows geo data from GML data");
             }
 
             Console.WriteLine("Node count {0}", nodes.Count);
