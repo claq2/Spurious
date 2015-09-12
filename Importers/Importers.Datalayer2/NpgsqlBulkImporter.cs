@@ -18,7 +18,7 @@ namespace Importers.Datalayer2
         public NpgsqlBulkImporter(string connectionString, Stopwatch stopwatch = null)
             : this(new NpgsqlConnectionWrapper(connectionString), new NpgsqlTempTableFiller())
         {
-            if (this.stopwatch != null)
+            if (stopwatch != null)
             {
                 this.stopwatch = stopwatch;
             }

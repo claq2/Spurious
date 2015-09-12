@@ -22,7 +22,8 @@ create extension postgis;
 create table subdivisions (
  id integer constraint firstkey primary key,
  population integer,
- boundry geography
+ boundry geography,
+ boundary_gml text,
 );
 
 -- Table: stores

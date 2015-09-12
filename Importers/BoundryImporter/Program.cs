@@ -1,4 +1,5 @@
-﻿using Npgsql;
+﻿using Importers.Datalayer2;
+using Npgsql;
 using NpgsqlTypes;
 using System;
 using System.Collections.Generic;
@@ -16,12 +17,28 @@ namespace BoundryImporter
     {
         static void Main(string[] args)
         {
+            var userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             var gmlDoc = new XmlDocument();
-            gmlDoc.Load(ConfigurationManager.AppSettings["GeographyFile"]);
+            gmlDoc.Load(Path.Combine(userProfile, ConfigurationManager.AppSettings["GeographyFile"]));
             var ns = new XmlNamespaceManager(gmlDoc.NameTable);
             ns.AddNamespace("gml", "http://www.opengis.net/gml");
             ns.AddNamespace("fme", "http://www.safe.com/gml/fme");
             var nodes = gmlDoc.SelectNodes("/gml:FeatureCollection/gml:featureMember", ns);
+
+            var boundaries = new List<BoundaryItem>();
+            foreach (XmlNode node in nodes)
+            {
+                boundaries.Add(new BoundaryItem(ns, node));
+            }
+
+            var collection = new BoundaryItemCollection { Items = boundaries };
+            var importer = new NpgsqlBulkImporter(ConfigurationManager.ConnectionStrings["spurious"].ConnectionString);
+            importer.BulkImport("subdivisions", collection);
+
+            // Amend table to have a gmltext field
+            // Populate gmltext field with importer
+            // Run over whole table to update boundry column from gmltext
+
             foreach (XmlNode node in nodes)
             {
                 var csidNode = node.SelectSingleNode("fme:gcsd000a11g_e/fme:CSDUID", ns);
