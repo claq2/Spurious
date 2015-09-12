@@ -92,8 +92,8 @@ namespace Importers.DataLayer2.UnitTests
         public void FillTempTableTwoIdsTwoFields()
         {
             var items = new List<TwoIdTwoFieldItem>();
-            items.Add(new TwoIdTwoFieldItem { Id1 = 12345, Field1 = 456.7M });
-            items.Add(new TwoIdTwoFieldItem { Id1 = 12346, Field2 = 78.1M });
+            items.Add(new TwoIdTwoFieldItem { Id1 = 12345, Id2 = 12, Field1 = 456.7M, Field2 = 555 });
+            items.Add(new TwoIdTwoFieldItem { Id1 = 12346, Id2 = 22, Field1 = 444, Field2 = 78.1M });
 
             var itemCollection = new TwoIdTwoFieldItemCollection { Items = items };
 
@@ -122,9 +122,9 @@ namespace Importers.DataLayer2.UnitTests
             Assert.That(issuedSqlCommands[0], Is.EqualTo("create temp table tempTable as (select * from prototypeTable where 0 = 1)"));
             Assert.That(issuedSqlCommands[1], Is.EqualTo("copy tempTable (id1, id2, field1, field2) from stdin with csv"));
             Assert.That(writtenLines.Count, Is.EqualTo(4)); // 2 CSV lines and 2 \n
-            Assert.That(writtenLines[0], Is.EqualTo("12345, 457"));
+            Assert.That(writtenLines[0], Is.EqualTo("12345, 12, 457, 555"));
             Assert.That(writtenLines[1], Is.EqualTo("\n"));
-            Assert.That(writtenLines[2], Is.EqualTo("12346, 78"));
+            Assert.That(writtenLines[2], Is.EqualTo("12346, 22, 444, 78"));
             Assert.That(writtenLines[3], Is.EqualTo("\n"));
         }
 
