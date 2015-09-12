@@ -29,7 +29,7 @@ namespace Importers.Datalayer2
         /// <param name="itemsToImport"></param>
         public void Fill<T>(string tempTableName, string prototypeTable,  IItemCollection<T> itemsToImport) where T : IItem
         {
-            this.Wrapper.ExecuteNonQuery($"create  table {tempTableName} as (select * from {prototypeTable} where 0 = 1)");
+            this.Wrapper.ExecuteNonQuery($"create temp table {tempTableName} as (select * from {prototypeTable} where 0 = 1)");
 
             string fields = string.Join(", ", itemsToImport.DbIdFields.Concat(itemsToImport.DbDataFields));
             var copyCommand = $"copy {tempTableName} ({fields}) from stdin with csv";

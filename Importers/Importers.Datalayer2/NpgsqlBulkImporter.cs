@@ -65,10 +65,10 @@ namespace Importers.Datalayer2
                 Func<string, string> formatWithItPrefix = id => string.Format("it.{0}", id);
                 var nonIdsCsvWithItPrefix = string.Join(", ", itemCollectionToImport.DbDataFields.Select(formatWithItPrefix));
 
-                StringBuilder nonIdNotMatchClause = new StringBuilder(string.Format("it.{0} <> t.{0}", itemCollectionToImport.DbDataFields[0]));
+                StringBuilder nonIdNotMatchClause = new StringBuilder(string.Format("it.{0} is distinct from t.{0}", itemCollectionToImport.DbDataFields[0]));
                 itemCollectionToImport.DbDataFields.Skip(1).ToList().ForEach((id) =>
                 {
-                    nonIdNotMatchClause.AppendFormat(" or it.{0} <> t.{0}", id);
+                    nonIdNotMatchClause.AppendFormat(" or it.{0} is distinct from t.{0}", id);
                 });
 
                 var updatedRows = wrapper.ExecuteNonQuery(string.Format(@"update {0} t set ({3}) = ({4}) from {2} it where {1} and ({5})",
