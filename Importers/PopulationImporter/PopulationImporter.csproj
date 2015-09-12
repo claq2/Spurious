@@ -68,9 +68,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Importers.Datalayer2\Importers.Datalayer2.csproj">
+    <ProjectReference Include="..\Importers.Datalayer2\Importers.DataLayer.csproj">
       <Project>{2d4afa4a-d222-438b-b345-258b6982c2c5}</Project>
-      <Name>Importers.Datalayer2</Name>
+      <Name>Importers.DataLayer</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

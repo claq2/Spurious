@@ -82,8 +82,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Importers.DataLayer\Importers.DataLayer.csproj">
-      <Project>{2f5bf5d3-a482-43bb-a12c-052a5b6a09ad}</Project>
+    <ProjectReference Include="..\Importers.Datalayer2\Importers.DataLayer.csproj">
+      <Project>{2d4afa4a-d222-438b-b345-258b6982c2c5}</Project>
       <Name>Importers.DataLayer</Name>
     </ProjectReference>
   </ItemGroup>

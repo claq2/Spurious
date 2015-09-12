@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Importers.Datalayer2
+namespace Importers.DataLayer
 {
     public class NpgsqlBulkImporter
     {
