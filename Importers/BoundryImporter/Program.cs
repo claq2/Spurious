@@ -51,7 +51,7 @@ namespace BoundryImporter
                     else
                     {
                         var updateCommand = conn.CreateCommand();
-                        updateCommand.CommandText = @"update subdivisions set boundry = ST_FlipCoordinates(ST_GeomFromGML('" + gmlText + "')) where id = "+ csdid;
+                        updateCommand.CommandText = @"update subdivisions set boundry = ST_FlipCoordinates(ST_GeomFromGML('" + gmlText + "')) where id = " + csdid;
                         var rowCount = updateCommand.ExecuteNonQuery();
                         Console.WriteLine("Updated subdivision {0}.", csdid);
                     }
