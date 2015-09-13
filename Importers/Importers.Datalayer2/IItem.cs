@@ -8,11 +8,4 @@ namespace Importers.DataLayer
     {
         string IdAndDataFieldsAsCsv { get; }
     }
-
-    public interface IItemCollection<T>
-    {
-        List<string> DbIdFields { get; }
-        List<string> DbDataFields { get; }
-        IEnumerable<T> Items { get; }
-    }
 }
