@@ -19,7 +19,7 @@ namespace LcboImporter
 
         public string IdAndDataFieldsAsCsv
         {
-            get { return $"{Id},{Name},{City},{Latitude},{Longitude}"; }
+            get { return $"{Id},\"{Name}\",{City},{Latitude},{Longitude}"; }
         }
 
         public override string ToString()
