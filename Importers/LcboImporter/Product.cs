@@ -15,7 +15,7 @@ namespace LcboImporter
 
         public string IdAndDataFieldsAsCsv
         {
-            get { return $"{Id},\"{Name}\",{Category},{Volume}"; }
+            get { return $"{Id},\"{Name.Replace("\"","")}\",{Category},{Volume}"; }
         }
 
         public override string ToString()
