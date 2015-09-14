@@ -61,10 +61,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Inventory.cs" />
+    <Compile Include="InventoryCollection.cs" />
     <Compile Include="InventoryMap.cs" />
     <Compile Include="Product.cs" />
     <Compile Include="ProductCategtory.cs" />
     <Compile Include="ProductCategtoryConverter.cs" />
+    <Compile Include="ProductCollection.cs" />
     <Compile Include="ProductMap.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
