@@ -124,6 +124,8 @@ namespace LcboImporter
                 var csv = new CsvReader(reader);
                 csv.Configuration.RegisterClassMap(new StoreMap());
                 stores = csv.GetRecords<Store>();
+                // Bulk import
+                // Update all location columns with value from latitude, longitude
                 using (var conn = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["spurious"].ConnectionString))
                 {
                     conn.Open();

@@ -39,6 +39,8 @@ CREATE TABLE stores
   wine_volume integer,
   spirits_volume integer,
   location geography,
+  latitude numeric(7,4),
+  longitude numeric(7,4),
   CONSTRAINT stores_pkey PRIMARY KEY (id)
 )
 WITH (
