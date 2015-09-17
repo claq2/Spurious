@@ -13,8 +13,11 @@ namespace SpuriousApi.FunctionalTests
         public async void GetStoresTest()
         {
             var service = new LcboService();
-            var resp = await service.GetLcboStores();
-            Assert.That(resp.Contains("Queen's"));
+            var stores = await service.GetLcboStores();
+            Assert.That(stores.Count, Is.EqualTo(100));
+            Assert.That(stores.All(s => s.Id > 0));
+            Assert.That(stores.All(s => !string.IsNullOrWhiteSpace(s.Name)));
+            Assert.That(stores.All(s => !string.IsNullOrWhiteSpace(s.GeoJSON)));
         }
     }
 }

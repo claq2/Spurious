@@ -11,21 +11,35 @@ namespace SpuriousApi.Models
     
     public class LcboService
     {
-        public async Task<string> GetLcboStores()
+        private readonly string connString = ConfigurationManager.ConnectionStrings["spurious"].ConnectionString;
+
+        public async Task<List<LcboStore>> GetLcboStores()
         {
-            var token = ConfigurationManager.AppSettings["LcboToken"];
-            var httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.Add("Authorization", String.Format("Token {0}", token));
-            var resp = await httpClient.GetAsync("https://lcboapi.com/stores");
-            if (resp.IsSuccessStatusCode)
+            var result = new List<LcboStore>();
+            using (var conn = new Npgsql.NpgsqlConnection(connString))
             {
-                var y = resp.Content;
-                return await y.ReadAsStringAsync();
+                var cmd = conn.CreateCommand();
+                cmd.CommandText = "select id, name, ST_AsGeoJSON(location) as location from stores limit 100";
+                conn.Open();
+                var reader = await cmd.ExecuteReaderAsync();
+                while (reader.Read())
+                {
+                    var subdivision = new LcboStore() { Id = Convert.ToInt32(reader["id"]) };
+                    if (reader["name"] != DBNull.Value)
+                    {
+                        subdivision.Name = reader["name"] as string;
+                    }
+
+                    if (reader["location"] != DBNull.Value)
+                    {
+                        subdivision.GeoJSON = reader["location"] as string;
+                    }
+
+                    result.Add(subdivision);
+                }
             }
-            else
-            {
-                return "blah";
-            }
+
+            return result;
         }
     }
 }

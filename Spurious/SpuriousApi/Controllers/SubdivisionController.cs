@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace SpuriousApi.Controllers
@@ -11,15 +12,15 @@ namespace SpuriousApi.Controllers
     public class SubdivisionController : ApiController
     {
         // GET: api/Subdivision
-        public IEnumerable<Subdivision> Get()
+        public async Task<IEnumerable<Subdivision>> Get()
         {
-            return new CensusService().Load100();
+            return await new CensusService().Load100();
         }
 
         // GET: api/Subdivision/5
-        public Subdivision Get(int id)
+        public async Task<Subdivision> Get(int id)
         {
-            return new CensusService().LoadById(id);
+            return await new CensusService().LoadById(id);
         }
 
         // POST: api/Subdivision
