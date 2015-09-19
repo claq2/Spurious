@@ -171,3 +171,9 @@ select sb.id, s.id, s.name, s.city
 from subdivisions sb
 inner join stores s on ST_Intersects(sb.boundry, s.location)
 order by sb.id
+
+-- subdivs and volumes
+select sb.id, sum(s.beer_volume), sum(s.wine_volume), sum(s.spirits_volume)
+from subdivisions sb
+inner join stores s on ST_Intersects(sb.boundry, s.location)
+group by sb.id

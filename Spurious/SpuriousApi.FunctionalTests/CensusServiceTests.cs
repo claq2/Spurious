@@ -30,5 +30,18 @@ namespace SpuriousApi.FunctionalTests
             Assert.That(subdiv.Population, Is.Not.Null);
             Assert.That(subdiv.GeoJSON, Is.Not.Null);
         }
+
+        [Test]
+        public async void LoadSubdivsAndVolumes()
+        {
+            var service = new CensusService();
+            var subdivs = await service.SubdivisionsAndVolumes();
+            Assert.That(subdivs.All(s => s.Id > 0));
+            Assert.That(subdivs.All(s => s.Population.HasValue));
+            foreach (var subdiv in subdivs)
+            {
+                Assert.That(subdiv.Volumes.Total, Is.GreaterThan(0), $"subdiv {subdiv.Id} has total {subdiv.Volumes.Total}");
+            }
+        }
     }
 }

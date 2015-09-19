@@ -57,9 +57,25 @@ namespace SpuriousApi.Models
             return result;
         }
 
-        public async Task<List<LcboService>> StoresInArea(string geoJson)
+        public async Task<List<LcboStore>> StoresInArea(string geoJson)
         {
-            return null;
+            var result = new List<LcboStore>();
+            var query = @"select sb.id, sum(s.beer_volume), sum(s.wine_volume), sum(s.spirits_volume)
+                            from subdivisions sb
+                            inner join stores s on ST_Intersects(sb.boundry, s.location)
+                            group by sb.id";
+            using (var conn = new Npgsql.NpgsqlConnection(connString))
+            {
+                var cmd = conn.CreateCommand();
+                cmd.CommandText = query;
+                conn.Open();
+                var reader = await cmd.ExecuteReaderAsync();
+                while (reader.Read())
+                {
+
+                }
+            }
+            return result;
         }
     }
 }
