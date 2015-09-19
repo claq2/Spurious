@@ -126,7 +126,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AlcoholVolumes.cs" />
-    <Compile Include="Models\CensusService.cs" />
+    <Compile Include="Models\SubdivisionService.cs" />
     <Compile Include="Models\LcboService.cs" />
     <Compile Include="Models\LcboStore.cs" />
     <Compile Include="Models\SubdivAndVolumes.cs" />

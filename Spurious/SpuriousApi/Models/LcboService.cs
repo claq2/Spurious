@@ -60,10 +60,9 @@ namespace SpuriousApi.Models
         public async Task<List<LcboStore>> StoresInArea(string geoJson)
         {
             var result = new List<LcboStore>();
-            var query = @"select sb.id, sum(s.beer_volume), sum(s.wine_volume), sum(s.spirits_volume)
-                            from subdivisions sb
-                            inner join stores s on ST_Intersects(sb.boundry, s.location)
-                            group by sb.id";
+            var query = $@"select s.id, s.name, s.beer_volume, s.wine_volume, s.spirits_volume
+                            from stores s
+                             where ST_Intersects(ST_GeomFromGeoJSON('{geoJson}'), s.location)";
             using (var conn = new Npgsql.NpgsqlConnection(connString))
             {
                 var cmd = conn.CreateCommand();
@@ -72,7 +71,28 @@ namespace SpuriousApi.Models
                 var reader = await cmd.ExecuteReaderAsync();
                 while (reader.Read())
                 {
+                    var store = new LcboStore() { Id = Convert.ToInt32(reader["id"]) };
+                    if (reader["name"] != DBNull.Value)
+                    {
+                        store.Name = reader["name"] as string;
+                    }
 
+                    if (reader["beer_volume"] != DBNull.Value)
+                    {
+                        store.Volumes.Beer = Convert.ToInt32(reader["beer_volume"]);
+                    }
+
+                    if (reader["wine_volume"] != DBNull.Value)
+                    {
+                        store.Volumes.Wine = Convert.ToInt32(reader["wine_volume"]);
+                    }
+
+                    if (reader["spirits_volume"] != DBNull.Value)
+                    {
+                        store.Volumes.Spirits = Convert.ToInt32(reader["spirits_volume"]);
+                    }
+
+                    result.Add(store);
                 }
             }
             return result;

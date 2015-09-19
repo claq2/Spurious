@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace SpuriousApi.Models
 {
-    public class CensusService
+    public class SubdivisionService
     {
         private readonly string connString = ConfigurationManager.ConnectionStrings["spurious"].ConnectionString;
 
-        public CensusService()
+        public SubdivisionService()
         {
 
         }
@@ -81,7 +81,7 @@ namespace SpuriousApi.Models
         public async Task<List<Subdivision>> SubdivisionsAndVolumes()
         {
             var result = new List<Subdivision>();
-            var query = @"select sb.id, sb.population, sum(s.beer_volume) as beer_volume, sum(s.wine_volume) as wine_volume, sum(s.spirits_volume) as spirits_volume
+            var query = @"select sb.id, sb.population, ST_AsGeoJSON(sb.boundry) as boundary, sum(s.beer_volume) as beer_volume, sum(s.wine_volume) as wine_volume, sum(s.spirits_volume) as spirits_volume
                             from subdivisions sb
                             inner join stores s on ST_Intersects(sb.boundry, s.location)
                             group by sb.id";
@@ -112,6 +112,11 @@ namespace SpuriousApi.Models
                     if (reader["spirits_volume"] != DBNull.Value)
                     {
                         subdivision.Volumes.Spirits = Convert.ToInt64(reader["spirits_volume"]);
+                    }
+
+                    if (reader["boundary"] != DBNull.Value)
+                    {
+                        subdivision.GeoJSON = reader["boundary"] as string;
                     }
 
                     result.Add(subdivision);

@@ -14,13 +14,13 @@ namespace SpuriousApi.Controllers
         // GET: api/Subdivision
         public async Task<IEnumerable<Subdivision>> Get()
         {
-            return await new CensusService().Load100();
+            return await new SubdivisionService().Load100();
         }
 
         // GET: api/Subdivision/5
         public async Task<Subdivision> Get(int id)
         {
-            return await new CensusService().LoadById(id);
+            return await new SubdivisionService().LoadById(id);
         }
 
         // POST: api/Subdivision

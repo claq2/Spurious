@@ -20,5 +20,15 @@ namespace SpuriousApi.FunctionalTests
             Assert.That(stores.All(s => !string.IsNullOrWhiteSpace(s.GeoJSON)));
             Assert.That(stores.All(s => s.Volumes.Total > 0));
         }
+
+        [Test]
+        public async void GetStoreByGeoJsonTest()
+        {
+            var subdivService = new SubdivisionService();
+            var subdiv = await subdivService.LoadById(3501005);
+            var storesService = new LcboService();
+            var stores = await storesService.StoresInArea(subdiv.GeoJSON);
+            Assert.That(stores.Count, Is.GreaterThan(0));
+        }
     }
 }
