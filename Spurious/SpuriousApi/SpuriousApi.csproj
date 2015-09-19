@@ -125,9 +125,11 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\AlcoholVolumes.cs" />
     <Compile Include="Models\CensusService.cs" />
     <Compile Include="Models\LcboService.cs" />
     <Compile Include="Models\LcboStore.cs" />
+    <Compile Include="Models\SubdivAndVolumes.cs" />
     <Compile Include="Models\Subdivision.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

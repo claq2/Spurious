@@ -18,6 +18,7 @@ namespace SpuriousApi.FunctionalTests
             Assert.That(stores.All(s => s.Id > 0));
             Assert.That(stores.All(s => !string.IsNullOrWhiteSpace(s.Name)));
             Assert.That(stores.All(s => !string.IsNullOrWhiteSpace(s.GeoJSON)));
+            Assert.That(stores.All(s => s.Volumes.Total > 0));
         }
     }
 }

@@ -23,7 +23,7 @@ create table subdivisions (
  id integer constraint firstkey primary key,
  population integer,
  boundry geography,
- boundary_gml text,
+ boundary_gml text
 );
 
 -- Table: stores
