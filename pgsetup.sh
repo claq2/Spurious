@@ -27,6 +27,8 @@ create table subdivisions (
   beer_volume bigint,
   wine_volume bigint,
   spirits_volume bigint,
+  province text,
+  name text,
   CONSTRAINT firstkey PRIMARY KEY (id)
 );
 

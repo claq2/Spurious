@@ -11,6 +11,7 @@ namespace PopulationImporter
         {
             Map(m => m.Characteristics).Name("Characteristics");
             Map(m => m.CsdName).Name("CSD_Name");
+            Map(m => m.Province).Name("Prov_Name");
             Map(m => m.GeoCode).Name("Geo_Code");
             Map(m => m.Topic).Name("Topic");
             Map(m => m.Total).Name("Total").Default(0);

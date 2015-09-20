@@ -11,9 +11,10 @@ namespace PopulationImporter
     {
         public int GeoCode { get; set; }
         public string CsdName { get; set; }
+        public string Province { get; set; }
         public string Topic { get; set; }
         public string Characteristics { get; set; }
         public decimal Total { get; set; }
-        public string IdAndDataFieldsAsCsv { get { return string.Format("{0},{1}", this.GeoCode, Convert.ToInt32(this.Total)); } }
+        public string IdAndDataFieldsAsCsv { get { return $"{this.GeoCode},{this.Province},\"{this.CsdName}\",{Convert.ToInt32(this.Total)}"; } }
     }
 }
