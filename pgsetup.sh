@@ -20,10 +20,14 @@ CREATE ROLE testuser WITH SUPERUSER LOGIN PASSWORD 'test';
 create extension adminpack;
 create extension postgis;
 create table subdivisions (
- id integer constraint firstkey primary key,
- population integer,
- boundry geography,
- boundary_gml text
+  id integer not null,
+  population integer,
+  boundry geography,
+  boundary_gml text,
+  beer_volume bigint,
+  wine_volume bigint,
+  spirits_volume bigint,
+  CONSTRAINT firstkey PRIMARY KEY (id)
 );
 
 -- Table: stores

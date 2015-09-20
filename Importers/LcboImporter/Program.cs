@@ -59,8 +59,11 @@ namespace LcboImporter
                             AddUpdateDeleteInventories(inventoriesEntry);
                         }
 
-                        // Populate volume columns
-                        PopulateVolumes();
+                        // Populate store volume columns
+                        PopulateStoresVolumes();
+
+                        // Update all subdivisions' volumes
+                        UpdateSubdivisionVolumes();
                     }
                 }
             }
@@ -70,9 +73,9 @@ namespace LcboImporter
             }
         }
 
-        private static void PopulateVolumes()
+        private static void PopulateStoresVolumes()
         {
-            Console.WriteLine("Starting volumes at {0:hh:mm:ss.fff}", DateTime.Now);
+            Console.WriteLine("Starting stores volumes at {0:hh:mm:ss.fff}", DateTime.Now);
             var volumesTimer = new Stopwatch();
             volumesTimer.Start();
             using (var conn = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["spurious"].ConnectionString))
@@ -107,7 +110,7 @@ namespace LcboImporter
                 }
 
                 volumesTimer.Stop();
-                Console.WriteLine("Finished volumes update at {0:hh:mm:ss.fff}, taking {1}", DateTime.Now, volumesTimer.Elapsed);
+                Console.WriteLine("Finished stores volumes update at {0:hh:mm:ss.fff}, taking {1}", DateTime.Now, volumesTimer.Elapsed);
             }
         }
 
@@ -188,6 +191,42 @@ namespace LcboImporter
 
                 stopwatch.Stop();
                 Console.WriteLine("Finished inventories at {0:hh:mm:ss.fff}, taking {1}", DateTime.Now, stopwatch.Elapsed);
+            }
+        }
+
+        private static void UpdateSubdivisionVolumes()
+        {
+            // update subdivisions sd set (beer_volume, wine_volume, spirits_volume) = ((select sum(s.beer_volume) from stores s where ST_Intersects(sd.boundry, s.location)), (select sum(s.wine_volume) from stores s where ST_Intersects(sd.boundry, s.location)), (select sum(s.spirits_volume) from stores s where ST_Intersects(sd.boundry, s.location)));
+            Console.WriteLine("Starting subdivisions volumes at {0:hh:mm:ss.fff}", DateTime.Now);
+            var volumesTimer = new Stopwatch();
+            volumesTimer.Start();
+            using (var conn = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["spurious"].ConnectionString))
+            {
+                conn.Open();
+                var updateVolumesCommand = conn.CreateCommand();
+                updateVolumesCommand.CommandText = @"update subdivisions sd 
+                                                        set (beer_volume, wine_volume, spirits_volume) = 
+                                                        (
+                                                            (select sum(s.beer_volume) 
+                                                            from stores s 
+                                                            where ST_Intersects(sd.boundry, s.location)), 
+                                        
+                                                            (select sum(s.wine_volume) 
+                                                            from stores s 
+                                                            where ST_Intersects(sd.boundry, s.location)), 
+
+                                                            (select sum(s.spirits_volume) 
+                                                            from stores s 
+                                                            where ST_Intersects(sd.boundry, s.location))
+                                                        )";
+                var rowsUpdated = updateVolumesCommand.ExecuteNonQuery();
+                if (rowsUpdated < 500)
+                {
+                    Console.WriteLine("Not all volumes updated! Only {0} updated!", rowsUpdated);
+                }
+
+                volumesTimer.Stop();
+                Console.WriteLine("Finished subdivisions volumes update at {0:hh:mm:ss.fff}, taking {1}", DateTime.Now, volumesTimer.Elapsed);
             }
         }
     }
