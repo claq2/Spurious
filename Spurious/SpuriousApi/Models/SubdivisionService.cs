@@ -81,10 +81,9 @@ namespace SpuriousApi.Models
         public async Task<List<Subdivision>> SubdivisionsAndVolumes()
         {
             var result = new List<Subdivision>();
-            var query = @"select sb.id, sb.population, ST_AsGeoJSON(sb.boundry) as boundary, sum(s.beer_volume) as beer_volume, sum(s.wine_volume) as wine_volume, sum(s.spirits_volume) as spirits_volume
-                            from subdivisions sb
-                            inner join stores s on ST_Intersects(sb.boundry, s.location)
-                            group by sb.id";
+            var query = @"select id, population, ST_AsGeoJSON(boundry) as boundary, beer_volume, wine_volume, spirits_volume
+                            from subdivisions
+                            where beer_volume > 0";
             using (var conn = new Npgsql.NpgsqlConnection(connString))
             {
                 var cmd = conn.CreateCommand();
@@ -122,8 +121,20 @@ namespace SpuriousApi.Models
                     result.Add(subdivision);
                 }
             }
+
             return result;
         }
 
+        public async List<Subdivision> Top10AlcoholDensity()
+        {
+            var result = new List<Subdivision>();
+            var query = @"select id, population, ST_AsGeoJSON(boundry) as boundary, beer_volume, wine_volume, spirits_volume, (beer_volume + wine_volume + spirits_volume) / population as density
+                            from subdivisions
+                            where beer_volume > 0
+                            order by density desc
+                            limit 10";
+
+            return result;
+        }
     }
 }

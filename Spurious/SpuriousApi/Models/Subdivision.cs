@@ -23,5 +23,9 @@ namespace SpuriousApi.Models
         public int? Population { get; set; }
         public string GeoJSON { get; set; }
         public AlcoholVolumes Volumes { get; private set; }
+        public float OverallAlcoholDensity { get { return this.Volumes.Total / (float)Population; } }
+        public float BeerDensity { get { return this.Volumes.Beer / (float)Population; } }
+        public float WineDensity { get { return this.Volumes.Wine / (float)Population; } }
+        public float SpiritsDensity { get { return this.Volumes.Spirits / (float)Population; } }
     }
 }

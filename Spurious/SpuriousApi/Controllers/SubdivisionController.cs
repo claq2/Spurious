@@ -14,7 +14,7 @@ namespace SpuriousApi.Controllers
         // GET: api/Subdivision
         public async Task<IEnumerable<Subdivision>> Get()
         {
-            return await new SubdivisionService().Load100();
+            return await new SubdivisionService().SubdivisionsAndVolumes();
         }
 
         // GET: api/Subdivision/5
