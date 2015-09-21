@@ -41,6 +41,21 @@ namespace SpuriousApi.FunctionalTests
             Assert.That(subdivs.All(s => !string.IsNullOrWhiteSpace(s.GeoJSON)));
             foreach (var subdiv in subdivs)
             {
+                Assert.That(subdiv.Volumes.Total, Is.GreaterThanOrEqualTo(0), $"subdiv {subdiv.Id} has total {subdiv.Volumes.Total}");
+            }
+        }
+
+        [Test]
+        public async void LoadTop10Densities()
+        {
+            var service = new SubdivisionService();
+            var subdivs = await service.Top10AlcoholDensity();
+            Assert.That(subdivs.Count, Is.EqualTo(10));
+            Assert.That(subdivs.All(s => s.Id > 0));
+            Assert.That(subdivs.All(s => s.Population.HasValue));
+            Assert.That(subdivs.All(s => !string.IsNullOrWhiteSpace(s.GeoJSON)));
+            foreach (var subdiv in subdivs)
+            {
                 Assert.That(subdiv.Volumes.Total, Is.GreaterThan(0), $"subdiv {subdiv.Id} has total {subdiv.Volumes.Total}");
             }
         }

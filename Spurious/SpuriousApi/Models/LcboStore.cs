@@ -18,6 +18,6 @@ namespace SpuriousApi.Models
         public string GeoJSON { get; internal set; }
         public int Id { get; internal set; }
         public string Name { get; internal set; }
-        public AlcoholVolumes Volumes { get; set; }
+        public AlcoholVolumes Volumes { get; private set; }
     }
 }

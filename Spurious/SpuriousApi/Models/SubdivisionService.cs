@@ -81,9 +81,9 @@ namespace SpuriousApi.Models
         public async Task<List<Subdivision>> SubdivisionsAndVolumes()
         {
             var result = new List<Subdivision>();
-            var query = @"select id, population, ST_AsGeoJSON(boundry) as boundary, beer_volume, wine_volume, spirits_volume
+            var query = @"select id, population, name, ST_AsGeoJSON(boundry) as boundary, beer_volume, wine_volume, spirits_volume
                             from subdivisions
-                            where beer_volume > 0";
+                            where province = 'Ontario'";
             using (var conn = new Npgsql.NpgsqlConnection(connString))
             {
                 var cmd = conn.CreateCommand();
@@ -92,33 +92,7 @@ namespace SpuriousApi.Models
                 var reader = await cmd.ExecuteReaderAsync();
                 while (reader.Read())
                 {
-                    var subdivision = new Subdivision() { Id = Convert.ToInt32(reader["id"]) };
-                    if (reader["population"] != DBNull.Value)
-                    {
-                        subdivision.Population = Convert.ToInt32(reader["population"]);
-                    }
-
-                    if (reader["beer_volume"] != DBNull.Value)
-                    {
-                        subdivision.Volumes.Beer = Convert.ToInt64(reader["beer_volume"]);
-                    }
-
-                    if (reader["wine_volume"] != DBNull.Value)
-                    {
-                        subdivision.Volumes.Wine = Convert.ToInt64(reader["wine_volume"]);
-                    }
-
-                    if (reader["spirits_volume"] != DBNull.Value)
-                    {
-                        subdivision.Volumes.Spirits = Convert.ToInt64(reader["spirits_volume"]);
-                    }
-
-                    if (reader["boundary"] != DBNull.Value)
-                    {
-                        subdivision.GeoJSON = reader["boundary"] as string;
-                    }
-
-                    result.Add(subdivision);
+                    result.Add(new Subdivision(reader));
                 }
             }
 
@@ -128,11 +102,23 @@ namespace SpuriousApi.Models
         public async Task<List<Subdivision>> Top10AlcoholDensity()
         {
             var result = new List<Subdivision>();
-            var query = @"select id, population, ST_AsGeoJSON(boundry) as boundary, beer_volume, wine_volume, spirits_volume, (beer_volume + wine_volume + spirits_volume) / population as density
+            var query = @"select id, population, name, ST_AsGeoJSON(boundry) as boundary, beer_volume, wine_volume, spirits_volume, (beer_volume + wine_volume + spirits_volume) / population as density
                             from subdivisions
                             where beer_volume > 0
                             order by density desc
                             limit 10";
+
+            using (var conn = new Npgsql.NpgsqlConnection(connString))
+            {
+                var cmd = conn.CreateCommand();
+                cmd.CommandText = query;
+                conn.Open();
+                var reader = await cmd.ExecuteReaderAsync();
+                while (reader.Read())
+                {
+                    result.Add(new Subdivision(reader));
+                }
+            }
 
             return result;
         }
