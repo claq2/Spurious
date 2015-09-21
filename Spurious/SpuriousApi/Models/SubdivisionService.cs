@@ -125,7 +125,7 @@ namespace SpuriousApi.Models
             return result;
         }
 
-        public async List<Subdivision> Top10AlcoholDensity()
+        public async Task<List<Subdivision>> Top10AlcoholDensity()
         {
             var result = new List<Subdivision>();
             var query = @"select id, population, ST_AsGeoJSON(boundry) as boundary, beer_volume, wine_volume, spirits_volume, (beer_volume + wine_volume + spirits_volume) / population as density

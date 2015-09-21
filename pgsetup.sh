@@ -32,6 +32,11 @@ create table subdivisions (
   CONSTRAINT firstkey PRIMARY KEY (id)
 );
 
+CREATE INDEX idx_boundary
+  ON subdivisions
+  USING gist
+  (boundry);
+
 -- Table: stores
 
 -- DROP TABLE stores;
@@ -54,6 +59,11 @@ WITH (
 );
 ALTER TABLE stores
   OWNER TO jmclachl;
+
+  CREATE INDEX idx_location
+  ON stores
+  USING gist
+  (location);
 
 CREATE TABLE products
 (
