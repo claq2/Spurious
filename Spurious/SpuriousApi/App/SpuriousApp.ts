@@ -4,7 +4,7 @@ module SpuriousApp {
     "use strict";
 
     // Create the module and define its dependencies.
-    angular.module("SpuriousApp", [
+    var SpuriousApp = angular.module("SpuriousApp", [
         // Angular modules 
         "ngAnimate", // animations
         "ngRoute" // routing
@@ -13,5 +13,15 @@ module SpuriousApp {
 
         // 3rd Party Modules
     ]);
+
+    SpuriousApp.config(["$routeProvider", ($routeProvider: ng.route.IRouteProvider) => {
+        var landingRoute: ng.route.IRoute = {
+            templateUrl: "App/Landing/Landing.html"
+        };
+
+        $routeProvider
+            .when("/landing", landingRoute)
+            .otherwise({ redirectTo: "/landing" });
+    }]);
 }
 
