@@ -193,3 +193,7 @@ select sb.id, sum(s.beer_volume), sum(s.wine_volume), sum(s.spirits_volume)
 from subdivisions sb
 inner join stores s on ST_Intersects(sb.boundry, s.location)
 group by sb.id
+
+-- centre of subdiv
+select st_asgeojson(st_centroid(boundry::geometry)) as centre from subdivisions
+where province = 'Ontario';

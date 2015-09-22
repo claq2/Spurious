@@ -9,33 +9,27 @@ using System.Web.Http;
 
 namespace SpuriousApi.Controllers
 {
+    [RoutePrefix("api/Subdivision")]
     public class SubdivisionController : ApiController
     {
         // GET: api/Subdivision
+        [Route("")]
         public async Task<IEnumerable<Subdivision>> Get()
         {
             return await new SubdivisionService().SubdivisionsAndVolumes();
         }
 
         // GET: api/Subdivision/5
+        [Route("{id}")]
         public async Task<Subdivision> Get(int id)
         {
             return await new SubdivisionService().LoadById(id);
         }
 
-        // POST: api/Subdivision
-        public void Post([FromBody]string value)
+        [Route("top10")]
+        public async Task<IEnumerable<Subdivision>> GetTop10()
         {
-        }
-
-        // PUT: api/Subdivision/5
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE: api/Subdivision/5
-        public void Delete(int id)
-        {
+            return await new SubdivisionService().Top10AlcoholDensity();
         }
     }
 }

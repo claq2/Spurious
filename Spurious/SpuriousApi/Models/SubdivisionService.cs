@@ -108,16 +108,41 @@ namespace SpuriousApi.Models
                             order by density desc
                             limit 10";
 
+            var resultDict = new Dictionary<int, Subdivision>();
             using (var conn = new Npgsql.NpgsqlConnection(connString))
             {
-                var cmd = conn.CreateCommand();
-                cmd.CommandText = query;
-                conn.Open();
-                var reader = await cmd.ExecuteReaderAsync();
-                while (reader.Read())
+                using (var cmd = conn.CreateCommand())
                 {
-                    result.Add(new Subdivision(reader));
+                    cmd.CommandText = query;
+                    conn.Open();
+                    using (var reader = await cmd.ExecuteReaderAsync())
+                    {
+                        while (reader.Read())
+                        {
+                            var subdiv = new Subdivision(reader);
+                            result.Add(subdiv);
+                            resultDict.Add(subdiv.Id, subdiv);
+                        }
+                    }
                 }
+
+                using (var getStoresCmd = conn.CreateCommand())
+                {
+                    var subdivIds = string.Join(", ", result.Select(s => s.Id));
+                    getStoresCmd.CommandText = $@"select sd.id as subdiv_id, s.id as id, s.name as name, ST_AsGeoJSON(s.location) as location from subdivisions sd inner join stores s on ST_Intersects(s.location, sd.boundry)
+                                                                                        where sd.id in ({subdivIds})
+                                                                                        order by subdiv_id";
+                    using (var storesReader = await getStoresCmd.ExecuteReaderAsync())
+                    {
+                        while (storesReader.Read())
+                        {
+                            var store = new LcboStore(storesReader);
+                            var subdivId = Convert.ToInt32(storesReader["subdiv_id"]);
+                            resultDict[subdivId].LcboStores.Add(store);
+                        }
+                    }
+                }
+
             }
 
             return result;
