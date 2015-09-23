@@ -10,10 +10,11 @@ module SpuriousApp {
     class LandingController implements ILandingController {
         title: string = "LandingController";
         subdivisions: Subdivision[] = [];
+        map: any;
 
-        static $inject: string[] = ["$location", "$http"];
+        static $inject: string[] = ["$location", "$http", "uiGmapGoogleMapApi"];
 
-        constructor(private $location: ng.ILocationService, private $http: ng.IHttpService) {
+        constructor(private $location: ng.ILocationService, private $http: ng.IHttpService, private googleMap: any) {
             this.activate();
         }
 
@@ -25,6 +26,10 @@ module SpuriousApp {
                 }, (r) => {
                     // error
                 });
+
+            this.googleMap.then((maps: any) => {
+                this.map = { center: { latitude: 45, longitude: -73 }, zoom: 8 };
+            });
         }
     }
 
