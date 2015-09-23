@@ -198,3 +198,5 @@ FakesAssemblies/
 # Things with values not to publish
 cstrings.config
 asettings.config
+Spurious/SpuriousApi/App/**/*.js
+Spurious/SpuriousApi/App/**/*.js.map
