@@ -40,7 +40,7 @@ module SpuriousApp {
                 id: json.id,
                 name: json.name,
                 population: json.population,
-                geoJSON: json.geoJson
+                geoJSON: json.geoJSON
             };
 
             return result;

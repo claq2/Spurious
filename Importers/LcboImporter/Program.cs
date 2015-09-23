@@ -204,6 +204,7 @@ namespace LcboImporter
             {
                 conn.Open();
                 var updateVolumesCommand = conn.CreateCommand();
+                updateVolumesCommand.CommandTimeout = 9001;
                 updateVolumesCommand.CommandText = @"update subdivisions sd 
                                                         set (beer_volume, wine_volume, spirits_volume) = 
                                                         (
