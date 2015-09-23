@@ -95,6 +95,11 @@ textarea {
    Author's custom styles
    ========================================================================== */
 
+.top10Table tr:first-child th {
+    background-color: #027FF4;
+    color: #fff;
+    font-weight: bold;
+}
 
 
 

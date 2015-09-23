@@ -4,7 +4,7 @@ module SpuriousApp {
     "use strict";
 
     // Create the module and define its dependencies.
-    var SpuriousApp = angular.module("SpuriousApp", [
+    export var SpuriousApp = angular.module("SpuriousApp", [
         // Angular modules 
         "ngAnimate", // animations
         "ngRoute" // routing
