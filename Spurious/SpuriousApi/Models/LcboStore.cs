@@ -24,7 +24,6 @@ namespace SpuriousApi.Models
 
             var columnNames = reader.GetSchemaTable().Rows.OfType<DataRow>().Select(r => (string)r["ColumnName"]);
 
-
             if (columnNames.Contains("name") && reader["name"] != DBNull.Value)
             {
                 this.Name = reader["name"] as string;

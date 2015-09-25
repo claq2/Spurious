@@ -24,16 +24,20 @@ module SpuriousApp {
                     this.subdivisions = Subdivision.subdivisionsFromJson(r.data);
                     this.googleMap.then((maps: any) => {
                         this.map = {
-                            center: { latitude: 45, longitude: -73 }, zoom: 8, events: {
+                            center: { latitude: 41.7829782176344, longitude: -82.764763246101 }, zoom: 11, events: {
                                 tilesloaded: (map) => {
                                     this.$scope.$apply(() => {
                                         var geojson = JSON.parse(this.subdivisions[0].geoJSON);
                                         map.data.addGeoJson(geojson);
+                                        map.data.setStyle({
+                                            fillColor: 'green',
+                                            strokeWeight: 1,
+                                            fillOpacity: 0.1
+                                        });
                                     });
                                 }
                             }
                         };
-                        //                        maps.data.loadGeoJson(this.subdivisions[0].geoJSON);
                     });
                     // success
                 }, (r) => {

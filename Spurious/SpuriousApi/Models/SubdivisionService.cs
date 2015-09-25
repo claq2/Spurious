@@ -102,7 +102,7 @@ namespace SpuriousApi.Models
         public async Task<List<Subdivision>> Top10AlcoholDensity()
         {
             var result = new List<Subdivision>();
-            var query = @"select id, population, name, ST_AsGeoJSON(boundry) as boundary, beer_volume, wine_volume, spirits_volume, (beer_volume + wine_volume + spirits_volume) / population as density
+            var query = @"select id, population, name, ST_AsGeoJSON(boundry) as boundary, St_AsGeoJSON(st_centroid(boundry::geometry)) as centre, beer_volume, wine_volume, spirits_volume, (beer_volume + wine_volume + spirits_volume) / population as density
                             from subdivisions
                             where beer_volume > 0
                             order by density desc

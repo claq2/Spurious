@@ -4,6 +4,8 @@ using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Data.Common;
+using System.Data;
+
 namespace SpuriousApi.Models
 {
     public class Subdivision
@@ -25,6 +27,9 @@ namespace SpuriousApi.Models
         public Subdivision(DbDataReader reader) : this()
         {
             this.Id = Convert.ToInt32(reader["id"]);
+
+            var columnNames = reader.GetSchemaTable().Rows.OfType<DataRow>().Select(r => (string)r["ColumnName"]);
+
             if (reader["population"] != DBNull.Value)
             {
                 this.Population = Convert.ToInt32(reader["population"]);
@@ -47,12 +52,28 @@ namespace SpuriousApi.Models
 
             if (reader["boundary"] != DBNull.Value)
             {
-                this.GeoJSON = reader["boundary"] as string;
+                var boundary = reader["boundary"] as string;
+                var featureWrapper = $@"
+{{ ""type"": ""FeatureCollection"",
+    ""features"": [
+      {{ ""type"": ""Feature"",
+        ""geometry"": {boundary},
+        ""properties"":{{}}
+      }}
+      ]
+}}";
+
+                this.GeoJSON = featureWrapper;
             }
 
             if (reader["name"] != DBNull.Value)
             {
                 this.Name = reader["name"] as string;
+            }
+
+            if (columnNames.Contains("centre") && reader["centre"] != DBNull.Value)
+            {
+                this.GeoJsonCentre = reader["centre"] as string;
             }
         }
 
@@ -60,6 +81,7 @@ namespace SpuriousApi.Models
         public string Name { get; set; }
         public int? Population { get; set; }
         public string GeoJSON { get; set; }
+        public string GeoJsonCentre { get; set; }
         public AlcoholVolumes Volumes { get; private set; }
         public float OverallAlcoholDensity { get { return this.Volumes.Total / (float)Population; } }
         public float BeerDensity { get { return this.Volumes.Beer / (float)Population; } }
