@@ -74,6 +74,9 @@ namespace SpuriousApi.Models
             if (columnNames.Contains("centre") && reader["centre"] != DBNull.Value)
             {
                 this.GeoJsonCentre = reader["centre"] as string;
+                dynamic geocentre = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(this.GeoJsonCentre);
+                this.CentreLatitude = geocentre.coordinates[1];
+                this.CentreLongitude = geocentre.coordinates[0];
             }
         }
 
@@ -82,6 +85,8 @@ namespace SpuriousApi.Models
         public int? Population { get; set; }
         public string GeoJSON { get; set; }
         public string GeoJsonCentre { get; set; }
+        public float CentreLatitude { get; set; }
+        public float CentreLongitude { get; set; }
         public AlcoholVolumes Volumes { get; private set; }
         public float OverallAlcoholDensity { get { return this.Volumes.Total / (float)Population; } }
         public float BeerDensity { get { return this.Volumes.Beer / (float)Population; } }

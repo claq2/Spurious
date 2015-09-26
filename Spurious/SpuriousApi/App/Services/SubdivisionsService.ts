@@ -23,7 +23,9 @@ module SpuriousApp {
         id: number;
         name: string;
         population: number;
-        geoJSON: string;
+        boundaryGeoJson: string;
+        centreLatitude: number;
+        centreLongitude: number;
         overallAlcoholDensity: number;
 
         static subdivisionsFromJson(json: Array<any>): Array<Subdivision> {
@@ -41,8 +43,10 @@ module SpuriousApp {
                 id: json.id,
                 name: json.name,
                 population: json.population,
-                geoJSON: json.geoJSON,
-                overallAlcoholDensity: json.overallAlcoholDensity
+                boundaryGeoJson: json.geoJSON,
+                overallAlcoholDensity: json.overallAlcoholDensity,
+                centreLatitude: json.centreLatitude,
+                centreLongitude: json.centreLongitude
             };
 
             return result;

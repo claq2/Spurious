@@ -23,11 +23,17 @@ module SpuriousApp {
                 .then((r) => {
                     this.subdivisions = Subdivision.subdivisionsFromJson(r.data);
                     this.googleMap.then((maps: any) => {
+                        var firstSubdiv = this.subdivisions[0];
                         this.map = {
-                            center: { latitude: 41.7829782176344, longitude: -82.764763246101 }, zoom: 11, events: {
+                            center: {
+                                latitude: firstSubdiv.centreLatitude,
+                                longitude: firstSubdiv.centreLongitude
+                            },
+                            zoom: 11,
+                            events: {
                                 tilesloaded: (map) => {
                                     this.$scope.$apply(() => {
-                                        var geojson = JSON.parse(this.subdivisions[0].geoJSON);
+                                        var geojson = JSON.parse(this.subdivisions[0].boundaryGeoJson);
                                         map.data.addGeoJson(geojson);
                                         map.data.setStyle({
                                             fillColor: 'green',
