@@ -31,5 +31,11 @@ namespace SpuriousApi.Controllers
         {
             return await new SubdivisionService().Top10AlcoholDensity();
         }
+
+        [Route("{id}/boundary")]
+        public async Task<string> GetBoundary(int id)
+        {
+            return await new SubdivisionService().BoundaryGeoJson(id);
+        }
     }
 }

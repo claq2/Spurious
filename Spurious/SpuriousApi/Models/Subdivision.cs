@@ -53,8 +53,8 @@ namespace SpuriousApi.Models
             if (reader["boundary"] != DBNull.Value)
             {
                 var boundary = reader["boundary"] as string;
-                var featureWrapper = $@"
-{{ ""type"": ""FeatureCollection"",
+                var featureWrapper = 
+$@"{{ ""type"": ""FeatureCollection"",
     ""features"": [
       {{ ""type"": ""Feature"",
         ""geometry"": {boundary},

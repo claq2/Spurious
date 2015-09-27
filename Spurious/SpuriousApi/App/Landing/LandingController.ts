@@ -16,6 +16,7 @@ module SpuriousApp {
 
         constructor(private $location: ng.ILocationService, private $http: ng.IHttpService, private googleMap: any, private $scope: ng.IScope) {
             this.activate();
+            //var x = this.map.control;
         }
 
         activate() {
@@ -42,7 +43,8 @@ module SpuriousApp {
                                         });
                                     });
                                 }
-                            }
+                            },
+                            control: {}
                         };
                     });
                     // success
@@ -51,6 +53,10 @@ module SpuriousApp {
                 });
 
 
+        }
+
+        selectSubdiv(id: number) {
+            // go get subdiv boundary
         }
     }
 

@@ -147,5 +147,35 @@ namespace SpuriousApi.Models
 
             return result;
         }
+
+        public async Task<string> BoundaryGeoJson(int subdivId)
+        {
+            var result = string.Empty;
+            var query = @"select ST_AsGeoJSON(boundry) as boundary
+                            from subdivisions
+                            where id = @subdivId";
+
+            using (var conn = new Npgsql.NpgsqlConnection(connString))
+            {
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = query;
+                    conn.Open();
+                    cmd.Parameters.AddWithValue("@subdivId", subdivId);
+                    var boundary = await cmd.ExecuteScalarAsync() as string;
+                    result = 
+$@"{{ ""type"": ""FeatureCollection"",
+    ""features"": [
+      {{ ""type"": ""Feature"",
+        ""geometry"": {boundary},
+        ""properties"":{{}}
+      }}
+      ]
+}}";
+                }
+            }
+
+            return result;
+        }
     }
 }

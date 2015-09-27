@@ -62,5 +62,14 @@ namespace SpuriousApi.FunctionalTests
                 Assert.That(subdiv.Volumes.Total, Is.GreaterThan(0), $"subdiv {subdiv.Id} has total {subdiv.Volumes.Total}");
             }
         }
+
+        [Test]
+        public async void GetBoundryGeoJson()
+        {
+            var service = new SubdivisionService();
+            var boundary = await service.BoundaryGeoJson(1001113);
+            Assert.That(boundary, Is.Not.Empty);
+            Assert.That(boundary, Is.StringStarting(@"{ ""type"": ""FeatureCollection"","));
+        }
     }
 }
