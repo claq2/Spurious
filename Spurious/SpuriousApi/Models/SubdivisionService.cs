@@ -163,7 +163,7 @@ namespace SpuriousApi.Models
                     conn.Open();
                     cmd.Parameters.AddWithValue("@subdivId", subdivId);
                     var boundary = await cmd.ExecuteScalarAsync() as string;
-                    result = 
+                    result =
 $@"{{ ""type"": ""FeatureCollection"",
     ""features"": [
       {{ ""type"": ""Feature"",
@@ -177,5 +177,32 @@ $@"{{ ""type"": ""FeatureCollection"",
 
             return result;
         }
+
+    }
+
+    public class FeatureCollection
+    {
+        public string type { get { return "FeatureCollection"; } }
+        public Feature[] features { get; set; }
+    }
+    public class Feature
+    {
+        public string type { get { return "Feature"; } }
+        public geometry geometry { get; set; }
+        public object propertiers { get; set; }
+    }
+    public abstract class geometry
+    {
+        public abstract string type { get; }
+        public coordinate[] coordinates { get; set; }
+    }
+    public class polygon : geometry
+    {
+        public override string type { get { return "Polygon"; } }
+    }
+    public class coordinate
+    {
+        public float longitude { get; set; }
+        public float latitude { get; set; }
     }
 }

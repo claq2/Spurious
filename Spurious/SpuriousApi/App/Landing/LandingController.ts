@@ -11,6 +11,7 @@ module SpuriousApp {
         title: string = "LandingController";
         subdivisions: Subdivision[] = [];
         map: any;
+        realMap: any;
 
         static $inject: string[] = ["$location", "$http", "uiGmapGoogleMapApi", "$scope"];
 
@@ -41,6 +42,7 @@ module SpuriousApp {
                                             strokeWeight: 1,
                                             fillOpacity: 0.1
                                         });
+                                        this.realMap = map;
                                     });
                                 }
                             },
@@ -57,6 +59,7 @@ module SpuriousApp {
 
         selectSubdiv(id: number) {
             // go get subdiv boundary
+            this.realMap.data.loadGeoJson("http://localhost/spuriousapi/api/subdivision/" + id + "/boundary");
         }
     }
 
