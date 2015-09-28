@@ -33,7 +33,7 @@ namespace SpuriousApi.Controllers
         }
 
         [Route("{id}/boundary")]
-        public async Task<string> GetBoundary(int id)
+        public async Task<object> GetBoundary(int id)
         {
             return await new SubdivisionService().BoundaryGeoJson(id);
         }

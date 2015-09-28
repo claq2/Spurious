@@ -148,7 +148,7 @@ namespace SpuriousApi.Models
             return result;
         }
 
-        public async Task<string> BoundaryGeoJson(int subdivId)
+        public async Task<object> BoundaryGeoJson(int subdivId)
         {
             var result = string.Empty;
             var query = @"select ST_AsGeoJSON(boundry) as boundary
@@ -163,19 +163,13 @@ namespace SpuriousApi.Models
                     conn.Open();
                     cmd.Parameters.AddWithValue("@subdivId", subdivId);
                     var boundary = await cmd.ExecuteScalarAsync() as string;
-                    result =
-$@"{{ ""type"": ""FeatureCollection"",
-    ""features"": [
-      {{ ""type"": ""Feature"",
-        ""geometry"": {boundary},
-        ""properties"":{{}}
-      }}
-      ]
-}}";
+                    result = $@"{{ ""type"": ""FeatureCollection"",    ""features"": [      {{ ""type"": ""Feature"",        ""geometry"": {boundary},        ""properties"":{{}}      }}      ]}}";
                 }
             }
 
-            return result;
+            dynamic x = Newtonsoft.Json.JsonConvert.DeserializeObject(result);
+
+            return x;
         }
 
     }
@@ -191,10 +185,10 @@ $@"{{ ""type"": ""FeatureCollection"",
         public geometry geometry { get; set; }
         public object propertiers { get; set; }
     }
-    public abstract class geometry
+    public class geometry
     {
-        public abstract string type { get; }
-        public coordinate[] coordinates { get; set; }
+        public virtual string type { get; }
+        public coordinate[][][] coordinates { get; set; }
     }
     public class polygon : geometry
     {
