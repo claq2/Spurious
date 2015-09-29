@@ -57,9 +57,17 @@ module SpuriousApp {
 
         }
 
-        selectSubdiv(id: number) {
+        selectSubdiv(subdiv: Subdivision) {
             // go get subdiv boundary
-            this.realMap.data.loadGeoJson("http://localhost/spuriousapi/api/subdivision/" + id + "/boundary");
+            this.realMap.data.forEach((feature) => {
+                //If you want, check here for some constraints.
+                this.realMap.data.remove(feature);
+
+            });
+            this.realMap.data.loadGeoJson("http://localhost/spuriousapi/api/subdivision/" + subdiv.id + "/boundary");
+            this.map.center = {
+                latitude: subdiv.centreLatitude,
+                longitude: subdiv.centreLongitude};
         }
     }
 
