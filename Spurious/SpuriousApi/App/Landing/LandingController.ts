@@ -12,6 +12,7 @@ module SpuriousApp {
         subdivisions: Subdivision[] = [];
         map: any;
         realMap: any;
+        mapsApi: any;
 
         static $inject: string[] = ["$location", "$http", "uiGmapGoogleMapApi", "$scope"];
 
@@ -25,6 +26,7 @@ module SpuriousApp {
                 .then((r) => {
                     this.subdivisions = Subdivision.subdivisionsFromJson(r.data);
                     this.googleMap.then((maps: any) => {
+                        this.mapsApi = maps;
                         var firstSubdiv = this.subdivisions[0];
                         this.map = {
                             center: {
@@ -65,6 +67,7 @@ module SpuriousApp {
 
             });
             this.realMap.data.loadGeoJson("http://localhost/spuriousapi/api/subdivision/" + subdiv.id + "/boundary");
+            //var bounds = new this.googleMap.value.LatLngBounds();
             this.map.center = {
                 latitude: subdiv.centreLatitude,
                 longitude: subdiv.centreLongitude};
