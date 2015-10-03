@@ -49,10 +49,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\SpuriousApi\asettings.config">
-      <Link>asettings.config</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="..\SpuriousApi\cstrings.config">
       <Link>cstrings.config</Link>
     </None>
