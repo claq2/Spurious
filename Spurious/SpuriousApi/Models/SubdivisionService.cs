@@ -102,7 +102,7 @@ namespace SpuriousApi.Models
         public async Task<List<Subdivision>> Top10AlcoholDensity()
         {
             var result = new List<Subdivision>();
-            var query = @"select id, population, name, ST_AsGeoJSON(boundry) as boundary, St_AsGeoJSON(st_centroid(boundry::geometry)) as centre, beer_volume, wine_volume, spirits_volume, (beer_volume + wine_volume + spirits_volume) / population as density
+            var query = @"select id, population, name, St_AsGeoJSON(st_centroid(boundry::geometry)) as centre, beer_volume, wine_volume, spirits_volume, (beer_volume + wine_volume + spirits_volume) / population as density
                             from subdivisions
                             where beer_volume > 0
                             order by density desc
@@ -172,31 +172,5 @@ namespace SpuriousApi.Models
             return x;
         }
 
-    }
-
-    public class FeatureCollection
-    {
-        public string type { get { return "FeatureCollection"; } }
-        public Feature[] features { get; set; }
-    }
-    public class Feature
-    {
-        public string type { get { return "Feature"; } }
-        public geometry geometry { get; set; }
-        public object propertiers { get; set; }
-    }
-    public class geometry
-    {
-        public virtual string type { get; }
-        public coordinate[][][] coordinates { get; set; }
-    }
-    public class polygon : geometry
-    {
-        public override string type { get { return "Polygon"; } }
-    }
-    public class coordinate
-    {
-        public float longitude { get; set; }
-        public float latitude { get; set; }
     }
 }

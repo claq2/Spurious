@@ -50,7 +50,7 @@ namespace SpuriousApi.Models
                 this.Volumes.Spirits = Convert.ToInt64(reader["spirits_volume"]);
             }
 
-            if (reader["boundary"] != DBNull.Value)
+            if (columnNames.Contains("boundary") && reader["boundary"] != DBNull.Value)
             {
                 var boundary = reader["boundary"] as string;
                 var featureWrapper = 

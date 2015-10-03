@@ -53,7 +53,7 @@ namespace SpuriousApi.FunctionalTests
             Assert.That(subdivs.Count, Is.EqualTo(10));
             Assert.That(subdivs.All(s => s.Id > 0));
             Assert.That(subdivs.All(s => s.Population.HasValue));
-            Assert.That(subdivs.All(s => !string.IsNullOrWhiteSpace(s.GeoJSON)));
+            Assert.That(subdivs.All(s => string.IsNullOrWhiteSpace(s.GeoJSON)));
             Assert.That(subdivs.All(s => s.LcboStores.Count > 0));
             Assert.That(subdivs.All(s => s.CentreLatitude != 0.0));
             Assert.That(subdivs.All(s => s.CentreLongitude != 0.0));
