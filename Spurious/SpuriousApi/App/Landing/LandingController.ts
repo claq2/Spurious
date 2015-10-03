@@ -37,8 +37,8 @@ module SpuriousApp {
                             events: {
                                 tilesloaded: (map) => {
                                     this.$scope.$apply(() => {
-                                        var geojson = JSON.parse(this.subdivisions[0].boundaryGeoJson);
-                                        map.data.addGeoJson(geojson);
+                                        //var geojson = JSON.parse(this.subdivisions[0].boundaryGeoJson);
+                                        //map.data.addGeoJson(geojson);
                                         map.data.setStyle({
                                             fillColor: 'green',
                                             strokeWeight: 1,
@@ -60,17 +60,39 @@ module SpuriousApp {
         }
 
         selectSubdiv(subdiv: Subdivision) {
-            // go get subdiv boundary
             this.realMap.data.forEach((feature) => {
-                //If you want, check here for some constraints.
                 this.realMap.data.remove(feature);
-
             });
+
             this.realMap.data.loadGeoJson("http://localhost/spuriousapi/api/subdivision/" + subdiv.id + "/boundary");
-            //var bounds = new this.googleMap.value.LatLngBounds();
+            var bounds = new this.mapsApi.LatLngBounds();
+            this.realMap.data.addListener('addfeature', (e) => {
+                this.processPoints(e.feature.getGeometry(), bounds.extend, bounds);
+                this.realMap.fitBounds(bounds);
+            });
+            //this.realMap.data.forEach((feature) => {
+            //    bounds.expand(                
+            //});
+
             this.map.center = {
                 latitude: subdiv.centreLatitude,
-                longitude: subdiv.centreLongitude};
+                longitude: subdiv.centreLongitude
+            };
+        }
+
+        processPoints(geometry: any, callback: any, thisArg: any) {
+            var type: string = "";
+            if (geometry instanceof this.mapsApi.LatLng) {
+                type = "latlng";
+                callback.call(thisArg, geometry);
+            } else if (geometry instanceof this.mapsApi.Data.Point) {
+                type = "point";
+                callback.call(thisArg, geometry.get());
+            } else {
+                geometry.getArray().forEach((g) => {
+                    this.processPoints(g, callback, thisArg);
+                });
+            }
         }
     }
 
