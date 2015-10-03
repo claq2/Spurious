@@ -15,9 +15,9 @@ module SpuriousApp {
         mapsApi: any;
         selectedSubdivId: number;
 
-        static $inject: string[] = ["$location", "$http", "uiGmapGoogleMapApi", "uiGmapIsReady", "$scope"];
+        static $inject: string[] = ["$location", "$http", "uiGmapGoogleMapApi", "uiGmapIsReady"];
 
-        constructor(private $location: ng.ILocationService, private $http: ng.IHttpService, private googleMap: any, private uiGmapIsReady: any, private $scope: ng.IScope) {
+        constructor(private $location: ng.ILocationService, private $http: ng.IHttpService, private googleMap: any, private uiGmapIsReady: any) {
             this.activate();
 
             this.uiGmapIsReady.promise()
