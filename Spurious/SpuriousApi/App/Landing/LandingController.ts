@@ -15,11 +15,23 @@ module SpuriousApp {
         mapsApi: any;
         selectedSubdivId: number;
 
-        static $inject: string[] = ["$location", "$http", "uiGmapGoogleMapApi", "$scope"];
+        static $inject: string[] = ["$location", "$http", "uiGmapGoogleMapApi", "uiGmapIsReady", "$scope"];
 
-        constructor(private $location: ng.ILocationService, private $http: ng.IHttpService, private googleMap: any, private $scope: ng.IScope) {
+        constructor(private $location: ng.ILocationService, private $http: ng.IHttpService, private googleMap: any, private uiGmapIsReady: any, private $scope: ng.IScope) {
             this.activate();
-            //var x = this.map.control;
+
+            this.uiGmapIsReady.promise()
+                .then((instances) => {
+                    var firstMap = instances[0].map;
+                    this.realMap = firstMap;
+                    this.realMap.data.setStyle({
+                        fillColor: 'green',
+                        strokeWeight: 1,
+                        fillOpacity: 0.1
+                    });
+
+                    this.selectSubdiv(this.subdivisions[0]);
+                });
         }
 
         activate() {
@@ -36,20 +48,6 @@ module SpuriousApp {
                                 longitude: firstSubdiv.centreLongitude
                             },
                             zoom: 11,
-                            events: {
-                                tilesloaded: (map) => {
-                                    this.$scope.$apply(() => {
-                                        //var geojson = JSON.parse(this.subdivisions[0].boundaryGeoJson);
-                                        //map.data.addGeoJson(geojson);
-                                        map.data.setStyle({
-                                            fillColor: 'green',
-                                            strokeWeight: 1,
-                                            fillOpacity: 0.1
-                                        });
-                                        this.realMap = map;
-                                    });
-                                }
-                            },
                             control: {}
                         };
                     });
@@ -72,9 +70,6 @@ module SpuriousApp {
                 this.processPoints(e.feature.getGeometry(), bounds.extend, bounds);
                 this.realMap.fitBounds(bounds);
             });
-            //this.realMap.data.forEach((feature) => {
-            //    bounds.expand(                
-            //});
 
             this.map.center = {
                 latitude: subdiv.centreLatitude,
