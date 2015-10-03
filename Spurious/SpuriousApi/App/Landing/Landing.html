@@ -18,7 +18,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr data-ng-repeat="subdivision in vm.subdivisions" data-ng-click="vm.selectSubdiv(subdivision)">
+                    <tr data-ng-repeat="subdivision in vm.subdivisions" data-ng-click="vm.selectSubdiv(subdivision)" data-ng-class="{info: subdivision.id === vm.selectedSubdivId}">
                         <td class="vert-align">{{subdivision.id}}</td>
                         <td class="vert-align">{{subdivision.name}}</td>
                         <td class="vert-align">{{subdivision.population}}</td>

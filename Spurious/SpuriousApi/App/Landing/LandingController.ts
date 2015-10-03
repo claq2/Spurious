@@ -13,6 +13,7 @@ module SpuriousApp {
         map: any;
         realMap: any;
         mapsApi: any;
+        selectedSubdivId: number;
 
         static $inject: string[] = ["$location", "$http", "uiGmapGoogleMapApi", "$scope"];
 
@@ -25,6 +26,7 @@ module SpuriousApp {
             this.$http.get<Array<any>>("/spuriousapi/api/subdivision/top10")
                 .then((r) => {
                     this.subdivisions = Subdivision.subdivisionsFromJson(r.data);
+                    this.selectedSubdivId = this.subdivisions[0].id;
                     this.googleMap.then((maps: any) => {
                         this.mapsApi = maps;
                         var firstSubdiv = this.subdivisions[0];
@@ -78,6 +80,8 @@ module SpuriousApp {
                 latitude: subdiv.centreLatitude,
                 longitude: subdiv.centreLongitude
             };
+
+            this.selectedSubdivId = subdiv.id;
         }
 
         processPoints(geometry: any, callback: any, thisArg: any) {

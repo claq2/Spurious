@@ -151,7 +151,7 @@ namespace SpuriousApi.Models
         public async Task<object> BoundaryGeoJson(int subdivId)
         {
             var result = string.Empty;
-            var query = @"select ST_AsGeoJSON(boundry) as boundary
+            var query = @"select ST_AsGeoJSON(boundry, 15, 4) as boundary
                             from subdivisions
                             where id = @subdivId";
 

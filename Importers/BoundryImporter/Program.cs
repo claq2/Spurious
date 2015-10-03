@@ -40,7 +40,7 @@ namespace BoundryImporter
             using (var wrapper = new NpgsqlConnectionWrapper(ConfigurationManager.ConnectionStrings["spurious"].ConnectionString))
             {
                 wrapper.Connection.Open();
-                var rowsGeoUpdated = wrapper.ExecuteNonQuery("update subdivisions s set (boundry) = ((select ST_FlipCoordinates(ST_GeomFromGML(boundary_gml)) from subdivisions ss where s.id = ss.id))");
+                var rowsGeoUpdated = wrapper.ExecuteNonQuery("update subdivisions s set (boundry) = ((select ST_FlipCoordinates(ST_GeomFromGML(boundary_gml, 4269)) from subdivisions ss where s.id = ss.id))");
                 Console.WriteLine($"Updated {rowsGeoUpdated} rows geo data from GML data");
             }
 
