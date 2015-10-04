@@ -35,7 +35,7 @@ module SpuriousApp {
         }
 
         activate() {
-            this.$http.get<Array<any>>("/api/subdivision/top10")
+            this.$http.get<Array<any>>("api/subdivision/top10")
                 .then((r) => {
                     this.subdivisions = Subdivision.subdivisionsFromJson(r.data);
                     this.selectedSubdivId = this.subdivisions[0].id;
@@ -64,7 +64,7 @@ module SpuriousApp {
                 this.realMap.data.remove(feature);
             });
 
-            this.realMap.data.loadGeoJson("/api/subdivision/" + subdiv.id + "/boundary");
+            this.realMap.data.loadGeoJson("api/subdivision/" + subdiv.id + "/boundary");
             var bounds = new this.mapsApi.LatLngBounds();
             this.realMap.data.addListener('addfeature', (e) => {
                 this.processPoints(e.feature.getGeometry(), bounds.extend, bounds);
