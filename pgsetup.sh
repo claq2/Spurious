@@ -1,7 +1,7 @@
 rpm -ivh http://yum.postgresql.org/9.4/redhat/rhel-7-x86_64/pgdg-centos94-9.4-1.noarch.rpm
-yum install postgresql94 postgresql94-server postgresql94-libs postgresql94-contrib postgresql94-devel
+yum install -y postgresql94 postgresql94-server postgresql94-libs postgresql94-contrib postgresql94-devel
 rpm -ivh http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-sudo yum install postgis2_94
+sudo yum install -y postgis2_94
 /usr/pgsql-9.4/bin/postgresql94-setup initdb
 
 # edit /var/lib/pgsql/9.4/data/postgresql.conf listen_addresses = '*' port = 5432
