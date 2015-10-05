@@ -126,19 +126,22 @@ namespace SpuriousApi.Models
                     }
                 }
 
-                using (var getStoresCmd = conn.CreateCommand())
+                if (result.Any())
                 {
-                    var subdivIds = string.Join(", ", result.Select(s => s.Id));
-                    getStoresCmd.CommandText = $@"select sd.id as subdiv_id, s.id as id, s.name as name, ST_AsGeoJSON(s.location) as location from subdivisions sd inner join stores s on ST_Intersects(s.location, sd.boundry)
+                    using (var getStoresCmd = conn.CreateCommand())
+                    {
+                        var subdivIds = string.Join(", ", result.Select(s => s.Id));
+                        getStoresCmd.CommandText = $@"select sd.id as subdiv_id, s.id as id, s.name as name, ST_AsGeoJSON(s.location) as location from subdivisions sd inner join stores s on ST_Intersects(s.location, sd.boundry)
                                                                                         where sd.id in ({subdivIds})
                                                                                         order by subdiv_id";
-                    using (var storesReader = await getStoresCmd.ExecuteReaderAsync())
-                    {
-                        while (storesReader.Read())
+                        using (var storesReader = await getStoresCmd.ExecuteReaderAsync())
                         {
-                            var store = new LcboStore(storesReader);
-                            var subdivId = Convert.ToInt32(storesReader["subdiv_id"]);
-                            resultDict[subdivId].LcboStores.Add(store);
+                            while (storesReader.Read())
+                            {
+                                var store = new LcboStore(storesReader);
+                                var subdivId = Convert.ToInt32(storesReader["subdiv_id"]);
+                                resultDict[subdivId].LcboStores.Add(store);
+                            }
                         }
                     }
                 }
