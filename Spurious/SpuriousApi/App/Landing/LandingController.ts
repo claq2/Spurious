@@ -64,13 +64,13 @@ module SpuriousApp {
                 this.realMap.data.remove(feature);
             });
 
-            this.realMap.data.loadGeoJson("api/subdivision/" + subdiv.id + "/boundary");
             var bounds = new this.mapsApi.LatLngBounds();
             this.realMap.data.addListener('addfeature', (e) => {
                 this.processPoints(e.feature.getGeometry(), bounds.extend, bounds);
                 this.realMap.fitBounds(bounds);
             });
 
+            this.realMap.data.loadGeoJson("api/subdivision/" + subdiv.id + "/boundary");
             this.map.center = {
                 latitude: subdiv.centreLatitude,
                 longitude: subdiv.centreLongitude
