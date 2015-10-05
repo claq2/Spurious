@@ -6,7 +6,7 @@ module SpuriousApp {
     // Create the module and define its dependencies.
     export var SpuriousApp = angular.module("SpuriousApp", [
         // Angular modules 
-        "ngAnimate", // animations
+        //"ngAnimate", // animations
         "ngRoute", // routing
 
         // Custom modules 
@@ -20,8 +20,13 @@ module SpuriousApp {
             templateUrl: "App/Landing/Landing.html"
         };
 
+        var aboutRoute: ng.route.IRoute = {
+            templateUrl: "App/About.html"
+        };
+
         $routeProvider
             .when("/landing", landingRoute)
+            .when("/about", aboutRoute)
             .otherwise({ redirectTo: "/landing" });
 
         googleMap.configure({

@@ -82,6 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="apple-touch-icon.png" />
+    <Content Include="App\About.html" />
     <Content Include="App\Landing\Landing.html" />
     <Content Include="browserconfig.xml" />
     <Content Include="Content\bootstrap-theme.css" />
