@@ -1,3 +1,5 @@
+http://spurious.azurewebsites.net
+
 What does the amount of alcohol in a census subdivision mean? Nothing. But it's fun to map it out like it does. 
 
 Population and census subdivision data comes from Statistics Canada's 2011 census data, which is the most recent one. 
