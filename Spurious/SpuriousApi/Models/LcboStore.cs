@@ -32,7 +32,7 @@ namespace SpuriousApi.Models
             if (columnNames.Contains("location") && reader["location"] != DBNull.Value)
             {
                 var location = reader["location"] as string;
-                var resultString = $@"{{ ""type"": ""Feature"",        ""geometry"": {location},        ""properties"":{{}}      }}";
+                var resultString = $@"{{ ""type"": ""Feature"",        ""geometry"": {location},        ""properties"":{{""name"":""value1""}}      }}";
                 this.GeoJSON = Newtonsoft.Json.JsonConvert.DeserializeObject(resultString);
             }
 
