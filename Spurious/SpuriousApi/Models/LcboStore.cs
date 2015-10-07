@@ -31,7 +31,9 @@ namespace SpuriousApi.Models
 
             if (columnNames.Contains("location") && reader["location"] != DBNull.Value)
             {
-                this.GeoJSON = reader["location"] as string;
+                var location = reader["location"] as string;
+                var resultString = $@"{{ ""type"": ""Feature"",        ""geometry"": {location},        ""properties"":{{}}      }}";
+                this.GeoJSON = Newtonsoft.Json.JsonConvert.DeserializeObject(resultString);
             }
 
             if (columnNames.Contains("beer_volume") && reader["beer_volume"] != DBNull.Value)
@@ -50,7 +52,7 @@ namespace SpuriousApi.Models
             }
         }
 
-        public string GeoJSON { get; internal set; }
+        public object GeoJSON { get; internal set; }
         public int Id { get; internal set; }
         public string Name { get; internal set; }
         public AlcoholVolumes Volumes { get; private set; }

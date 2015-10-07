@@ -131,7 +131,7 @@ namespace SpuriousApi.Models
                     using (var getStoresCmd = conn.CreateCommand())
                     {
                         var subdivIds = string.Join(", ", result.Select(s => s.Id));
-                        getStoresCmd.CommandText = $@"select sd.id as subdiv_id, s.id as id, s.name as name, ST_AsGeoJSON(s.location) as location from subdivisions sd inner join stores s on ST_Intersects(s.location, sd.boundry)
+                        getStoresCmd.CommandText = $@"select sd.id as subdiv_id, s.id as id, s.name as name, ST_AsGeoJSON(s.location) as location, s.beer_volume, s.wine_volume, s.spirits_volume from subdivisions sd inner join stores s on ST_Intersects(s.location, sd.boundry)
                                                                                         where sd.id in ({subdivIds})
                                                                                         order by subdiv_id";
                         using (var storesReader = await getStoresCmd.ExecuteReaderAsync())
@@ -153,7 +153,7 @@ namespace SpuriousApi.Models
 
         public async Task<object> BoundaryGeoJson(int subdivId)
         {
-            var result = string.Empty;
+            object result = null;
             var query = @"select ST_AsGeoJSON(boundry, 15, 4) as boundary
                             from subdivisions
                             where id = @subdivId";
@@ -166,14 +166,12 @@ namespace SpuriousApi.Models
                     conn.Open();
                     cmd.Parameters.AddWithValue("@subdivId", subdivId);
                     var boundary = await cmd.ExecuteScalarAsync() as string;
-                    result = $@"{{ ""type"": ""FeatureCollection"",    ""features"": [      {{ ""type"": ""Feature"",        ""geometry"": {boundary},        ""properties"":{{}}      }}      ]}}";
+                    var resultString = $@"{{ ""type"": ""FeatureCollection"",    ""features"": [      {{ ""type"": ""Feature"",        ""geometry"": {boundary},        ""properties"":{{}}      }}      ]}}";
+                    result = Newtonsoft.Json.JsonConvert.DeserializeObject(resultString);
                 }
             }
 
-            dynamic x = Newtonsoft.Json.JsonConvert.DeserializeObject(result);
-
-            return x;
+            return result;
         }
-
     }
 }

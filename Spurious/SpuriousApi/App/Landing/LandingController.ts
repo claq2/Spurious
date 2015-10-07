@@ -19,7 +19,6 @@ module SpuriousApp {
 
         constructor(private $location: ng.ILocationService, private $http: ng.IHttpService, private googleMap: any, private uiGmapIsReady: any) {
             this.activate();
-
             this.uiGmapIsReady.promise()
                 .then((instances) => {
                     var firstMap = instances[0].map;
@@ -35,9 +34,9 @@ module SpuriousApp {
         }
 
         activate() {
-            this.$http.get<Array<any>>("api/subdivision/top10")
+            this.$http.get<Array<Subdivision>>("api/subdivision/top10")
                 .then((r) => {
-                    this.subdivisions = Subdivision.subdivisionsFromJson(r.data);
+                    this.subdivisions = r.data;
                     this.selectedSubdivId = this.subdivisions[0].id;
                     this.googleMap.then((maps: any) => {
                         this.mapsApi = maps;
@@ -55,8 +54,6 @@ module SpuriousApp {
                 }, (r) => {
                     // error
                 });
-
-
         }
 
         selectSubdiv(subdiv: Subdivision) {
@@ -76,6 +73,10 @@ module SpuriousApp {
                 longitude: subdiv.centreLongitude
             };
 
+            subdiv.lcboStores.forEach((store) => {
+                this.realMap.data.addGeoJson(store.geoJSON);
+            });
+            
             this.selectedSubdivId = subdiv.id;
         }
 
