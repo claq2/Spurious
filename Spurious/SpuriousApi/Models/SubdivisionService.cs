@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using GeoJSON.Net.Geometry;
+using GeoJSON.Net.Feature;
 
 namespace SpuriousApi.Models
 {
@@ -147,9 +150,9 @@ namespace SpuriousApi.Models
             return result;
         }
 
-        public async Task<object> BoundaryGeoJson(int subdivId)
+        public async Task<Feature> BoundaryGeoJson(int subdivId)
         {
-            object result = null;
+            var result = new Feature(new Point(new Position()));
             var query = @"select ST_AsGeoJSON(boundry, 15, 4) as boundary
                             from subdivisions
                             where id = @subdivId";
@@ -162,8 +165,16 @@ namespace SpuriousApi.Models
                     conn.Open();
                     cmd.Parameters.AddWithValue("@subdivId", subdivId);
                     var boundary = await cmd.ExecuteScalarAsync() as string;
-                    var resultString = $@"{{ ""type"": ""FeatureCollection"",    ""features"": [      {{ ""type"": ""Feature"",        ""geometry"": {boundary},        ""properties"":{{}}      }}      ]}}";
-                    result = Newtonsoft.Json.JsonConvert.DeserializeObject(resultString);
+                    if (boundary.Contains("\"type\":\"MultiPolygon\""))
+                    {
+                        var multipolygon = JsonConvert.DeserializeObject<MultiPolygon>(boundary);
+                        result = new Feature(multipolygon);
+                    }
+                    else if (boundary.Contains("\"type\":\"Polygon\""))
+                    {
+                        var polygon = JsonConvert.DeserializeObject<Polygon>(boundary);
+                        result = new Feature(polygon);
+                    }
                 }
             }
 

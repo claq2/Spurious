@@ -7,7 +7,7 @@ using System.Data.Common;
 using System.Data;
 using GeoJSON.Net.Geometry;
 using GeoJSON.Net.Feature;
-
+using Newtonsoft.Json;
 namespace SpuriousApi.Models
 {
     public class Subdivision
@@ -55,7 +55,7 @@ namespace SpuriousApi.Models
             if (columnNames.Contains("boundary") && reader["boundary"] != DBNull.Value)
             {
                 var boundary = reader["boundary"] as string;
-                var featureWrapper = 
+                var featureWrapper =
 $@"{{ ""type"": ""FeatureCollection"",
     ""features"": [
       {{ ""type"": ""Feature"",
@@ -64,7 +64,7 @@ $@"{{ ""type"": ""FeatureCollection"",
       }}
       ]
 }}";
-
+                var featurecoll = JsonConvert.DeserializeObject(boundary);
                 this.GeoJSON = featureWrapper;
             }
 
@@ -76,7 +76,7 @@ $@"{{ ""type"": ""FeatureCollection"",
             if (columnNames.Contains("centre") && reader["centre"] != DBNull.Value)
             {
                 this.GeoJsonCentre = reader["centre"] as string;
-                var geocentre = Newtonsoft.Json.JsonConvert.DeserializeObject<Point>(this.GeoJsonCentre);
+                var geocentre = JsonConvert.DeserializeObject<Point>(this.GeoJsonCentre);
                 this.CentreLatitude = ((GeographicPosition)geocentre.Coordinates).Latitude;
                 this.CentreLongitude = ((GeographicPosition)geocentre.Coordinates).Longitude;
             }

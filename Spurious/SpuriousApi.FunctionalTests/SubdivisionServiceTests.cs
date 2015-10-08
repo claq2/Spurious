@@ -68,10 +68,9 @@ namespace SpuriousApi.FunctionalTests
         public async void GetBoundryGeoJson()
         {
             var service = new SubdivisionService();
-            var boundary = await service.BoundaryGeoJson(1001113);
-            Assert.That(boundary, Is.Not.Empty);
-            // TODO: handle that this is a dynamic object now
-            //Assert.That(boundary, Is.StringStarting(@"{ ""type"": ""FeatureCollection"","));
+            var boundary = await service.BoundaryGeoJson(1001113); // "Newfoundland and Labrador";"Trepassey"
+            Assert.That(boundary, Is.Not.Null);
+            Assert.That(boundary.Geometry.Type, Is.EqualTo(GeoJSON.Net.GeoJSONObjectType.Polygon));
         }
     }
 }
