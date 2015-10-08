@@ -5,6 +5,8 @@ using System.Linq;
 using System.Web;
 using System.Data.Common;
 using System.Data;
+using GeoJSON.Net.Geometry;
+using GeoJSON.Net.Feature;
 
 namespace SpuriousApi.Models
 {
@@ -74,9 +76,9 @@ $@"{{ ""type"": ""FeatureCollection"",
             if (columnNames.Contains("centre") && reader["centre"] != DBNull.Value)
             {
                 this.GeoJsonCentre = reader["centre"] as string;
-                dynamic geocentre = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(this.GeoJsonCentre);
-                this.CentreLatitude = geocentre.coordinates[1];
-                this.CentreLongitude = geocentre.coordinates[0];
+                var geocentre = Newtonsoft.Json.JsonConvert.DeserializeObject<Point>(this.GeoJsonCentre);
+                this.CentreLatitude = ((GeographicPosition)geocentre.Coordinates).Latitude;
+                this.CentreLongitude = ((GeographicPosition)geocentre.Coordinates).Longitude;
             }
         }
 
@@ -85,8 +87,8 @@ $@"{{ ""type"": ""FeatureCollection"",
         public int? Population { get; set; }
         public string GeoJSON { get; set; }
         public string GeoJsonCentre { get; set; }
-        public float CentreLatitude { get; set; }
-        public float CentreLongitude { get; set; }
+        public double CentreLatitude { get; set; }
+        public double CentreLongitude { get; set; }
         public AlcoholVolumes Volumes { get; private set; }
         public float OverallAlcoholDensity { get { return this.Volumes.Total / (float)Population; } }
         public float BeerDensity { get { return this.Volumes.Beer / (float)Population; } }

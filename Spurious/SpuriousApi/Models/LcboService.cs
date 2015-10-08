@@ -24,32 +24,7 @@ namespace SpuriousApi.Models
                 var reader = await cmd.ExecuteReaderAsync();
                 while (reader.Read())
                 {
-                    var store = new LcboStore() { Id = Convert.ToInt32(reader["id"]) };
-                    if (reader["name"] != DBNull.Value)
-                    {
-                        store.Name = reader["name"] as string;
-                    }
-
-                    if (reader["location"] != DBNull.Value)
-                    {
-                        store.GeoJSON = reader["location"] as string;
-                    }
-
-                    if (reader["beer_volume"] != DBNull.Value)
-                    {
-                        store.Volumes.Beer = Convert.ToInt32(reader["beer_volume"]);
-                    }
-
-                    if (reader["wine_volume"] != DBNull.Value)
-                    {
-                        store.Volumes.Wine = Convert.ToInt32(reader["wine_volume"]);
-                    }
-
-                    if (reader["spirits_volume"] != DBNull.Value)
-                    {
-                        store.Volumes.Spirits = Convert.ToInt32(reader["spirits_volume"]);
-                    }
-
+                    var store = new LcboStore(reader);
                     result.Add(store);
                 }
             }
@@ -71,27 +46,7 @@ namespace SpuriousApi.Models
                 var reader = await cmd.ExecuteReaderAsync();
                 while (reader.Read())
                 {
-                    var store = new LcboStore() { Id = Convert.ToInt32(reader["id"]) };
-                    if (reader["name"] != DBNull.Value)
-                    {
-                        store.Name = reader["name"] as string;
-                    }
-
-                    if (reader["beer_volume"] != DBNull.Value)
-                    {
-                        store.Volumes.Beer = Convert.ToInt32(reader["beer_volume"]);
-                    }
-
-                    if (reader["wine_volume"] != DBNull.Value)
-                    {
-                        store.Volumes.Wine = Convert.ToInt32(reader["wine_volume"]);
-                    }
-
-                    if (reader["spirits_volume"] != DBNull.Value)
-                    {
-                        store.Volumes.Spirits = Convert.ToInt32(reader["spirits_volume"]);
-                    }
-
+                    var store = new LcboStore(reader);
                     result.Add(store);
                 }
             }

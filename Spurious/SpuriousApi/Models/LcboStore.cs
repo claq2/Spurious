@@ -2,7 +2,10 @@
 using System.Data;
 using System.Data.Common;
 using System.Linq;
-
+using Newtonsoft.Json;
+using GeoJSON.Net.Geometry;
+using GeoJSON.Net.Feature;
+using System.Collections.Generic;
 namespace SpuriousApi.Models
 {
     public class LcboStore
@@ -12,7 +15,7 @@ namespace SpuriousApi.Models
         /// </summary>
         public LcboStore()
         {
-            GeoJSON = String.Empty;
+            GeoJSON = new Feature(new Point(new Position()));
             Id = 0;
             Name = String.Empty;
             Volumes = new AlcoholVolumes();
@@ -32,8 +35,9 @@ namespace SpuriousApi.Models
             if (columnNames.Contains("location") && reader["location"] != DBNull.Value)
             {
                 var location = reader["location"] as string;
-                var resultString = $@"{{ ""type"": ""Feature"",        ""geometry"": {location},        ""properties"":{{""name"":""value1""}}      }}";
-                this.GeoJSON = Newtonsoft.Json.JsonConvert.DeserializeObject(resultString);
+                var geojsonlocation = JsonConvert.DeserializeObject<Point>(location);
+                var feature = new Feature(geojsonlocation, new Dictionary<string, object> { { "name", this.Name } });
+                this.GeoJSON = feature;
             }
 
             if (columnNames.Contains("beer_volume") && reader["beer_volume"] != DBNull.Value)
@@ -52,8 +56,7 @@ namespace SpuriousApi.Models
             }
         }
 
-        public object GeoJSON { get; internal set; }
-        public GeoJSON.Net.Feature.Feature geofeature;
+        public Feature GeoJSON { get; internal set; }
         public int Id { get; internal set; }
         public string Name { get; internal set; }
         public AlcoholVolumes Volumes { get; private set; }

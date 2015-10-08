@@ -52,10 +52,6 @@ namespace SpuriousApi.Models
                 var cmd = conn.CreateCommand();
                 cmd.CommandText = "select id, population, ST_AsGeoJSON(boundry) as boundry from subdivisions where id = @id";
                 cmd.Parameters.AddWithValue("@id", id);
-                //var idParam = cmd.CreateParameter();
-                //idParam.DbType = System.Data.DbType.Int32;
-                //idParam.ParameterName = "@id";
-                //idParam.Value = id;
                 conn.Open();
                 var reader = await cmd.ExecuteReaderAsync();
                 while (reader.Read())
