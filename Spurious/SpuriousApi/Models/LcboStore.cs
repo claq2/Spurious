@@ -53,6 +53,7 @@ namespace SpuriousApi.Models
         }
 
         public object GeoJSON { get; internal set; }
+        public GeoJSON.Net.Feature.Feature geofeature;
         public int Id { get; internal set; }
         public string Name { get; internal set; }
         public AlcoholVolumes Volumes { get; private set; }
