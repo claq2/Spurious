@@ -14,6 +14,7 @@ module SpuriousApp {
         realMap: any;
         mapsApi: any;
         selectedSubdivId: number;
+        infoWindow: any;
 
         static $inject: string[] = ["$location", "$http", "uiGmapGoogleMapApi", "uiGmapIsReady"];
 
@@ -23,6 +24,36 @@ module SpuriousApp {
                 .then((instances) => {
                     var firstMap = instances[0].map;
                     this.realMap = firstMap;
+                    this.infoWindow = new this.mapsApi.InfoWindow();
+                    
+                    this.realMap.data.addListener('addfeature', (e) => {
+                        var bounds = new this.mapsApi.LatLngBounds();
+                        this.processPoints(e.feature.getGeometry(), bounds.extend, bounds);
+                        this.realMap.fitBounds(bounds);
+                    });
+
+                    this.realMap.data.addListener('click', (e) => {
+                        this.infoWindow.close();
+                        if (e.feature.getProperty("beerVolume") !== undefined) {
+                            var city = e.feature.getProperty("city");
+                            var name = e.feature.getProperty("name");
+                            var beerVolume = e.feature.getProperty("beerVolume");
+                            var wineVolume = e.feature.getProperty("wineVolume");
+                            var spiritsVolume = e.feature.getProperty("spiritsVolume");
+                            var content = '<div>' +
+                                '<b>Name:</b> ' + name + '<br />' +
+                                '<b>City:</b> ' + city + '<br />' +
+                                '<b>Beer Volume:</b> ' + beerVolume + ' mL<br />' +
+                                '<b>Wine Volume:</b> ' + wineVolume + ' mL<br />' +
+                                '<b>Spirits Volume:</b> ' + spiritsVolume + ' mL<br />' +
+                                '</div>';
+                            this.infoWindow.setContent(content);
+                            this.infoWindow.setPosition(e.feature.getGeometry().get());
+                            this.infoWindow.setOptions({ pixelOffset: new this.mapsApi.Size(0, -30) });
+                            this.infoWindow.open(this.realMap);
+                        }
+                    });
+
                     this.realMap.data.setStyle({
                         fillColor: 'green',
                         strokeWeight: 1,
@@ -61,11 +92,7 @@ module SpuriousApp {
                 this.realMap.data.remove(feature);
             });
 
-            var bounds = new this.mapsApi.LatLngBounds();
-            this.realMap.data.addListener('addfeature', (e) => {
-                this.processPoints(e.feature.getGeometry(), bounds.extend, bounds);
-                this.realMap.fitBounds(bounds);
-            });
+            
 
             this.realMap.data.loadGeoJson("api/subdivision/" + subdiv.id + "/boundary");
             this.map.center = {

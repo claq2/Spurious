@@ -130,7 +130,7 @@ namespace SpuriousApi.Models
                     using (var getStoresCmd = conn.CreateCommand())
                     {
                         var subdivIds = string.Join(", ", result.Select(s => s.Id));
-                        getStoresCmd.CommandText = $@"select sd.id as subdiv_id, s.id as id, s.name as name, ST_AsGeoJSON(s.location) as location, s.beer_volume, s.wine_volume, s.spirits_volume from subdivisions sd inner join stores s on ST_Intersects(s.location, sd.boundry)
+                        getStoresCmd.CommandText = $@"select sd.id as subdiv_id, s.id as id, s.name as name, s.city as city, ST_AsGeoJSON(s.location) as location, s.beer_volume, s.wine_volume, s.spirits_volume from subdivisions sd inner join stores s on ST_Intersects(s.location, sd.boundry)
                                                                                         where sd.id in ({subdivIds})
                                                                                         order by subdiv_id";
                         using (var storesReader = await getStoresCmd.ExecuteReaderAsync())

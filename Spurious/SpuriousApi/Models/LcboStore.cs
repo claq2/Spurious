@@ -32,14 +32,6 @@ namespace SpuriousApi.Models
                 this.Name = reader["name"] as string;
             }
 
-            if (columnNames.Contains("location") && reader["location"] != DBNull.Value)
-            {
-                var location = reader["location"] as string;
-                var geojsonlocation = JsonConvert.DeserializeObject<Point>(location);
-                var feature = new Feature(geojsonlocation, new Dictionary<string, object> { { "name", this.Name } });
-                this.GeoJSON = feature;
-            }
-
             if (columnNames.Contains("beer_volume") && reader["beer_volume"] != DBNull.Value)
             {
                 this.Volumes.Beer = Convert.ToInt32(reader["beer_volume"]);
@@ -54,11 +46,35 @@ namespace SpuriousApi.Models
             {
                 this.Volumes.Spirits = Convert.ToInt32(reader["spirits_volume"]);
             }
+
+            if (columnNames.Contains("city") && reader["city"] != DBNull.Value)
+            {
+                this.City = reader["city"] as string;
+            }
+
+            if (columnNames.Contains("location") && reader["location"] != DBNull.Value)
+            {
+                var location = reader["location"] as string;
+                var geojsonlocation = JsonConvert.DeserializeObject<Point>(location);
+                var properties = new Dictionary<string, object>
+                {
+                    { "name", this.Name },
+                    { "city", this.City },
+                    { "beerVolume", this.Volumes.Beer },
+                    { "wineVolume", this.Volumes.Wine },
+                    { "spiritsVolume", this.Volumes.Spirits },
+                    { "totalVolume", this.Volumes.Total },
+                };
+
+                var feature = new Feature(geojsonlocation, properties);
+                this.GeoJSON = feature;
+            }
         }
 
         public Feature GeoJSON { get; internal set; }
         public int Id { get; internal set; }
         public string Name { get; internal set; }
         public AlcoholVolumes Volumes { get; private set; }
+        public string City { get; internal set; }
     }
 }
