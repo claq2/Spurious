@@ -52,6 +52,11 @@ namespace SpuriousApi.Models
                 this.City = reader["city"] as string;
             }
 
+            if (columnNames.Contains("subdivision_id") && reader["subdivision_id"] != DBNull.Value)
+            {
+                this.SubdivisionId = Convert.ToInt32(reader["subdivision_id"]);
+            }
+
             if (columnNames.Contains("location") && reader["location"] != DBNull.Value)
             {
                 var location = reader["location"] as string;
@@ -76,5 +81,6 @@ namespace SpuriousApi.Models
         public string Name { get; internal set; }
         public AlcoholVolumes Volumes { get; private set; }
         public string City { get; internal set; }
+        public int SubdivisionId { get; set; }
     }
 }

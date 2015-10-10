@@ -32,22 +32,22 @@ namespace SpuriousApi.Models
 
             var columnNames = reader.GetSchemaTable().Rows.OfType<DataRow>().Select(r => (string)r["ColumnName"]);
 
-            if (reader["population"] != DBNull.Value)
+            if (columnNames.Contains("population") && reader["population"] != DBNull.Value)
             {
                 this.Population = Convert.ToInt32(reader["population"]);
             }
 
-            if (reader["beer_volume"] != DBNull.Value)
+            if (columnNames.Contains("beer_volume") && reader["beer_volume"] != DBNull.Value)
             {
                 this.Volumes.Beer = Convert.ToInt64(reader["beer_volume"]);
             }
 
-            if (reader["wine_volume"] != DBNull.Value)
+            if (columnNames.Contains("wine_volume") && reader["wine_volume"] != DBNull.Value)
             {
                 this.Volumes.Wine = Convert.ToInt64(reader["wine_volume"]);
             }
 
-            if (reader["spirits_volume"] != DBNull.Value)
+            if (columnNames.Contains("spirits_volume") && reader["spirits_volume"] != DBNull.Value)
             {
                 this.Volumes.Spirits = Convert.ToInt64(reader["spirits_volume"]);
             }
@@ -68,7 +68,7 @@ $@"{{ ""type"": ""FeatureCollection"",
                 this.GeoJSON = featureWrapper;
             }
 
-            if (reader["name"] != DBNull.Value)
+            if (columnNames.Contains("name") && reader["name"] != DBNull.Value)
             {
                 this.Name = reader["name"] as string;
             }

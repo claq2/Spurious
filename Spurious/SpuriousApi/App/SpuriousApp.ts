@@ -20,12 +20,17 @@ module SpuriousApp {
             templateUrl: "App/Landing/Landing.html"
         };
 
+        var top10WineRoute: ng.route.IRoute = {
+            templateUrl: "App/Top10Wine/Top10Wine.html"
+        };
+
         var aboutRoute: ng.route.IRoute = {
             templateUrl: "App/About.html"
         };
 
         $routeProvider
             .when("/landing", landingRoute)
+            .when("/top10Wine", top10WineRoute)
             .when("/about", aboutRoute)
             .otherwise({ redirectTo: "/landing" });
 

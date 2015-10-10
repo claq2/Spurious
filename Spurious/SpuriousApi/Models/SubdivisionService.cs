@@ -101,7 +101,14 @@ namespace SpuriousApi.Models
         public async Task<List<Subdivision>> Top10AlcoholDensity()
         {
             var result = new List<Subdivision>();
-            var query = @"select id, population, name, St_AsGeoJSON(st_centroid(boundry::geometry)) as centre, beer_volume, wine_volume, spirits_volume, (beer_volume + wine_volume + spirits_volume) / population as density
+            var query = @"select id, 
+                            population,
+                            name,
+                            St_AsGeoJSON(st_centroid(boundry::geometry)) as centre,
+                            beer_volume, 
+                            wine_volume, 
+                            spirits_volume, 
+                            (beer_volume + wine_volume + spirits_volume) / population as density
                             from subdivisions
                             where beer_volume > 0
                             order by density desc
@@ -127,24 +134,58 @@ namespace SpuriousApi.Models
 
                 if (result.Any())
                 {
-                    using (var getStoresCmd = conn.CreateCommand())
+                    var stores = await GetStoresForSubdivisions(result.Select(s => s.Id), conn);
+                    foreach (var store in stores)
                     {
-                        var subdivIds = string.Join(", ", result.Select(s => s.Id));
-                        getStoresCmd.CommandText = $@"select sd.id as subdiv_id, s.id as id, s.name as name, s.city as city, ST_AsGeoJSON(s.location) as location, s.beer_volume, s.wine_volume, s.spirits_volume from subdivisions sd inner join stores s on ST_Intersects(s.location, sd.boundry)
-                                                                                        where sd.id in ({subdivIds})
-                                                                                        order by subdiv_id";
-                        using (var storesReader = await getStoresCmd.ExecuteReaderAsync())
+                        resultDict[store.SubdivisionId].LcboStores.Add(store);
+                    }
+                }
+            }
+
+            return result;
+        }
+
+
+        public async Task<List<Subdivision>> Top10WineDensity()
+        {
+            var result = new List<Subdivision>();
+            var query = @"select id, 
+                            population, 
+                            name,
+                            St_AsGeoJSON(st_centroid(boundry::geometry)) as centre, 
+                            wine_volume,
+                            wine_volume / population as density
+                            from subdivisions
+                            where wine_volume > 0
+                            order by density desc
+                            limit 10";
+
+            var resultDict = new Dictionary<int, Subdivision>();
+            using (var conn = new Npgsql.NpgsqlConnection(connString))
+            {
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = query;
+                    conn.Open();
+                    using (var reader = await cmd.ExecuteReaderAsync())
+                    {
+                        while (reader.Read())
                         {
-                            while (storesReader.Read())
-                            {
-                                var store = new LcboStore(storesReader);
-                                var subdivId = Convert.ToInt32(storesReader["subdiv_id"]);
-                                resultDict[subdivId].LcboStores.Add(store);
-                            }
+                            var subdiv = new Subdivision(reader);
+                            result.Add(subdiv);
+                            resultDict.Add(subdiv.Id, subdiv);
                         }
                     }
                 }
 
+                if (result.Any())
+                {
+                    var stores = await GetStoresForSubdivisions(result.Select(s => s.Id), conn);
+                    foreach (var store in stores)
+                    {
+                        resultDict[store.SubdivisionId].LcboStores.Add(store);
+                    }
+                }
             }
 
             return result;
@@ -174,6 +215,35 @@ namespace SpuriousApi.Models
                     {
                         var polygon = JsonConvert.DeserializeObject<Polygon>(boundary);
                         result = new Feature(polygon);
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        private static async Task<List<LcboStore>> GetStoresForSubdivisions(IEnumerable<int> subdivisionIds, Npgsql.NpgsqlConnection conn)
+        {
+            var result = new List<LcboStore>();
+            using (var getStoresCmd = conn.CreateCommand())
+            {
+                var subdivIds = string.Join(", ", subdivisionIds);
+                getStoresCmd.CommandText = $@"select sd.id as subdivision_id,
+                                                s.id as id, 
+                                                s.name as name, 
+                                                s.city as city,
+                                                ST_AsGeoJSON(s.location) as location, 
+                                                s.beer_volume, 
+                                                s.wine_volume, 
+                                                s.spirits_volume from subdivisions sd 
+                                                inner join stores s on ST_Intersects(s.location, sd.boundry)
+                                                where sd.id in ({subdivIds})
+                                                order by subdivision_id";
+                using (var storesReader = await getStoresCmd.ExecuteReaderAsync())
+                {
+                    while (storesReader.Read())
+                    {
+                        result.Add(new LcboStore(storesReader));
                     }
                 }
             }
