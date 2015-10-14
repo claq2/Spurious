@@ -12,6 +12,7 @@ namespace SpuriousApi.Models
     public class SubdivisionService
     {
         private readonly string connString = ConfigurationManager.ConnectionStrings["spurious"].ConnectionString;
+        private readonly Dictionary<AlcoholType, string> alcoholTypeVolumeFieldMap = new Dictionary<AlcoholType, string> { { AlcoholType.Beer, "beer_volume" }, { AlcoholType.Spirits, "spirits_volume" }, { AlcoholType.Wine, "wine_volume" } };
 
         public SubdivisionService()
         {
@@ -145,7 +146,6 @@ namespace SpuriousApi.Models
             return result;
         }
 
-
         public async Task<List<Subdivision>> Top10WineDensity()
         {
             var result = new List<Subdivision>();
@@ -157,6 +157,52 @@ namespace SpuriousApi.Models
                             wine_volume / population as density
                             from subdivisions
                             where wine_volume > 0
+                            order by density desc
+                            limit 10";
+
+            var resultDict = new Dictionary<int, Subdivision>();
+            using (var conn = new Npgsql.NpgsqlConnection(connString))
+            {
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = query;
+                    conn.Open();
+                    using (var reader = await cmd.ExecuteReaderAsync())
+                    {
+                        while (reader.Read())
+                        {
+                            var subdiv = new Subdivision(reader);
+                            result.Add(subdiv);
+                            resultDict.Add(subdiv.Id, subdiv);
+                        }
+                    }
+                }
+
+                if (result.Any())
+                {
+                    var stores = await GetStoresForSubdivisions(result.Select(s => s.Id), conn);
+                    foreach (var store in stores)
+                    {
+                        resultDict[store.SubdivisionId].LcboStores.Add(store);
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        public async Task<List<Subdivision>> Top10Density(AlcoholType alcoholType)
+        {
+            var volumeField = alcoholTypeVolumeFieldMap[alcoholType];
+            var result = new List<Subdivision>();
+            var query = $@"select id, 
+                            population, 
+                            name,
+                            St_AsGeoJSON(st_centroid(boundry::geometry)) as centre, 
+                            {volumeField},
+                            {volumeField} / population as density
+                            from subdivisions
+                            where {volumeField} > 0
                             order by density desc
                             limit 10";
 
@@ -250,5 +296,12 @@ namespace SpuriousApi.Models
 
             return result;
         }
+    }
+
+    public enum AlcoholType
+    {
+        Beer,
+        Spirits,
+        Wine,
     }
 }

@@ -87,8 +87,7 @@
   <ItemGroup>
     <Content Include="apple-touch-icon.png" />
     <Content Include="App\About.html" />
-    <Content Include="App\Landing\Landing.html" />
-    <Content Include="App\Top10Wine\Top10Wine.html" />
+    <Content Include="App\ListAndMap\ListAndMap.html" />
     <Content Include="browserconfig.xml" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
@@ -175,8 +174,7 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="App\Landing\LandingController.ts" />
-    <TypeScriptCompile Include="App\Top10Wine\Top10WineController.ts" />
+    <TypeScriptCompile Include="App\ListAndMap\ListAndMapController.ts" />
     <TypeScriptCompile Include="App\SpuriousApp.ts" />
     <TypeScriptCompile Include="Scripts\typings\angular-ui\angular-ui-router.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\angular-ui\angular-ui-sortable.d.ts" />

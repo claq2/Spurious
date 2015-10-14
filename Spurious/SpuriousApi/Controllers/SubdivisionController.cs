@@ -35,7 +35,19 @@ namespace SpuriousApi.Controllers
         [Route("top10wine")]
         public async Task<IEnumerable<Subdivision>> GetTop10Wine()
         {
-            return await new SubdivisionService().Top10WineDensity();
+            return await new SubdivisionService().Top10Density(AlcoholType.Wine);
+        }
+
+        [Route("top10beer")]
+        public async Task<IEnumerable<Subdivision>> GetTop10Beer()
+        {
+            return await new SubdivisionService().Top10Density(AlcoholType.Beer);
+        }
+
+        [Route("top10spirits")]
+        public async Task<IEnumerable<Subdivision>> GetTop10Spirits()
+        {
+            return await new SubdivisionService().Top10Density(AlcoholType.Spirits);
         }
 
         [Route("{id}/boundary")]

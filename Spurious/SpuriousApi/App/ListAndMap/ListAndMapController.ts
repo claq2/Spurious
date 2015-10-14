@@ -2,30 +2,34 @@
 module SpuriousApp {
     "use strict";
 
-    interface ITop10WineController {
+    interface IListAndMapController {
         title: string;
         activate: () => void;
     }
 
-    class Top10WineController implements ITop10WineController {
-        title: string = "Top10WineController";
+    class ListAndMapController implements IListAndMapController {
+        title: string;
         subdivisions: Subdivision[] = [];
         map: any;
         realMap: any;
         mapsApi: any;
         selectedSubdivId: number;
         infoWindow: any;
+        listName: string;
 
-        static $inject: string[] = ["$location", "$http", "uiGmapGoogleMapApi", "uiGmapIsReady"];
+        static $inject: string[] = ["$location", "$http", "$routeParams", "uiGmapGoogleMapApi", "uiGmapIsReady"];
 
-        constructor(private $location: ng.ILocationService, private $http: ng.IHttpService, private googleMap: any, private uiGmapIsReady: any) {
+        constructor(private $location: ng.ILocationService, private $http: ng.IHttpService, private $routeParams: ng.route.IRouteParamsService, private googleMap: any, private uiGmapIsReady: any) {
+            this.listName = this.$routeParams["listName"];
+            this.title = this.$routeParams["title"];
             this.activate();
+
             this.uiGmapIsReady.promise()
                 .then((instances) => {
                     var firstMap = instances[0].map;
                     this.realMap = firstMap;
                     this.infoWindow = new this.mapsApi.InfoWindow();
-                    
+
                     this.realMap.data.addListener('addfeature', (e) => {
                         var bounds = new this.mapsApi.LatLngBounds();
                         this.processPoints(e.feature.getGeometry(), bounds.extend, bounds);
@@ -65,7 +69,7 @@ module SpuriousApp {
         }
 
         activate() {
-            this.$http.get<Array<Subdivision>>("api/subdivision/top10wine")
+            this.$http.get<Array<Subdivision>>("api/subdivision/" + this.listName)
                 .then((r) => {
                     this.subdivisions = r.data;
                     this.selectedSubdivId = this.subdivisions[0].id;
@@ -92,7 +96,7 @@ module SpuriousApp {
                 this.realMap.data.remove(feature);
             });
 
-            
+
 
             this.realMap.data.loadGeoJson("api/subdivision/" + subdiv.id + "/boundary");
             this.map.center = {
@@ -103,7 +107,7 @@ module SpuriousApp {
             subdiv.lcboStores.forEach((store) => {
                 this.realMap.data.addGeoJson(store.geoJSON);
             });
-            
+
             this.selectedSubdivId = subdiv.id;
         }
 
@@ -123,5 +127,5 @@ module SpuriousApp {
         }
     }
 
-    SpuriousApp.controller("Top10WineController", Top10WineController);
+    SpuriousApp.controller("ListAndMapController", ListAndMapController);
 }

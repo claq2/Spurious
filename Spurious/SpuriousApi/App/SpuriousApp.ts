@@ -16,12 +16,8 @@ module SpuriousApp {
     ]);
 
     SpuriousApp.config(["$routeProvider", "uiGmapGoogleMapApiProvider", ($routeProvider: ng.route.IRouteProvider, googleMap:any) => {
-        var landingRoute: ng.route.IRoute = {
-            templateUrl: "App/Landing/Landing.html"
-        };
-
-        var top10WineRoute: ng.route.IRoute = {
-            templateUrl: "App/Top10Wine/Top10Wine.html"
+        var listAndMapRoute: ng.route.IRoute = {
+            templateUrl: "App/ListAndMap/ListAndMap.html"
         };
 
         var aboutRoute: ng.route.IRoute = {
@@ -29,10 +25,9 @@ module SpuriousApp {
         };
 
         $routeProvider
-            .when("/landing", landingRoute)
-            .when("/top10Wine", top10WineRoute)
+            .when("/listAndMap/:title/:listName", listAndMapRoute)
             .when("/about", aboutRoute)
-            .otherwise({ redirectTo: "/landing" });
+            .otherwise({ redirectTo: "/listAndMap/Top 10 Overall/top10" });
 
         googleMap.configure({
             //    key: 'your api key',
