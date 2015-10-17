@@ -65,6 +65,24 @@ namespace SpuriousApi.FunctionalTests
         }
 
         [Test]
+        public async void LoadAll()
+        {
+            var service = new SubdivisionService();
+            var subdivs = await service.Density(AlcoholType.All, EndOfDistribution.Top, 1000);
+            Assert.That(subdivs.All(s => s.Id > 0));
+            Assert.That(subdivs.All(s => s.Population.HasValue));
+            Assert.That(subdivs.All(s => string.IsNullOrWhiteSpace(s.GeoJSON)));
+            Assert.That(subdivs.All(s => s.LcboStores.Count > 0));
+            Assert.That(subdivs.All(s => s.CentreLatitude != 0.0));
+            Assert.That(subdivs.All(s => s.CentreLongitude != 0.0));
+            Assert.That(subdivs.All(s => s.OverallAlcoholDensity != 0.0));
+            foreach (var subdiv in subdivs)
+            {
+                Assert.That(subdiv.Volumes.Total, Is.GreaterThan(0), $"subdiv {subdiv.Id} has total {subdiv.Volumes.Total}");
+            }
+        }
+
+        [Test]
         public async void GetBoundryGeoJson()
         {
             var service = new SubdivisionService();

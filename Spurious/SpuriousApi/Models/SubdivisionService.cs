@@ -201,7 +201,9 @@ namespace SpuriousApi.Models
                             population, 
                             name,
                             St_AsGeoJSON(st_centroid(boundry::geometry)) as centre, 
-                            {volumeField},
+                            beer_volume, 
+                            wine_volume, 
+                            spirits_volume, 
                             {volumeField} / population as density
                             from subdivisions
                             where {volumeField} > 0
@@ -248,7 +250,9 @@ namespace SpuriousApi.Models
                             population, 
                             name,
                             St_AsGeoJSON(st_centroid(boundry::geometry)) as centre, 
-                            {volumeField},
+                            beer_volume, 
+                            wine_volume, 
+                            spirits_volume, 
                             {volumeField} / population as density
                             from subdivisions
                             where {volumeField} > 0
