@@ -1,4 +1,5 @@
 ﻿using SpuriousApi.Models;
+using SpuriousApi.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace SpuriousApi.Controllers
         [Route("")]
         public async Task<IEnumerable<Subdivision>> Get()
         {
-                return await new SubdivisionService().Density(AlcoholType.All, EndOfDistribution.Top, 10000);
+            return await new SubdivisionService().Density(AlcoholType.All, EndOfDistribution.Top, 10000);
         }
 
         [Route("all")]
@@ -36,6 +37,19 @@ namespace SpuriousApi.Controllers
         public async Task<IEnumerable<Subdivision>> GetTop10()
         {
             return await new SubdivisionService().Top10AlcoholDensity();
+        }
+
+        [Route("top10x")]
+        public async Task<ListAndMapView> GetTop10x()
+        {
+            var subdivs = await new SubdivisionService().Top10AlcoholDensity();
+            return new ListAndMapView
+            {
+                Title = "Top 10 Overall",
+                Subdivisions = subdivs,
+                DensityName = "Alcohol",
+                DensityPropertyToUse = nameof(Subdivision.OverallAlcoholDensity)
+            };
         }
 
         [Route("top10wine")]

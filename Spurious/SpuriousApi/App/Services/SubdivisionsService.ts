@@ -27,6 +27,9 @@ module SpuriousApp {
         centreLatitude: number;
         centreLongitude: number;
         overallAlcoholDensity: number;
+        beerDensity: number;
+        wineDensity: number;
+        spitirsDensity: number;
         lcboStores: LcboStore[];
     }
 
