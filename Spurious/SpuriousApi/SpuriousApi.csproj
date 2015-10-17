@@ -146,7 +146,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\AlcoholType.cs" />
     <Compile Include="Models\AlcoholVolumes.cs" />
+    <Compile Include="Models\EndOfDistribution.cs" />
     <Compile Include="Models\SubdivisionService.cs" />
     <Compile Include="Models\LcboService.cs" />
     <Compile Include="Models\LcboStore.cs" />

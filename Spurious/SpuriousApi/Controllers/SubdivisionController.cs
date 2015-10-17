@@ -16,7 +16,13 @@ namespace SpuriousApi.Controllers
         [Route("")]
         public async Task<IEnumerable<Subdivision>> Get()
         {
-            return await new SubdivisionService().SubdivisionsAndVolumes();
+                return await new SubdivisionService().Density(AlcoholType.All, EndOfDistribution.Top, 10000);
+        }
+
+        [Route("all")]
+        public async Task<IEnumerable<Subdivision>> GetAll()
+        {
+            return await new SubdivisionService().Density(AlcoholType.All, EndOfDistribution.Top, 10000);
         }
 
         // GET: api/Subdivision/5
@@ -47,7 +53,13 @@ namespace SpuriousApi.Controllers
         [Route("top10spirits")]
         public async Task<IEnumerable<Subdivision>> GetTop10Spirits()
         {
-            return await new SubdivisionService().Top10Density(AlcoholType.Spirits);
+            return await new SubdivisionService().Density(AlcoholType.Spirits, EndOfDistribution.Top, 10);
+        }
+
+        [Route("bottom10")]
+        public async Task<IEnumerable<Subdivision>> GetBottom10Spirits()
+        {
+            return await new SubdivisionService().Density(AlcoholType.All, EndOfDistribution.Bottom, 10);
         }
 
         [Route("{id}/boundary")]

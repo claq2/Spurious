@@ -12,12 +12,14 @@ namespace SpuriousApi.Models
     public class SubdivisionService
     {
         private readonly string connString = ConfigurationManager.ConnectionStrings["spurious"].ConnectionString;
-        private readonly Dictionary<AlcoholType, string> alcoholTypeVolumeFieldMap = new Dictionary<AlcoholType, string> { { AlcoholType.Beer, "beer_volume" }, { AlcoholType.Spirits, "spirits_volume" }, { AlcoholType.Wine, "wine_volume" } };
-
-        public SubdivisionService()
+        private readonly Dictionary<AlcoholType, string> alcoholTypeVolumeFieldMap = new Dictionary<AlcoholType, string>
         {
-
-        }
+            { AlcoholType.All, "(beer_volume + wine_volume + spirits_volume)" },
+            { AlcoholType.Beer, "beer_volume" },
+            { AlcoholType.Spirits, "spirits_volume" },
+            { AlcoholType.Wine, "wine_volume" }
+        };
+        private readonly Dictionary<EndOfDistribution, string> endOfDistributionMap = new Dictionary<EndOfDistribution, string> { { EndOfDistribution.Bottom, "asc" }, { EndOfDistribution.Top, "desc" } };
 
         public async Task<IEnumerable<Subdivision>> Load100()
         {
@@ -237,6 +239,53 @@ namespace SpuriousApi.Models
             return result;
         }
 
+        public async Task<List<Subdivision>> Density(AlcoholType alcoholType, EndOfDistribution distribution, int count)
+        {
+            var volumeField = alcoholTypeVolumeFieldMap[alcoholType];
+            var sortDirection = endOfDistributionMap[distribution];
+            var result = new List<Subdivision>();
+            var query = $@"select id, 
+                            population, 
+                            name,
+                            St_AsGeoJSON(st_centroid(boundry::geometry)) as centre, 
+                            {volumeField},
+                            {volumeField} / population as density
+                            from subdivisions
+                            where {volumeField} > 0
+                            order by density {sortDirection}
+                            limit {count}";
+
+            var resultDict = new Dictionary<int, Subdivision>();
+            using (var conn = new Npgsql.NpgsqlConnection(connString))
+            {
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = query;
+                    conn.Open();
+                    using (var reader = await cmd.ExecuteReaderAsync())
+                    {
+                        while (reader.Read())
+                        {
+                            var subdiv = new Subdivision(reader);
+                            result.Add(subdiv);
+                            resultDict.Add(subdiv.Id, subdiv);
+                        }
+                    }
+                }
+
+                if (result.Any())
+                {
+                    var stores = await GetStoresForSubdivisions(result.Select(s => s.Id), conn);
+                    foreach (var store in stores)
+                    {
+                        resultDict[store.SubdivisionId].LcboStores.Add(store);
+                    }
+                }
+            }
+
+            return result;
+        }
+
         public async Task<Feature> BoundaryGeoJson(int subdivId)
         {
             var result = new Feature(new Point(new Position()));
@@ -296,12 +345,5 @@ namespace SpuriousApi.Models
 
             return result;
         }
-    }
-
-    public enum AlcoholType
-    {
-        Beer,
-        Spirits,
-        Wine,
     }
 }
