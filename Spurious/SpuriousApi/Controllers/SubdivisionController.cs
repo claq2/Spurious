@@ -43,14 +43,14 @@ namespace SpuriousApi.Controllers
         public async Task<ListAndMapView> GetTop10x()
         {
             var n = nameof(Subdivision.OverallAlcoholDensity);
-            n = n.Substring(0, 1).ToLowerInvariant() + n.Substring(1);
+            n = Char.ToLowerInvariant(n[0]) + n.Substring(1);
             var subdivs = await new SubdivisionService().Top10AlcoholDensity();
             return new ListAndMapView
             {
                 Title = "Top 10 Overall",
                 Subdivisions = subdivs,
                 DensityName = "Alcohol",
-                DensityPropertyToUse = n;
+                DensityPropertyToUse = n
             };
         }
 
