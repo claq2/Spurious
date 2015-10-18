@@ -42,13 +42,15 @@ namespace SpuriousApi.Controllers
         [Route("top10x")]
         public async Task<ListAndMapView> GetTop10x()
         {
+            var n = nameof(Subdivision.OverallAlcoholDensity);
+            n = n.Substring(0, 1).ToLowerInvariant() + n.Substring(1);
             var subdivs = await new SubdivisionService().Top10AlcoholDensity();
             return new ListAndMapView
             {
                 Title = "Top 10 Overall",
                 Subdivisions = subdivs,
                 DensityName = "Alcohol",
-                DensityPropertyToUse = nameof(Subdivision.OverallAlcoholDensity)
+                DensityPropertyToUse = n;
             };
         }
 
