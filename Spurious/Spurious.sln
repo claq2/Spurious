@@ -1,11 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpuriousApi", "SpuriousApi\SpuriousApi.csproj", "{143DC28D-FCD8-438B-98A7-58621D44705F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpuriousApi.FunctionalTests", "SpuriousApi.FunctionalTests\SpuriousApi.FunctionalTests.csproj", "{1B96EB84-BB93-4D93-8CE3-4486FC4A7093}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E5A503AA-0F1E-4877-A8B1-7A9670AD3AE2}"
+	ProjectSection(SolutionItems) = preProject
+		..\pgsetup.sh = ..\pgsetup.sh
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
