@@ -122,6 +122,7 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="cstrings.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <None Include="Properties\PublishProfiles\LocalFIle.pubxml" />
     <None Include="Properties\PublishProfiles\Spurious.pubxml" />
