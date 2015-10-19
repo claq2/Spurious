@@ -44,12 +44,42 @@ namespace SpuriousApi.Controllers
         {
             var n = nameof(Subdivision.OverallAlcoholDensity);
             n = Char.ToLowerInvariant(n[0]) + n.Substring(1);
-            var subdivs = await new SubdivisionService().Top10AlcoholDensity();
+            var subdivs = await new SubdivisionService().Density(AlcoholType.All, EndOfDistribution.Top, 10);
             return new ListAndMapView
             {
                 Title = "Top 10 Overall",
                 Subdivisions = subdivs,
                 DensityName = "Alcohol",
+                DensityPropertyToUse = n
+            };
+        }
+
+        [Route("top10winex")]
+        public async Task<ListAndMapView> GetTop10Winex()
+        {
+            var n = nameof(Subdivision.WineDensity);
+            n = Char.ToLowerInvariant(n[0]) + n.Substring(1);
+            var subdivs = await new SubdivisionService().Density(AlcoholType.Wine, EndOfDistribution.Top, 10);
+            return new ListAndMapView
+            {
+                Title = "Top 10 Wine",
+                Subdivisions = subdivs,
+                DensityName = "Wine",
+                DensityPropertyToUse = n
+            };
+        }
+
+        [Route("top10beerx")]
+        public async Task<ListAndMapView> GetTop10Beerx()
+        {
+            var n = nameof(Subdivision.BeerDensity);
+            n = Char.ToLowerInvariant(n[0]) + n.Substring(1);
+            var subdivs = await new SubdivisionService().Density(AlcoholType.Beer, EndOfDistribution.Top, 10);
+            return new ListAndMapView
+            {
+                Title = "Top 10 Beer",
+                Subdivisions = subdivs,
+                DensityName = "Beer",
                 DensityPropertyToUse = n
             };
         }
