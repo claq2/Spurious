@@ -19,6 +19,13 @@ module SpuriousApp {
 
     SpuriousApp.service("SubdivisionsService", SubdivisionsService);
 
+    export class ListAndMapViewModel {
+        title: string;
+        subdivisions: Array<Subdivision>;
+        densityName: string;
+        densityPropertyToUse: string;
+    }
+
     export class Subdivision {
         id: number;
         name: string;

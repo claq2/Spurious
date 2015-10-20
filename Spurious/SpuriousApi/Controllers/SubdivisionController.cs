@@ -84,6 +84,21 @@ namespace SpuriousApi.Controllers
             };
         }
 
+        [Route("top10spiritsx")]
+        public async Task<ListAndMapView> GetTop10Spiritsx()
+        {
+            var n = nameof(Subdivision.WineDensity);
+            n = Char.ToLowerInvariant(n[0]) + n.Substring(1);
+            var subdivs = await new SubdivisionService().Density(AlcoholType.Spirits, EndOfDistribution.Top, 10);
+            return new ListAndMapView
+            {
+                Title = "Top 10 Spirits",
+                Subdivisions = subdivs,
+                DensityName = "Spirits",
+                DensityPropertyToUse = n
+            };
+        }
+
         [Route("top10wine")]
         public async Task<IEnumerable<Subdivision>> GetTop10Wine()
         {
