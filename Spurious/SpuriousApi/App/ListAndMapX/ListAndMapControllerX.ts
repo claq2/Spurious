@@ -16,6 +16,7 @@ module SpuriousApp {
         selectedSubdivId: number;
         infoWindow: any;
         listName: string;
+        densityPropertyToUse: string;
 
         static $inject: string[] = ["$location", "$http", "$routeParams", "uiGmapGoogleMapApi", "uiGmapIsReady"];
 
@@ -72,6 +73,7 @@ module SpuriousApp {
                 .then((r) => {
                     this.subdivisions = r.data.subdivisions;
                     this.title = r.data.title;
+                    this.densityPropertyToUse = r.data.densityPropertyToUse;
                     this.selectedSubdivId = this.subdivisions[0].id;
                     this.googleMap.then((maps: any) => {
                         this.mapsApi = maps;

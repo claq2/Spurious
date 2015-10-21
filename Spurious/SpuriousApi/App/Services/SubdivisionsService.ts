@@ -36,7 +36,7 @@ module SpuriousApp {
         overallAlcoholDensity: number;
         beerDensity: number;
         wineDensity: number;
-        spitirsDensity: number;
+        spiritsDensity: number;
         lcboStores: LcboStore[];
     }
 

@@ -20,23 +20,11 @@ namespace SpuriousApi.Controllers
             return await new SubdivisionService().Density(AlcoholType.All, EndOfDistribution.Top, 10000);
         }
 
-        [Route("all")]
-        public async Task<IEnumerable<Subdivision>> GetAll()
-        {
-            return await new SubdivisionService().Density(AlcoholType.All, EndOfDistribution.Top, 10000);
-        }
-
         // GET: api/Subdivision/5
         [Route("{id}")]
         public async Task<Subdivision> Get(int id)
         {
             return await new SubdivisionService().LoadById(id);
-        }
-
-        [Route("top10")]
-        public async Task<IEnumerable<Subdivision>> GetTop10()
-        {
-            return await new SubdivisionService().Top10AlcoholDensity();
         }
 
         [Route("top10x")]
@@ -99,22 +87,34 @@ namespace SpuriousApi.Controllers
             };
         }
 
-        [Route("top10wine")]
-        public async Task<IEnumerable<Subdivision>> GetTop10Wine()
+        [Route("allx")]
+        public async Task<ListAndMapView> GetAllx()
         {
-            return await new SubdivisionService().Top10Density(AlcoholType.Wine);
+            var n = nameof(Subdivision.OverallAlcoholDensity);
+            n = Char.ToLowerInvariant(n[0]) + n.Substring(1);
+            var subdivs = await new SubdivisionService().Density(AlcoholType.All, EndOfDistribution.Top, 100000);
+            return new ListAndMapView
+            {
+                Title = "All",
+                Subdivisions = subdivs,
+                DensityName = "All",
+                DensityPropertyToUse = n
+            };
         }
 
-        [Route("top10beer")]
-        public async Task<IEnumerable<Subdivision>> GetTop10Beer()
+        [Route("bottom10x")]
+        public async Task<ListAndMapView> GetBottom10x()
         {
-            return await new SubdivisionService().Top10Density(AlcoholType.Beer);
-        }
-
-        [Route("top10spirits")]
-        public async Task<IEnumerable<Subdivision>> GetTop10Spirits()
-        {
-            return await new SubdivisionService().Density(AlcoholType.Spirits, EndOfDistribution.Top, 10);
+            var n = nameof(Subdivision.OverallAlcoholDensity);
+            n = Char.ToLowerInvariant(n[0]) + n.Substring(1);
+            var subdivs = await new SubdivisionService().Density(AlcoholType.All, EndOfDistribution.Bottom, 10);
+            return new ListAndMapView
+            {
+                Title = "Bottom 10 Overall",
+                Subdivisions = subdivs,
+                DensityName = "Alcohol",
+                DensityPropertyToUse = n
+            };
         }
 
         [Route("bottom10")]
