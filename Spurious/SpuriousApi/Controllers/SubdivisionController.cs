@@ -15,9 +15,18 @@ namespace SpuriousApi.Controllers
     {
         // GET: api/Subdivision
         [Route("")]
-        public async Task<IEnumerable<Subdivision>> Get()
+        public async Task<ListAndMapView> Get()
         {
-            return await new SubdivisionService().Density(AlcoholType.All, EndOfDistribution.Top, 10000);
+            var n = nameof(Subdivision.OverallAlcoholDensity);
+            n = Char.ToLowerInvariant(n[0]) + n.Substring(1);
+            var subdivs = await new SubdivisionService().Density(AlcoholType.All, EndOfDistribution.Top, 100000);
+            return new ListAndMapView
+            {
+                Title = "All",
+                Subdivisions = subdivs,
+                DensityName = "All",
+                DensityPropertyToUse = n
+            };
         }
 
         // GET: api/Subdivision/5
@@ -27,7 +36,7 @@ namespace SpuriousApi.Controllers
             return await new SubdivisionService().LoadById(id);
         }
 
-        [Route("top10x")]
+        [Route("top10")]
         public async Task<ListAndMapView> GetTop10x()
         {
             var n = nameof(Subdivision.OverallAlcoholDensity);
@@ -42,7 +51,7 @@ namespace SpuriousApi.Controllers
             };
         }
 
-        [Route("top10winex")]
+        [Route("top10wine")]
         public async Task<ListAndMapView> GetTop10Winex()
         {
             var n = nameof(Subdivision.WineDensity);
@@ -57,7 +66,7 @@ namespace SpuriousApi.Controllers
             };
         }
 
-        [Route("top10beerx")]
+        [Route("top10beer")]
         public async Task<ListAndMapView> GetTop10Beerx()
         {
             var n = nameof(Subdivision.BeerDensity);
@@ -72,7 +81,7 @@ namespace SpuriousApi.Controllers
             };
         }
 
-        [Route("top10spiritsx")]
+        [Route("top10spirits")]
         public async Task<ListAndMapView> GetTop10Spiritsx()
         {
             var n = nameof(Subdivision.WineDensity);
@@ -87,7 +96,7 @@ namespace SpuriousApi.Controllers
             };
         }
 
-        [Route("allx")]
+        [Route("all")]
         public async Task<ListAndMapView> GetAllx()
         {
             var n = nameof(Subdivision.OverallAlcoholDensity);
@@ -102,7 +111,7 @@ namespace SpuriousApi.Controllers
             };
         }
 
-        [Route("bottom10x")]
+        [Route("bottom10")]
         public async Task<ListAndMapView> GetBottom10x()
         {
             var n = nameof(Subdivision.OverallAlcoholDensity);
@@ -115,12 +124,6 @@ namespace SpuriousApi.Controllers
                 DensityName = "Alcohol",
                 DensityPropertyToUse = n
             };
-        }
-
-        [Route("bottom10")]
-        public async Task<IEnumerable<Subdivision>> GetBottom10Spirits()
-        {
-            return await new SubdivisionService().Density(AlcoholType.All, EndOfDistribution.Bottom, 10);
         }
 
         [Route("{id}/boundary")]

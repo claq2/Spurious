@@ -20,19 +20,14 @@ module SpuriousApp {
             templateUrl: "App/ListAndMap/ListAndMap.html"
         };
 
-        var listAndMapRouteX: ng.route.IRoute = {
-            templateUrl: "App/ListAndMapX/ListAndMapX.html"
-        };
-
         var aboutRoute: ng.route.IRoute = {
             templateUrl: "App/About.html"
         };
 
         $routeProvider
-            .when("/listAndMap/:title/:listName", listAndMapRoute)
             .when("/about", aboutRoute)
-            .when("/listAndMapX/:listName", listAndMapRouteX)
-            .otherwise({ redirectTo: "/listAndMapX/top10x" });
+            .when("/listAndMap/:listName", listAndMapRoute)
+            .otherwise({ redirectTo: "/listAndMap/top10" });
 
         googleMap.configure({
             //    key: 'your api key',
