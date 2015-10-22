@@ -32,7 +32,7 @@ module SpuriousApp {
             .when("/listAndMap/:title/:listName", listAndMapRoute)
             .when("/about", aboutRoute)
             .when("/listAndMapX/:listName", listAndMapRouteX)
-            .otherwise({ redirectTo: "/listAndMap/Top 10 Overall/top10" });
+            .otherwise({ redirectTo: "/listAndMapX/top10x" });
 
         googleMap.configure({
             //    key: 'your api key',
