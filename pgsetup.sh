@@ -1,20 +1,38 @@
+# Centos
 rpm -ivh http://yum.postgresql.org/9.4/redhat/rhel-7-x86_64/pgdg-centos94-9.4-1.noarch.rpm
 yum install -y postgresql94 postgresql94-server postgresql94-libs postgresql94-contrib postgresql94-devel
 rpm -ivh http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 sudo yum install -y postgis2_94
 /usr/pgsql-9.4/bin/postgresql94-setup initdb
-
-# edit /var/lib/pgsql/9.4/data/postgresql.conf listen_addresses = '*' port = 5432
-# edit /var/lib/pgsql/9.4/data/pg_hba.conf host all all         0.0.0.0/0 md5
-
 systemctl start postgresql-9.4.service
 systemctl enable postgresql-9.4.service
 firewall-cmd --permanent --zone=public --add-service=postgresql
 systemctl restart firewalld.service
-su postgres
+# edit /var/lib/pgsql/9.4/data/postgresql.conf listen_addresses = '*' port = 5432
+# edit /var/lib/pgsql/9.4/data/pg_hba.conf host all all         0.0.0.0/0 md5
 
-createdb spurious
-psql spurious
+# Linux Mint 17.2/Ubuntu 14.04
+echo deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main>/etc/apt/sources.list.d/pgdg.list
+wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | \
+  sudo apt-key add -
+sudo apt-get update
+sudo apt-get install postgresql-9.4
+sudo apt-get install postgresql-9.4-postgis-2.1
+sudo apt-get install postgresql-contrib
+# edit /etc/postgresql/9.4/main/postgresql.conf listen_addresses = '*' port = 5432
+# edit /etc/postgresql/9.4/main/pg_hba.conf host all all         0.0.0.0/0 md5
+
+
+# Common
+
+
+#su postgres
+sudo -u postgres psql postgres
+\password postgres
+\q
+
+sudo -u postgres createdb spurious
+sudo -u postgres psql spurious
 
 CREATE ROLE testuser WITH SUPERUSER LOGIN PASSWORD 'test';
 create extension adminpack;
@@ -118,8 +136,6 @@ inner join products as p on p.id = i.product_id
 group by p.category, s.id, s.name, city
 order by total_volume;
 
-DROP FUNCTION category_volume(integer,text);
-
 create or replace function category_volume(store_id int, category text) returns int as
 $$
 declare
@@ -134,6 +150,8 @@ begin
 
 end;
 $$ language plpgsql;
+
+# Example queries
 
 select s.id, s.name, category_volume(s.id, 'Beer') as beer, category_volume(s.id, 'Wine') as wine, category_volume(s.id, 'Spirit') as spirit
 --(select sum(i.quantity * p.volume) where p.category = 'Beer') as beer, p.category
