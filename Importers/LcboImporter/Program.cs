@@ -69,7 +69,7 @@ namespace LcboImporter
             }
             else
             {
-                Console.WriteLine("Couldn't get latest dataset!");
+                Console.WriteLine($"Couldn't get latest dataset! Error was {resp.StatusCode}");
             }
         }
 
