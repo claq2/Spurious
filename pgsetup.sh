@@ -16,9 +16,7 @@ echo deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main>/etc/apt/sour
 wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | \
   sudo apt-key add -
 sudo apt-get update
-sudo apt-get install postgresql-9.4
-sudo apt-get install postgresql-9.4-postgis-2.1
-sudo apt-get install postgresql-contrib
+sudo apt-get install postgresql-9.4 postgresql-9.4-postgis-2.1 postgresql-contrib
 # edit /etc/postgresql/9.4/main/postgresql.conf listen_addresses = '*' port = 5432
 # edit /etc/postgresql/9.4/main/pg_hba.conf host all all         0.0.0.0/0 md5
 
