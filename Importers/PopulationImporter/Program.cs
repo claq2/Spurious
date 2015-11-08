@@ -38,7 +38,7 @@ namespace PopulationImporter
             Console.WriteLine("Imported data in {0}", importStopwatch.Elapsed);
         }
 
-        static void Something<T, U>(string dataFile, CsvClassMap classMap) where T : IStatsCanCsvLine where U : LineCollection<T>, new()
+        static void Something<T, U>(string dataFile, CsvClassMap classMap) where T : IStatsCanCsvLine, IItem where U : LineCollection<T>, new()
         {
             importStopwatch.Start();
             var userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
@@ -49,15 +49,20 @@ namespace PopulationImporter
 
             csv.Configuration.RegisterClassMap(classMap);
             var populationLines = csv.GetRecords<T>().Where(pl => pl.Characteristics == "Population in 2011");
-            U x = new U(populationLines);
-            x.Items = populationLines;
-            var lineCollection = x;
+            var lineCollection = new U();
+            lineCollection.Items = populationLines;
 
             var bulkImporter = new NpgsqlBulkImporter(ConfigurationManager.ConnectionStrings["spurious"].ConnectionString, importStopwatch);
 
             bulkImporter.BulkImport("subdivisions", lineCollection);
             importStopwatch.Stop();
             Console.WriteLine("Imported data in {0}", importStopwatch.Elapsed);
+        }
+
+        class PopulationCsvQuery
+        {
+            string query = "Population in 2011";
+            Func<PopulationLine, bool> queryLambda = (pl) => pl.Characteristics == "Pop";
         }
     }
 }
