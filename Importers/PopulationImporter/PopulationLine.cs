@@ -7,7 +7,11 @@ using System.Threading.Tasks;
 
 namespace PopulationImporter
 {
-    internal class PopulationLine : IItem
+    interface IStatsCanCsvLine
+    {
+        string Characteristics { get; set; }
+    }
+    internal class PopulationLine : IItem, IStatsCanCsvLine
     {
         public int GeoCode { get; set; }
         public string CsdName { get; set; }
@@ -17,4 +21,16 @@ namespace PopulationImporter
         public decimal Total { get; set; }
         public string IdAndDataFieldsAsCsv { get { return $"{this.GeoCode},{this.Province},\"{this.CsdName}\",{Convert.ToInt32(this.Total)}"; } }
     }
+
+    internal class IncomeLine : IItem, IStatsCanCsvLine
+    {
+        public int GeoCode { get; set; }
+        public string CsdName { get; set; }
+        public string Province { get; set; }
+        public string Topic { get; set; }
+        public string Characteristics { get; set; }
+        public decimal Total { get; set; }
+        public string IdAndDataFieldsAsCsv { get { return $"{this.GeoCode},{this.Province},\"{this.CsdName}\",{Convert.ToInt32(this.Total)}"; } }
+    }
+
 }

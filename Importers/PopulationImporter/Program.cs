@@ -5,12 +5,13 @@ using System.Linq;
 using CsvHelper;
 using System.Diagnostics;
 using Importers.DataLayer;
+using CsvHelper.Configuration;
 
 namespace PopulationImporter
 {
     class Program
     {
-        static Stopwatch populationStopwatch = new Stopwatch();
+        static Stopwatch importStopwatch = new Stopwatch();
 
         static void Main(string[] args)
         {
@@ -18,7 +19,7 @@ namespace PopulationImporter
             // Census Profile -Census Subdivisions(CSDs)
             // Geo_Code,Prov_Name,CD_Name,CSD_Name,CSD_Type,Topic,Characteristics,Note,Total,Flag_Total,Male,Flag_Male,Female,Flag_Female
             // 1001101,Newfoundland and Labrador,Division No.  1,"Division No.  1, Subd. V",Subdivision of unorganized,Population and dwelling counts, Population in 2011,1,62,,,...,,...
-            populationStopwatch.Start();
+            importStopwatch.Start();
             var userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             var fileStream = File.OpenText(Path.Combine(userProfile, ConfigurationManager.AppSettings["PopulationFile"]));
             // Advance reader 1 line to skip stupid non-CSV first line.
@@ -29,12 +30,34 @@ namespace PopulationImporter
             var populationLines = csv.GetRecords<PopulationLine>().Where(pl => pl.Characteristics == "Population in 2011");
             var populationLineCollection = new PopulationLineCollection() { Items = populationLines };
 
-            var bulkImporter = new NpgsqlBulkImporter(ConfigurationManager.ConnectionStrings["spurious"].ConnectionString, populationStopwatch);
-            
+            var bulkImporter = new NpgsqlBulkImporter(ConfigurationManager.ConnectionStrings["spurious"].ConnectionString, importStopwatch);
+
             bulkImporter.BulkImport("subdivisions", populationLineCollection);
 
-            populationStopwatch.Stop();
-            Console.WriteLine("Imported population data in {0}", populationStopwatch.Elapsed);
+            importStopwatch.Stop();
+            Console.WriteLine("Imported data in {0}", importStopwatch.Elapsed);
+        }
+
+        static void Something<T, U>(string dataFile, CsvClassMap classMap) where T : IStatsCanCsvLine where U : LineCollection<T>, new()
+        {
+            importStopwatch.Start();
+            var userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            var fileStream = File.OpenText(Path.Combine(userProfile, ConfigurationManager.AppSettings[dataFile]));
+            // Advance reader 1 line to skip stupid non-CSV first line.
+            fileStream.ReadLine();
+            var csv = new CsvReader(fileStream);
+
+            csv.Configuration.RegisterClassMap(classMap);
+            var populationLines = csv.GetRecords<T>().Where(pl => pl.Characteristics == "Population in 2011");
+            U x = new U(populationLines);
+            x.Items = populationLines;
+            var lineCollection = x;
+
+            var bulkImporter = new NpgsqlBulkImporter(ConfigurationManager.ConnectionStrings["spurious"].ConnectionString, importStopwatch);
+
+            bulkImporter.BulkImport("subdivisions", lineCollection);
+            importStopwatch.Stop();
+            Console.WriteLine("Imported data in {0}", importStopwatch.Elapsed);
         }
     }
 }

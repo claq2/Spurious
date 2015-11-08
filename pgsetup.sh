@@ -37,14 +37,18 @@ create extension adminpack;
 create extension postgis;
 create table subdivisions (
   id integer not null,
-  population integer,
+  population integer NOT NULL DEFAULT 0,
   boundry geography,
   boundary_gml text,
-  beer_volume bigint,
-  wine_volume bigint,
-  spirits_volume bigint,
+  beer_volume bigint NOT NULL DEFAULT 0,
+  wine_volume bigint NOT NULL DEFAULT 0,
+  spirits_volume bigint NOT NULL DEFAULT 0,
   province text,
   name text,
+  average_income integer NOT NULL DEFAULT 0,
+  median_income integer NOT NULL DEFAULT 0,
+  median_after_tax_income integer NOT NULL DEFAULT 0,
+  average_after_tax_income integer NOT NULL DEFAULT 0,
   CONSTRAINT firstkey PRIMARY KEY (id)
 );
 
