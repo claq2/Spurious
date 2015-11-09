@@ -17,6 +17,8 @@ namespace BoundryImporter
             get { return new List<string> { "id" }; }
         }
 
-        public IEnumerable<BoundaryItem> Items { get; set; }
+        public IEnumerable<BoundaryItem> Items { get; private set; }
+
+        public void SetItems(IEnumerable<BoundaryItem> items) { this.Items = items; }
     }
 }

@@ -27,7 +27,8 @@ namespace Importers.DataLayer2.UnitTests
                 items.Add(new PopulationItem { GeoCode = 12345, Total = 456.7M });
                 items.Add(new PopulationItem { GeoCode = 12346, Total = 78.1M });
 
-                var itemCollection = new PopulationItemCollection { Items = items };
+                var itemCollection = new PopulationItemCollection();
+                itemCollection.SetItems(items);
 
                 filler.Fill("temp_test", "subdivisions", itemCollection);
 
@@ -55,7 +56,8 @@ namespace Importers.DataLayer2.UnitTests
             items.Add(new PopulationItem { GeoCode = 12345, Total = 456.7M });
             items.Add(new PopulationItem { GeoCode = 12346, Total = 78.1M });
 
-            var itemCollection = new PopulationItemCollection { Items = items };
+            var itemCollection = new PopulationItemCollection();
+            itemCollection.SetItems(items);
 
             var conn = new Mock<IDbConnection>();
             conn.Setup(c => c.Open());
@@ -95,7 +97,8 @@ namespace Importers.DataLayer2.UnitTests
             items.Add(new TwoIdTwoFieldItem { Id1 = 12345, Id2 = 12, Field1 = 456.7M, Field2 = 555 });
             items.Add(new TwoIdTwoFieldItem { Id1 = 12346, Id2 = 22, Field1 = 444, Field2 = 78.1M });
 
-            var itemCollection = new TwoIdTwoFieldItemCollection { Items = items };
+            var itemCollection = new TwoIdTwoFieldItemCollection();
+            itemCollection.SetItems(items);
 
             var conn = new Mock<IDbConnection>();
             conn.Setup(c => c.Open());
@@ -140,7 +143,9 @@ namespace Importers.DataLayer2.UnitTests
                 get { return new List<string> { "id" }; }
             }
 
-            public IEnumerable<PopulationItem> Items { get; set; }
+            public IEnumerable<PopulationItem> Items { get; private set; }
+
+            public void SetItems(IEnumerable<PopulationItem> items) { this.Items = items; }
         }
 
         private class PopulationItem : IItem
@@ -164,7 +169,9 @@ namespace Importers.DataLayer2.UnitTests
                 get { return new List<string> { "id1, id2" }; }
             }
 
-            public IEnumerable<TwoIdTwoFieldItem> Items { get; set; }
+            public IEnumerable<TwoIdTwoFieldItem> Items { get; private set; }
+
+            public void SetItems(IEnumerable<TwoIdTwoFieldItem> items) { this.Items = items; }
         }
 
         private class TwoIdTwoFieldItem : IItem

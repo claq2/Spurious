@@ -9,7 +9,8 @@ namespace PopulationImporter
     {
         public List<string> DbIdFields { get { return new List<string> { "id" }; } }
         public List<string> DbDataFields { get { return new List<string> { "province", "name", "population" }; } }
-        public IEnumerable<PopulationLine> Items { get; set; }
+        public IEnumerable<PopulationLine> Items { get; private set; }
+        public void SetItems(IEnumerable<PopulationLine> items) { this.Items = items; }
     }
 
     internal abstract class LineCollection<T> : IItemCollection<T>
@@ -24,7 +25,8 @@ namespace PopulationImporter
 
         public List<string> DbIdFields { get { return new List<string> { "id" }; } }
         public List<string> DbDataFields { get { return new List<string> { "province", "name", incomeField }; } }
-        public IEnumerable<T> Items { get; set; }
+        public IEnumerable<T> Items { get; private set; }
+        public void SetItems(IEnumerable<T> items) { this.Items = items; }
     }
 
     internal class AverageIncomeLineCollection : LineCollection<IncomeLine>, IItemCollection<IncomeLine>

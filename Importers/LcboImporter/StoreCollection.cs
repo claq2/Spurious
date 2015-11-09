@@ -19,7 +19,9 @@ namespace LcboImporter
 
         public IEnumerable<Store> Items
         {
-            get; set;
+            get; private set;
         }
+
+        public void SetItems(IEnumerable<Store> items) { this.Items = items; }
     }
 }

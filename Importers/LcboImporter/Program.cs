@@ -129,7 +129,8 @@ namespace LcboImporter
                 csv.Configuration.RegisterClassMap(new StoreMap());
                 stores = csv.GetRecords<Store>().Where(s => !s.IsDead);
 
-                var storesCollection = new StoreCollection() { Items = stores };
+                var storesCollection = new StoreCollection();
+                storesCollection.SetItems(stores);
                 var importer = new NpgsqlBulkImporter(ConfigurationManager.ConnectionStrings["spurious"].ConnectionString, storeTimer);
                 importer.BulkImport("stores", storesCollection);
 
@@ -159,7 +160,8 @@ namespace LcboImporter
                 var csv = new CsvReader(reader);
                 csv.Configuration.RegisterClassMap(new ProductMap());
                 products = csv.GetRecords<Product>().Where(p => !p.IsDead);
-                var productCollection = new ProductCollection { Items = products };
+                var productCollection = new ProductCollection();
+                productCollection.SetItems(products);
                 var importer = new NpgsqlBulkImporter(ConfigurationManager.ConnectionStrings["spurious"].ConnectionString, stopwatch);
                 importer.BulkImport("products", productCollection);
 
@@ -185,7 +187,8 @@ namespace LcboImporter
                 StringBuilder invForImport = new StringBuilder();
                 inventories = csv.GetRecords<Inventory>().Where(i => !i.IsDead);
 
-                var inventoryCollection = new InventoryCollection { Items = inventories };
+                var inventoryCollection = new InventoryCollection();
+                inventoryCollection.SetItems(inventories);
                 var importer = new NpgsqlBulkImporter(ConfigurationManager.ConnectionStrings["spurious"].ConnectionString, stopwatch);
                 importer.BulkImport("inventories", inventoryCollection);
 

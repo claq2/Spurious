@@ -32,7 +32,8 @@ namespace BoundryImporter
                 boundaries.Add(new BoundaryItem(ns, node));
             }
 
-            var collection = new BoundaryItemCollection { Items = boundaries };
+            var collection = new BoundaryItemCollection();
+            collection.SetItems(boundaries);
             var importer = new NpgsqlBulkImporter(ConfigurationManager.ConnectionStrings["spurious"].ConnectionString);
             importer.BulkImport("subdivisions", collection);
             Console.WriteLine("Bulk update complete");

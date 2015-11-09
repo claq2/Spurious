@@ -9,5 +9,6 @@ namespace Importers.DataLayer
         List<string> DbIdFields { get; }
         List<string> DbDataFields { get; }
         IEnumerable<T> Items { get; }
+        void SetItems(IEnumerable<T> items);
     }
 }

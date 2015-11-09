@@ -17,6 +17,8 @@ namespace LcboImporter
             get { return new List<string> { "id" }; }
         }
 
-        public IEnumerable<Product> Items { get; set; }
+        public IEnumerable<Product> Items { get; private set; }
+
+        public void SetItems(IEnumerable<Product> items) { this.Items = items; }
     }
 }

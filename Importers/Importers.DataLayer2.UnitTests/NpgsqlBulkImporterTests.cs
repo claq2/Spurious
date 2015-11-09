@@ -20,10 +20,8 @@ namespace Importers.DataLayer2.UnitTests
                 new ItemWithOneIdOneNonId { Id = 1235, Total = 123.9M }
             };
 
-            var itemCollection = new ItemWithOneIdOneNonIdCollection
-            {
-                Items = items
-            };
+            var itemCollection = new ItemWithOneIdOneNonIdCollection();
+            itemCollection.SetItems(items);
 
             var conn = new Mock<IDbConnection>();
             conn.Setup(c => c.Open());
@@ -60,10 +58,8 @@ namespace Importers.DataLayer2.UnitTests
                 new ItemWithTwoIdsTwoNonIds { Id1 = 1235, Id2 = 9, Total1 = 123.9M, Total2 = 14M }
             };
 
-            var itemCollection = new ItemWithTwoIdsTwoNonIdsCollection
-            {
-                Items = items
-            };
+            var itemCollection = new ItemWithTwoIdsTwoNonIdsCollection();
+            itemCollection.SetItems(items);
 
             var conn = new Mock<IDbConnection>();
             conn.Setup(c => c.Open());
@@ -110,7 +106,9 @@ namespace Importers.DataLayer2.UnitTests
                 get { return new List<string> { "id" }; }
             }
 
-            public IEnumerable<ItemWithOneIdOneNonId> Items { get; set; }
+            public IEnumerable<ItemWithOneIdOneNonId> Items { get; private set; }
+
+            public void SetItems(IEnumerable<ItemWithOneIdOneNonId> items) { this.Items = items; }
         }
 
         private class ItemWithTwoIdsTwoNonIdsCollection : IItemCollection<ItemWithTwoIdsTwoNonIds>
@@ -125,7 +123,9 @@ namespace Importers.DataLayer2.UnitTests
                 get { return new List<string> { "id1", "id2" }; }
             }
 
-            public IEnumerable<ItemWithTwoIdsTwoNonIds> Items { get; set; }
+            public IEnumerable<ItemWithTwoIdsTwoNonIds> Items { get; private set; }
+
+            public void SetItems(IEnumerable<ItemWithTwoIdsTwoNonIds> items) { this.Items = items; }
         }
 
         private class ItemWithTwoIdsTwoNonIds : IItem
