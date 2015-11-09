@@ -5,11 +5,11 @@ using System.Linq;
 
 namespace PopulationImporter
 {
-    internal sealed class PopulationLineMap : CsvClassMap<PopulationLine>
+    internal sealed class IncomeLineMap : CsvClassMap<IncomeLine>
     {
-        public PopulationLineMap()
+        public IncomeLineMap()
         {
-            Map(m => m.Characteristic).Name("Characteristics");
+            Map(m => m.Characteristic).Name("Characteristic");
             Map(m => m.CsdName).Name("CSD_Name");
             Map(m => m.Province).Name("Prov_Name");
             Map(m => m.GeoCode).Name("Geo_Code");

@@ -1,13 +1,11 @@
-﻿using Importers.DataLayer;
+using Importers.DataLayer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PopulationImporter
 {
-    internal class PopulationLine : IItem, IStatsCanCsvLine
+    internal class IncomeLine : IItem, IStatsCanCsvLine
     {
         public int GeoCode { get; set; }
         public string CsdName { get; set; }
@@ -17,5 +15,4 @@ namespace PopulationImporter
         public decimal Total { get; set; }
         public string IdAndDataFieldsAsCsv { get { return $"{this.GeoCode},{this.Province},\"{this.CsdName}\",{Convert.ToInt32(this.Total)}"; } }
     }
-
 }

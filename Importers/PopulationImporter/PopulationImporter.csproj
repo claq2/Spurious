@@ -54,6 +54,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AverageAfterTaxIncomeLineCollection.cs" />
+    <Compile Include="AverageIncomeLineCollection.cs" />
+    <Compile Include="ICsvQuery.cs" />
+    <Compile Include="IncomeLine.cs" />
+    <Compile Include="IncomeLineMap.cs" />
+    <Compile Include="IStatsCanCsvLine.cs" />
+    <Compile Include="LineCollection.cs" />
+    <Compile Include="MedianAfterTaxIncomeLineCollection.cs" />
+    <Compile Include="MedianIncomeLineCollection.cs" />
+    <Compile Include="PopulationCsvQuery.cs" />
     <Compile Include="PopulationLine.cs" />
     <Compile Include="PopulationLineCollection.cs" />
     <Compile Include="PopulationLineMap.cs" />
