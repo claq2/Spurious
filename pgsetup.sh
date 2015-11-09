@@ -126,8 +126,9 @@ CREATE INDEX fki_inventories_stores_id_fkey
   ON inventories
   USING btree
   (store_id);
-  
-  
+
+
+# Example queries
   
   select s.id, s.name, city, 
 --p.name, 
@@ -152,8 +153,6 @@ begin
 
 end;
 $$ language plpgsql;
-
-# Example queries
 
 select s.id, s.name, category_volume(s.id, 'Beer') as beer, category_volume(s.id, 'Wine') as wine, category_volume(s.id, 'Spirit') as spirit
 --(select sum(i.quantity * p.volume) where p.category = 'Beer') as beer, p.category

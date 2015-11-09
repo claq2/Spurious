@@ -211,15 +211,15 @@ namespace LcboImporter
                 updateVolumesCommand.CommandText = @"update subdivisions sd 
                                                         set (beer_volume, wine_volume, spirits_volume) = 
                                                         (
-                                                            (select sum(s.beer_volume) 
+                                                            (select coalesce (sum(s.beer_volume), 0) 
                                                             from stores s 
                                                             where ST_Intersects(sd.boundry, s.location)), 
                                         
-                                                            (select sum(s.wine_volume) 
+                                                            (select coalesce (sum(s.wine_volume), 0) 
                                                             from stores s 
                                                             where ST_Intersects(sd.boundry, s.location)), 
 
-                                                            (select sum(s.spirits_volume) 
+                                                            (select coalesce (sum(s.spirits_volume), 0) 
                                                             from stores s 
                                                             where ST_Intersects(sd.boundry, s.location))
                                                         )";
