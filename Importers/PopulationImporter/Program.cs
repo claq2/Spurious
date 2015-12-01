@@ -46,7 +46,7 @@ namespace PopulationImporter
             }
 
             importStopwatch.Stop();
-            Console.WriteLine($"Imported {typeof(T)} data in {importStopwatch.Elapsed}");
+            Console.WriteLine($"Imported {thequery.GetType()} data in {importStopwatch.Elapsed}");
             importStopwatch.Reset();
         }
     }
