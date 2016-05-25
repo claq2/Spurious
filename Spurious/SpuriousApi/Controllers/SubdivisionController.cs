@@ -84,7 +84,7 @@ namespace SpuriousApi.Controllers
         [Route("top10spirits")]
         public async Task<ListAndMapView> GetTop10Spiritsx()
         {
-            var n = nameof(Subdivision.WineDensity);
+            var n = nameof(Subdivision.SpiritsDensity);
             n = Char.ToLowerInvariant(n[0]) + n.Substring(1);
             var subdivs = await new SubdivisionService().Density(AlcoholType.Spirits, EndOfDistribution.Top, 10);
             return new ListAndMapView
