@@ -42,7 +42,7 @@ module SpuriousApp {
 
     export class LcboStore {
         id: number;
-        geoJSON: GeoJSON.Feature;
+        geoJSON: GeoJSON.Feature<GeoJSON.Point>;
         name: string;
         volumes: Volumes;
     }
