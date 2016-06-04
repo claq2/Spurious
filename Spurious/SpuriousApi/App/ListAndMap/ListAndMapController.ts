@@ -32,7 +32,7 @@ module SpuriousApp {
             this.activate();
             console.log("Right after activate");
 
-            this.uiGmapIsReady.promise()
+            this.uiGmapIsReady.promise(1)
                 .then((instances) => {
                     console.log("Starting then after uiGmapIsReady");
                     var firstMap = instances[0].map;
