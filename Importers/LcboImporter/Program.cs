@@ -213,15 +213,15 @@ namespace LcboImporter
                                                         (
                                                             (select coalesce (sum(s.beer_volume), 0) 
                                                             from stores s 
-                                                            where ST_Intersects(sd.boundry, s.location)), 
+                                                            where ST_Intersects(sd.boundry, ST_Transform(s.location::geometry, 4269))), 
                                         
                                                             (select coalesce (sum(s.wine_volume), 0) 
                                                             from stores s 
-                                                            where ST_Intersects(sd.boundry, s.location)), 
+                                                            where ST_Intersects(sd.boundry, ST_Transform(s.location::geometry, 4269))), 
 
                                                             (select coalesce (sum(s.spirits_volume), 0) 
                                                             from stores s 
-                                                            where ST_Intersects(sd.boundry, s.location))
+                                                            where ST_Intersects(sd.boundry, ST_Transform(s.location::geometry, 4269)))
                                                         )";
                 var rowsUpdated = updateVolumesCommand.ExecuteNonQuery();
                 if (rowsUpdated < 500)
