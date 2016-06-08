@@ -335,7 +335,7 @@ namespace SpuriousApi.Models
                                                 s.beer_volume, 
                                                 s.wine_volume, 
                                                 s.spirits_volume from subdivisions sd 
-                                                inner join stores s on ST_Intersects(s.location, sd.boundry)
+                                                inner join stores s on ST_Intersects(ST_Transform(s.location::geometry, 4269), sd.boundry)
                                                 where sd.id in ({subdivIds})
                                                 order by subdivision_id";
                 using (var storesReader = await getStoresCmd.ExecuteReaderAsync())

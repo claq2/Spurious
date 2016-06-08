@@ -20,12 +20,21 @@ module SpuriousApp {
 
         static $inject: string[] = ["$location", "$http", "$routeParams", "uiGmapGoogleMapApi", "uiGmapIsReady"];
 
-        constructor(private $location: ng.ILocationService, private $http: ng.IHttpService, private $routeParams: ng.route.IRouteParamsService, private googleMap: any, private uiGmapIsReady: any) {
+        constructor(private $location: ng.ILocationService,
+            private $http: ng.IHttpService,
+            private $routeParams: ng.route.IRouteParamsService,
+            private googleMap: any,
+            private uiGmapIsReady: any)
+        {
+            console.log("======================================");
             this.listName = this.$routeParams["listName"];
+            console.log("About to activate in cctor");
             this.activate();
+            console.log("Right after activate");
 
-            this.uiGmapIsReady.promise()
+            this.uiGmapIsReady.promise(1)
                 .then((instances) => {
+                    console.log("Starting then after uiGmapIsReady");
                     var firstMap = instances[0].map;
                     this.realMap = firstMap;
                     this.infoWindow = new this.mapsApi.InfoWindow();
@@ -63,7 +72,7 @@ module SpuriousApp {
                         strokeWeight: 1,
                         fillOpacity: 0.1
                     });
-
+                    console.log("About to select subdiv in cctor");
                     this.selectSubdiv(this.subdivisions[0]);
                 });
         }
@@ -71,11 +80,13 @@ module SpuriousApp {
         activate() {
             this.$http.get<ListAndMapViewModel>("api/subdivision/" + this.listName)
                 .then((r) => {
+                    console.log("Got data");
                     this.subdivisions = r.data.subdivisions;
                     this.title = r.data.title;
                     this.densityPropertyToUse = r.data.densityPropertyToUse;
                     this.selectedSubdivId = this.subdivisions[0].id;
                     this.googleMap.then((maps: any) => {
+                        console.log("googlemap.then");
                         this.mapsApi = maps;
                         var firstSubdiv = this.subdivisions[0];
                         this.map = {
@@ -94,6 +105,7 @@ module SpuriousApp {
         }
 
         selectSubdiv(subdiv: Subdivision) {
+            console.log("Starting select subdiv");
             this.realMap.data.forEach((feature) => {
                 this.realMap.data.remove(feature);
             });
