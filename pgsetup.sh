@@ -142,14 +142,14 @@ order by total_volume;
 create or replace function category_volume(store_id int, category text) returns int as
 $$
 declare
-	vol int;
+    vol int;
 begin
-	select sum(i.quantity * p.volume) into vol
-	from stores s
-	inner join inventories i on (i.store_id = s.id)
-	inner join products p on (i.product_id = p.id)
-	where s.id = $1 and p.category = $2;
-	return vol;
+    select sum(i.quantity * p.volume) into vol
+    from stores s
+    inner join inventories i on (i.store_id = s.id)
+    inner join products p on (i.product_id = p.id)
+    where s.id = $1 and p.category = $2;
+    return vol;
 
 end;
 $$ language plpgsql;
@@ -166,40 +166,40 @@ from stores as s
 
 select s.id, s.name, s.city,
 (select sum(i.quantity * p.volume)
-	from inventories i
-	inner join products p on p.id = i.product_id
-	where i.store_id = s.id
-	and p.category = 'Beer') as beer_volume,
+    from inventories i
+    inner join products p on p.id = i.product_id
+    where i.store_id = s.id
+    and p.category = 'Beer') as beer_volume,
 (select sum(i.quantity * p.volume)
-	from inventories i
-	inner join products p on p.id = i.product_id
-	where i.store_id = s.id and p.category = 'Wine') as wine_volume,
+    from inventories i
+    inner join products p on p.id = i.product_id
+    where i.store_id = s.id and p.category = 'Wine') as wine_volume,
 (select sum(i.quantity * p.volume)
-	from inventories i
-	inner join products p on p.id = i.product_id
-	where i.store_id = s.id and p.category = 'Spirit') as spirits_volume
+    from inventories i
+    inner join products p on p.id = i.product_id
+    where i.store_id = s.id and p.category = 'Spirit') as spirits_volume
 from stores s
 order by s.id
 
 update stores set (beer_volume, wine_volume, spirits_volume) = 
 (
-	(select sum(i.quantity * p.volume)
-	from inventories i
-	inner join products p on p.id = i.product_id
-	where i.store_id = stores.id
-	and p.category = 'Beer')
+    (select sum(i.quantity * p.volume)
+    from inventories i
+    inner join products p on p.id = i.product_id
+    where i.store_id = stores.id
+    and p.category = 'Beer')
 
-	,(select sum(i.quantity * p.volume)
-	from inventories i
-	inner join products p on p.id = i.product_id
-	where i.store_id = stores.id
-	and p.category = 'Wine')
+    ,(select sum(i.quantity * p.volume)
+    from inventories i
+    inner join products p on p.id = i.product_id
+    where i.store_id = stores.id
+    and p.category = 'Wine')
 
-	,(select sum(i.quantity * p.volume)
-	from inventories i
-	inner join products p on p.id = i.product_id
-	where i.store_id = stores.id
-	and p.category = 'Spirit')
+    ,(select sum(i.quantity * p.volume)
+    from inventories i
+    inner join products p on p.id = i.product_id
+    where i.store_id = stores.id
+    and p.category = 'Spirit')
 );
 
 select sb.id, s.id, s.name, s.city
