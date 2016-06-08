@@ -85,23 +85,23 @@ namespace LcboImporter
                 updateVolumesCommand.CommandText = @"update stores 
                                                         set (beer_volume, wine_volume, spirits_volume) = 
                                                         (
-	                                                        (select sum(i.quantity * p.volume)
-	                                                        from inventories i
-	                                                        inner join products p on p.id = i.product_id
-	                                                        where i.store_id = stores.id
-	                                                        and p.category = 'Beer')
+                                                            (select sum(i.quantity * p.volume)
+                                                            from inventories i
+                                                            inner join products p on p.id = i.product_id
+                                                            where i.store_id = stores.id
+                                                            and p.category = 'Beer')
 
-	                                                        ,(select sum(i.quantity * p.volume)
-	                                                        from inventories i
-	                                                        inner join products p on p.id = i.product_id
-	                                                        where i.store_id = stores.id
-	                                                        and p.category = 'Wine')
+                                                            ,(select sum(i.quantity * p.volume)
+                                                            from inventories i
+                                                            inner join products p on p.id = i.product_id
+                                                            where i.store_id = stores.id
+                                                            and p.category = 'Wine')
 
-	                                                        ,(select sum(i.quantity * p.volume)
-	                                                        from inventories i
-	                                                        inner join products p on p.id = i.product_id
-	                                                        where i.store_id = stores.id
-	                                                        and p.category = 'Spirit')
+                                                            ,(select sum(i.quantity * p.volume)
+                                                            from inventories i
+                                                            inner join products p on p.id = i.product_id
+                                                            where i.store_id = stores.id
+                                                            and p.category = 'Spirit')
                                                         )";
                 var rowsUpdated = updateVolumesCommand.ExecuteNonQuery();
                 if (rowsUpdated < 500)
