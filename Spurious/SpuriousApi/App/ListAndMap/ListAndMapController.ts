@@ -10,6 +10,7 @@ module SpuriousApp {
     class ListAndMapController implements IListAndMapController {
         title: string;
         subdivisions: Subdivision[] = [];
+        map2: any;
         map: any;
         realMap: any;
         mapsApi: any;
@@ -24,15 +25,15 @@ module SpuriousApp {
             private $http: ng.IHttpService,
             private $routeParams: ng.route.IRouteParamsService,
             private googleMap: any,
-            private uiGmapIsReady: any)
-        {
+            private uiGmapIsReady: any) {
             console.log("======================================");
             this.listName = this.$routeParams["listName"];
             console.log("About to activate in cctor");
             this.activate();
             console.log("Right after activate");
+            this.map2 = { center: { latitude: 46, longitude: -73 }, zoom: 10 };
 
-            this.uiGmapIsReady.promise(1)
+            this.uiGmapIsReady.promise(2)
                 .then((instances) => {
                     console.log("Starting then after uiGmapIsReady");
                     var firstMap = instances[0].map;
