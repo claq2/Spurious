@@ -31,12 +31,13 @@ module SpuriousApp {
             console.log("About to activate in cctor");
             this.activate();
             console.log("Right after activate");
+            // This map gets its values first so it's instance 0?
             this.map2 = { center: { latitude: 46, longitude: -73 }, zoom: 10 };
 
             this.uiGmapIsReady.promise(2)
                 .then((instances) => {
                     console.log("Starting then after uiGmapIsReady");
-                    var firstMap = instances[0].map;
+                    let firstMap = instances[1].map;
                     this.realMap = firstMap;
                     this.infoWindow = new this.mapsApi.InfoWindow();
 
