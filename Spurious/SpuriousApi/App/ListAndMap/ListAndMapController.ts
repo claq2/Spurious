@@ -12,10 +12,10 @@ module SpuriousApp {
         subdivisions: Subdivision[] = [];
         map2: any;
         map: any;
-        realMap: any;
+        realMap: google.maps.Map;
         mapsApi: any;
         selectedSubdivId: number;
-        infoWindow: any;
+        infoWindow: google.maps.InfoWindow;
         listName: string;
         densityPropertyToUse: string;
 
@@ -41,13 +41,15 @@ module SpuriousApp {
                     this.realMap = firstMap;
                     this.infoWindow = new this.mapsApi.InfoWindow();
 
-                    this.realMap.data.addListener('addfeature', (e) => {
-                        var bounds = new this.mapsApi.LatLngBounds();
+                    // What to do when a shape (feature) is added (fit in view)
+                    this.realMap.data.addListener('addfeature', (e: google.maps.Data.AddFeatureEvent) => {
+                        let bounds: google.maps.LatLngBounds = new this.mapsApi.LatLngBounds();
                         this.processPoints(e.feature.getGeometry(), bounds.extend, bounds);
                         this.realMap.fitBounds(bounds);
                     });
 
-                    this.realMap.data.addListener('click', (e) => {
+                    // Show location info when location clicked
+                    this.realMap.data.addListener('click', (e: google.maps.Data.MouseEvent) => {
                         this.infoWindow.close();
                         if (e.feature.getProperty("beerVolume") !== undefined) {
                             var city = e.feature.getProperty("city");
@@ -63,7 +65,7 @@ module SpuriousApp {
                                 '<b>Spirits Volume:</b> ' + spiritsVolume + ' mL<br />' +
                                 '</div>';
                             this.infoWindow.setContent(content);
-                            this.infoWindow.setPosition(e.feature.getGeometry().get());
+                            this.infoWindow.setPosition((<google.maps.Data.Point>e.feature.getGeometry()).get());
                             this.infoWindow.setOptions({ pixelOffset: new this.mapsApi.Size(0, -30) });
                             this.infoWindow.open(this.realMap);
                         }
@@ -127,6 +129,7 @@ module SpuriousApp {
             this.selectedSubdivId = subdiv.id;
         }
 
+        // callback is typically bounds.extend
         processPoints(geometry: any, callback: any, thisArg: any) {
             var type: string = "";
             if (geometry instanceof this.mapsApi.LatLng) {
