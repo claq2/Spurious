@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace SpuriousApi.Controllers
 {
@@ -15,6 +16,7 @@ namespace SpuriousApi.Controllers
     {
         // GET: api/Subdivision
         [Route("")]
+        [EnableCors(origins: "*", headers: "*", methods: "*")]
         public async Task<ListAndMapView> Get()
         {
             var n = nameof(Subdivision.OverallAlcoholDensity);
@@ -31,12 +33,14 @@ namespace SpuriousApi.Controllers
 
         // GET: api/Subdivision/5
         [Route("{id}")]
+        [EnableCors(origins: "*", headers: "*", methods: "*")]
         public async Task<Subdivision> Get(int id)
         {
             return await new SubdivisionService().LoadById(id);
         }
 
         [Route("top10")]
+        [EnableCors(origins: "*", headers: "*", methods: "*")]
         public async Task<ListAndMapView> GetTop10x()
         {
             var n = nameof(Subdivision.OverallAlcoholDensity);
@@ -52,6 +56,7 @@ namespace SpuriousApi.Controllers
         }
 
         [Route("top10wine")]
+        [EnableCors(origins: "*", headers: "*", methods: "*")]
         public async Task<ListAndMapView> GetTop10Winex()
         {
             var n = nameof(Subdivision.WineDensity);
@@ -67,6 +72,7 @@ namespace SpuriousApi.Controllers
         }
 
         [Route("top10beer")]
+        [EnableCors(origins: "*", headers: "*", methods: "*")]
         public async Task<ListAndMapView> GetTop10Beerx()
         {
             var n = nameof(Subdivision.BeerDensity);
@@ -82,6 +88,7 @@ namespace SpuriousApi.Controllers
         }
 
         [Route("top10spirits")]
+        [EnableCors(origins: "*", headers: "*", methods: "*")]
         public async Task<ListAndMapView> GetTop10Spiritsx()
         {
             var n = nameof(Subdivision.SpiritsDensity);
@@ -97,6 +104,7 @@ namespace SpuriousApi.Controllers
         }
 
         [Route("all")]
+        [EnableCors(origins: "*", headers: "*", methods: "*")]
         public async Task<ListAndMapView> GetAllx()
         {
             var n = nameof(Subdivision.OverallAlcoholDensity);
@@ -112,6 +120,7 @@ namespace SpuriousApi.Controllers
         }
 
         [Route("bottom10")]
+        [EnableCors(origins: "*", headers: "*", methods: "*")]
         public async Task<ListAndMapView> GetBottom10x()
         {
             var n = nameof(Subdivision.OverallAlcoholDensity);
@@ -127,6 +136,7 @@ namespace SpuriousApi.Controllers
         }
 
         [Route("{id}/boundary")]
+        [EnableCors(origins: "*", headers: "*", methods: "*")]
         public async Task<object> GetBoundary(int id)
         {
             return await new SubdivisionService().BoundaryGeoJson(id);
