@@ -200,3 +200,16 @@ cstrings.config
 asettings.config
 Spurious/SpuriousApi/App/**/*.js
 Spurious/SpuriousApi/App/**/*.js.map
+
+# Aurelia
+node_modules
+jspm_packages
+bower_components
+.idea
+.DS_STORE
+dist
+build/reports
+coverage
+test/e2e/dist
+typings
+export

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
+  <!--Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" /-->
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -94,59 +94,225 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="apple-touch-icon.png" />
-    <Content Include="App\About.html" />
-    <Content Include="App\ListAndMap\ListAndMap.html" />
     <Content Include="browserconfig.xml" />
-    <Content Include="Content\bootstrap-theme.css" />
-    <Content Include="Content\bootstrap-theme.min.css" />
-    <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap.min.css" />
-    <Content Include="Content\main.css" />
-    <Content Include="Content\normalize.css" />
-    <Content Include="Content\ui-bootstrap-csp.css" />
+    <Content Include="build\args.js" />
+    <Content Include="build\bundles.js" />
+    <Content Include="build\export.js" />
+    <Content Include="build\paths.js" />
+    <Content Include="build\tasks\build.js" />
+    <Content Include="build\tasks\bundle.js" />
+    <Content Include="build\tasks\clean.js" />
+    <Content Include="build\tasks\dev.js" />
+    <Content Include="build\tasks\e2e.js" />
+    <Content Include="build\tasks\export-release.js" />
+    <Content Include="build\tasks\lint.js" />
+    <Content Include="build\tasks\prepare-release.js" />
+    <Content Include="build\tasks\serve.js" />
+    <Content Include="build\tasks\test.js" />
+    <Content Include="build\tasks\watch.js" />
+    <Content Include="config.js" />
     <Content Include="cstrings.config">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="dist\app-build.js" />
+    <Content Include="dist\aurelia.js" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="gulpfile.js" />
     <Content Include="humans.txt" />
     <Content Include="index.html" />
+    <Content Include="index.js" />
+    <Content Include="jspm_packages\github\jspm\nodelibs-process%400.1.2\index.js" />
+    <Content Include="jspm_packages\npm\asap%401.0.0\asap.js" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\js\browser\bluebird.core.js" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\js\browser\bluebird.core.min.js" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\js\browser\bluebird.js" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\js\browser\bluebird.min.js" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\js\release\any.js" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\js\release\assert.js" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\js\release\async.js" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\js\release\bind.js" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\js\release\bluebird.js" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\js\release\call_get.js" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\js\release\cancel.js" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\js\release\catch_filter.js" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\js\release\context.js" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\js\release\debuggability.js" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\js\release\direct_resolve.js" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\js\release\each.js" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\js\release\errors.js" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\js\release\es5.js" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\js\release\filter.js" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\js\release\finally.js" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\js\release\generators.js" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\js\release\join.js" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\js\release\map.js" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\js\release\method.js" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\js\release\nodeback.js" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\js\release\nodeify.js" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\js\release\promise.js" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\js\release\promise_array.js" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\js\release\promisify.js" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\js\release\props.js" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\js\release\queue.js" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\js\release\race.js" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\js\release\reduce.js" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\js\release\schedule.js" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\js\release\settle.js" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\js\release\some.js" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\js\release\synchronous_inspection.js" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\js\release\thenables.js" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\js\release\timers.js" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\js\release\using.js" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\js\release\util.js" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3\css\font-awesome.css" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3\css\font-awesome.min.css" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3\fonts\fontawesome-webfont.svg" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3\HELP-US-OUT.txt" />
+    <Content Include="jspm_packages\npm\google-maps-api%402.0.1\examples\geocode\basic.js" />
+    <Content Include="jspm_packages\npm\google-maps-api%402.0.1\geocode.js" />
+    <Content Include="jspm_packages\npm\google-maps-api%402.0.1\geocode\index.js" />
+    <Content Include="jspm_packages\npm\google-maps-api%402.0.1\index.js" />
+    <Content Include="jspm_packages\npm\google-maps-api%402.0.1\lib\doErr.js" />
+    <Content Include="jspm_packages\npm\google-maps-api%402.0.1\map.js" />
+    <Content Include="jspm_packages\npm\google-maps-api%402.0.1\map\index.js" />
+    <Content Include="jspm_packages\npm\google-maps-api%402.0.1\streetviewservice.js" />
+    <Content Include="jspm_packages\npm\google-maps-api%402.0.1\streetviewservice\index.js" />
+    <Content Include="jspm_packages\npm\google-maps-api%402.0.1\test\geocode.js" />
+    <Content Include="jspm_packages\npm\google-maps-api%402.0.1\test\geocode\index.js" />
+    <Content Include="jspm_packages\npm\google-maps-api%402.0.1\test\map.js" />
+    <Content Include="jspm_packages\npm\google-maps-api%402.0.1\test\map\index.js" />
+    <Content Include="jspm_packages\npm\process%400.11.8\browser.js" />
+    <Content Include="jspm_packages\npm\process%400.11.8\index.js" />
+    <Content Include="jspm_packages\npm\process%400.11.8\test.js" />
+    <Content Include="jspm_packages\npm\promise%406.1.0\core.js" />
+    <Content Include="jspm_packages\npm\promise%406.1.0\index.js" />
+    <Content Include="jspm_packages\npm\promise%406.1.0\lib\core.js" />
+    <Content Include="jspm_packages\npm\promise%406.1.0\lib\done.js" />
+    <Content Include="jspm_packages\npm\promise%406.1.0\lib\es6-extensions.js" />
+    <Content Include="jspm_packages\npm\promise%406.1.0\lib\node-extensions.js" />
+    <Content Include="jspm_packages\npm\promise%406.1.0\polyfill-done.js" />
+    <Content Include="jspm_packages\npm\promise%406.1.0\polyfill.js" />
+    <Content Include="jspm_packages\npm\scriptjs%402.5.8\benchmarks\headjs.html" />
+    <Content Include="jspm_packages\npm\scriptjs%402.5.8\benchmarks\labjs.html" />
+    <Content Include="jspm_packages\npm\scriptjs%402.5.8\benchmarks\scriptjs.html" />
+    <Content Include="jspm_packages\npm\scriptjs%402.5.8\demos\advanced.html" />
+    <Content Include="jspm_packages\npm\scriptjs%402.5.8\demos\analytics.html" />
+    <Content Include="jspm_packages\npm\scriptjs%402.5.8\demos\basic.html" />
+    <Content Include="jspm_packages\npm\scriptjs%402.5.8\demos\css\demos.css" />
+    <Content Include="jspm_packages\npm\scriptjs%402.5.8\demos\js\bar.js" />
+    <Content Include="jspm_packages\npm\scriptjs%402.5.8\demos\js\baz.js" />
+    <Content Include="jspm_packages\npm\scriptjs%402.5.8\demos\js\foo.js" />
+    <Content Include="jspm_packages\npm\scriptjs%402.5.8\demos\js\thunk.js" />
+    <Content Include="jspm_packages\npm\scriptjs%402.5.8\dist\script.js" />
+    <Content Include="jspm_packages\npm\scriptjs%402.5.8\dist\script.min.js" />
+    <Content Include="jspm_packages\npm\scriptjs%402.5.8\Makefile.js" />
+    <Content Include="jspm_packages\npm\scriptjs%402.5.8\src\ender.js" />
+    <Content Include="jspm_packages\npm\scriptjs%402.5.8\src\header.js" />
+    <Content Include="jspm_packages\npm\scriptjs%402.5.8\src\script.js" />
+    <Content Include="jspm_packages\npm\scriptjs%402.5.8\tests\test.html" />
+    <Content Include="jspm_packages\npm\scriptjs%402.5.8\tests\tests.js" />
+    <Content Include="jspm_packages\npm\scriptjs%402.5.8\vendor\bird.png" />
+    <Content Include="jspm_packages\npm\scriptjs%402.5.8\vendor\double-load.js" />
+    <Content Include="jspm_packages\npm\scriptjs%402.5.8\vendor\head.js" />
+    <Content Include="jspm_packages\npm\scriptjs%402.5.8\vendor\jquery.js" />
+    <Content Include="jspm_packages\npm\scriptjs%402.5.8\vendor\lab2.js" />
+    <Content Include="jspm_packages\npm\scriptjs%402.5.8\vendor\lab2.min.js" />
+    <Content Include="jspm_packages\npm\scriptjs%402.5.8\vendor\mootools.js" />
+    <Content Include="jspm_packages\npm\scriptjs%402.5.8\vendor\order-a.js" />
+    <Content Include="jspm_packages\npm\scriptjs%402.5.8\vendor\order-b.js" />
+    <Content Include="jspm_packages\npm\scriptjs%402.5.8\vendor\order-c.js" />
+    <Content Include="jspm_packages\npm\scriptjs%402.5.8\vendor\patha.js" />
+    <Content Include="jspm_packages\npm\scriptjs%402.5.8\vendor\pathb.js" />
+    <Content Include="jspm_packages\npm\scriptjs%402.5.8\vendor\pathc.js" />
+    <Content Include="jspm_packages\npm\scriptjs%402.5.8\vendor\yui-utilities.js" />
+    <Content Include="karma.conf.js" />
+    <Content Include="protractor.conf.js" />
     <Content Include="robots.txt" />
-    <Content Include="Scripts\angular-animate.js" />
-    <Content Include="Scripts\angular-animate.min.js" />
-    <Content Include="Scripts\angular-google-maps-street-view.js" />
-    <Content Include="Scripts\angular-google-maps-street-view.min.js" />
-    <Content Include="Scripts\angular-google-maps.js" />
-    <Content Include="Scripts\angular-google-maps.min.js" />
-    <Content Include="Scripts\angular-mocks.js" />
-    <Content Include="Scripts\angular-route.js" />
-    <Content Include="Scripts\angular-route.min.js" />
-    <Content Include="Scripts\angular-simple-logger.min.js" />
-    <Content Include="Scripts\angular-ui\ui-bootstrap-tpls.js" />
-    <Content Include="Scripts\angular-ui\ui-bootstrap-tpls.min.js" />
-    <Content Include="Scripts\angular-ui\ui-bootstrap.js" />
-    <Content Include="Scripts\angular-ui\ui-bootstrap.min.js" />
-    <Content Include="Scripts\angular.js" />
-    <Content Include="Scripts\angular.min.js" />
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="package.json" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3\.jspm-hash" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3\.npmignore" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3\css\font-awesome.css.map" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3\fonts\fontawesome-webfont.eot" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3\fonts\fontawesome-webfont.ttf" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3\fonts\fontawesome-webfont.woff" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3\fonts\fontawesome-webfont.woff2" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3\fonts\FontAwesome.otf" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3\less\animated.less" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3\less\bordered-pulled.less" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3\less\core.less" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3\less\fixed-width.less" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3\less\font-awesome.less" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3\less\icons.less" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3\less\larger.less" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3\less\list.less" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3\less\mixins.less" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3\less\path.less" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3\less\rotated-flipped.less" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3\less\screen-reader.less" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3\less\stacked.less" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3\less\variables.less" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3\package.json" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3\README.md" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3\scss\font-awesome.scss" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3\scss\_animated.scss" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3\scss\_bordered-pulled.scss" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3\scss\_core.scss" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3\scss\_fixed-width.scss" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3\scss\_icons.scss" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3\scss\_larger.scss" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3\scss\_list.scss" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3\scss\_mixins.scss" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3\scss\_path.scss" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3\scss\_rotated-flipped.scss" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3\scss\_screen-reader.scss" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3\scss\_stacked.scss" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3\scss\_variables.scss" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\.jspm-hash" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\LICENSE" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1\package.json" />
+    <Content Include="jspm_packages\npm\google-maps-api%402.0.1\.jspm-hash" />
+    <Content Include="jspm_packages\npm\google-maps-api%402.0.1\.npmignore" />
+    <Content Include="jspm_packages\npm\google-maps-api%402.0.1\geocode\README.md" />
+    <Content Include="jspm_packages\npm\google-maps-api%402.0.1\LICENSE" />
+    <Content Include="jspm_packages\npm\google-maps-api%402.0.1\map\README.md" />
+    <Content Include="jspm_packages\npm\google-maps-api%402.0.1\package.json" />
+    <Content Include="jspm_packages\npm\google-maps-api%402.0.1\README.md" />
+    <Content Include="jspm_packages\npm\google-maps-api%402.0.1\streetviewservice\README.md" />
+    <Content Include="jspm_packages\npm\scriptjs%402.5.8\.jspm-hash" />
+    <Content Include="jspm_packages\npm\scriptjs%402.5.8\.npmignore" />
+    <Content Include="jspm_packages\npm\scriptjs%402.5.8\Makefile" />
+    <Content Include="jspm_packages\npm\scriptjs%402.5.8\package.json" />
+    <Content Include="jspm_packages\npm\scriptjs%402.5.8\README.md" />
+    <Content Include="jspm_packages\npm\promise%406.1.0\.jshintrc" />
+    <Content Include="jspm_packages\npm\promise%406.1.0\.jspm-hash" />
+    <Content Include="jspm_packages\npm\promise%406.1.0\.npmignore" />
+    <Content Include="jspm_packages\npm\promise%406.1.0\LICENSE" />
+    <Content Include="jspm_packages\npm\promise%406.1.0\package.json" />
+    <Content Include="jspm_packages\npm\promise%406.1.0\Readme.md" />
+    <Content Include="jspm_packages\npm\asap%401.0.0\.jspm-hash" />
+    <Content Include="jspm_packages\npm\asap%401.0.0\LICENSE.md" />
+    <Content Include="jspm_packages\npm\asap%401.0.0\package.json" />
+    <Content Include="jspm_packages\npm\asap%401.0.0\README.md" />
+    <Content Include="jspm_packages\github\jspm\nodelibs-process%400.1.2\.jspm-hash" />
+    <Content Include="jspm_packages\github\jspm\nodelibs-process%400.1.2\package.json" />
+    <Content Include="jspm_packages\npm\process%400.11.8\.jspm-hash" />
+    <Content Include="jspm_packages\npm\process%400.11.8\LICENSE" />
+    <Content Include="jspm_packages\npm\process%400.11.8\package.json" />
+    <Content Include="jspm_packages\npm\process%400.11.8\README.md" />
     <None Include="Properties\PublishProfiles\LocalFIle.pubxml" />
     <None Include="Properties\PublishProfiles\Spurious - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\Spurious.pubxml" />
-    <Content Include="Scripts\angular.min.js.map" />
-    <Content Include="Scripts\angular-animate.min.js.map" />
-    <Content Include="Scripts\angular-route.min.js.map" />
-    <None Include="Scripts\jquery-1.11.3.intellisense.js" />
-    <Content Include="Scripts\jquery-1.11.3.js" />
-    <Content Include="Scripts\jquery-1.11.3.min.js" />
-    <Content Include="Scripts\lodash.core.js" />
-    <Content Include="Scripts\lodash.core.min.js" />
-    <Content Include="Scripts\lodash.js" />
-    <Content Include="Scripts\lodash.min.js" />
-    <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="README.md" />
+    <Content Include="src\about.html" />
+    <Content Include="src\app.html" />
+    <Content Include="src\list-and-map.html" />
+    <Content Include="src\nav-bar.html" />
+    <Content Include="styles\styles.css" />
     <Content Include="tile-wide.png" />
     <Content Include="tile.png" />
+    <Content Include="wallaby.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -172,13 +338,13 @@
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Content\bootstrap-theme.css.map" />
-    <Content Include="Content\bootstrap.css.map" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
-    <Content Include="Scripts\jquery-1.11.3.min.map" />
+    <Content Include="tsconfig.json" />
+    <Content Include="tslint.json" />
+    <Content Include="typings.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -190,23 +356,18 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="App\ListAndMap\ListAndMapController.ts" />
-    <TypeScriptCompile Include="App\SpuriousApp.ts" />
-    <TypeScriptCompile Include="Scripts\typings\angular-ui\angular-ui-router.d.ts" />
-    <TypeScriptCompile Include="Scripts\typings\angular-ui\angular-ui-sortable.d.ts" />
-    <TypeScriptCompile Include="App\Services\SubdivisionsService.ts" />
-    <TypeScriptCompile Include="Scripts\typings\angularjs\angular-animate.d.ts" />
-    <TypeScriptCompile Include="Scripts\typings\angularjs\angular-component-router.d.ts" />
-    <TypeScriptCompile Include="Scripts\typings\angularjs\angular-cookies.d.ts" />
-    <TypeScriptCompile Include="Scripts\typings\angularjs\angular-mocks.d.ts" />
-    <TypeScriptCompile Include="Scripts\typings\angularjs\angular-resource.d.ts" />
-    <TypeScriptCompile Include="Scripts\typings\angularjs\angular-route.d.ts" />
-    <TypeScriptCompile Include="Scripts\typings\angularjs\angular-sanitize.d.ts" />
-    <TypeScriptCompile Include="Scripts\typings\angularjs\angular.d.ts" />
-    <TypeScriptCompile Include="Scripts\typings\geojson\geojson.d.ts" />
-    <TypeScriptCompile Include="Scripts\typings\google-maps\google-maps.d.ts" />
-    <TypeScriptCompile Include="Scripts\typings\googlemaps\google.maps.d.ts" />
-    <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
+    <TypeScriptCompile Include="custom_typings\google.maps.api\index.d.ts" />
+    <None Include="src\about.ts" />
+    <None Include="src\app.ts" />
+    <None Include="src\list-and-map.ts" />
+    <None Include="src\main.ts" />
+    <TypeScriptCompile Include="test\e2e\src\demo.spec.ts" />
+    <TypeScriptCompile Include="test\e2e\src\skeleton.po.ts" />
+    <TypeScriptCompile Include="test\e2e\src\welcome.po.ts" />
+    <TypeScriptCompile Include="test\unit\app.spec.ts" />
+    <TypeScriptCompile Include="test\unit\child-router.spec.ts" />
+    <TypeScriptCompile Include="test\unit\setup.ts" />
+    <TypeScriptCompile Include="test\unit\users.spec.ts" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
@@ -233,7 +394,7 @@
     <TypeScriptSourceRoot>
     </TypeScriptSourceRoot>
   </PropertyGroup>
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+  <!--Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" /-->
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
   <ProjectExtensions>
