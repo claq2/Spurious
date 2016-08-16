@@ -332,9 +332,10 @@ namespace SpuriousApi.Models
                                                 s.name as name, 
                                                 s.city as city,
                                                 ST_AsGeoJSON(s.location) as location, 
-                                                s.beer_volume, 
-                                                s.wine_volume, 
-                                                s.spirits_volume from subdivisions sd 
+                                                s.beer_volume / 1000.0 as beer_volume, 
+                                                s.wine_volume / 1000.0 as wine_volume, 
+                                                s.spirits_volume / 1000.0 as spirits_volume 
+                                                from subdivisions sd 
                                                 inner join stores s on ST_Intersects(ST_Transform(s.location::geometry, 4269), sd.boundry)
                                                 where sd.id in ({subdivIds})
                                                 order by subdivision_id";

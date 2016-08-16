@@ -30,7 +30,7 @@ module SpuriousApp {
             .otherwise({ redirectTo: "/listAndMap/top10" });
 
         googleMap.configure({
-            //    key: 'your api key',
+            key: 'AIzaSyDg6zramGtc2YcW-nwLc7FZE0tFUYk-HHw',
             v: '3', //defaults to latest 3.X anyhow
             libraries: 'geometry,visualization'
         });

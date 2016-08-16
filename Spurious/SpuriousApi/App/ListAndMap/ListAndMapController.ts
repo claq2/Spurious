@@ -60,9 +60,9 @@ module SpuriousApp {
                             var content = '<div>' +
                                 '<b>Name:</b> ' + name + '<br />' +
                                 '<b>City:</b> ' + city + '<br />' +
-                                '<b>Beer Volume:</b> ' + beerVolume + ' mL<br />' +
-                                '<b>Wine Volume:</b> ' + wineVolume + ' mL<br />' +
-                                '<b>Spirits Volume:</b> ' + spiritsVolume + ' mL<br />' +
+                                '<b>Beer Volume:</b> ' + beerVolume + ' L<br />' +
+                                '<b>Wine Volume:</b> ' + wineVolume + ' L<br />' +
+                                '<b>Spirits Volume:</b> ' + spiritsVolume + ' L<br />' +
                                 '</div>';
                             this.infoWindow.setContent(content);
                             this.infoWindow.setPosition((<google.maps.Data.Point>e.feature.getGeometry()).get());
