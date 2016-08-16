@@ -123,8 +123,11 @@
     <Content Include="humans.txt" />
     <Content Include="index.html" />
     <Content Include="index.js" />
+    <Content Include="jspm_packages\github\jspm\nodelibs-process%400.1.2.js" />
     <Content Include="jspm_packages\github\jspm\nodelibs-process%400.1.2\index.js" />
+    <Content Include="jspm_packages\npm\asap%401.0.0.js" />
     <Content Include="jspm_packages\npm\asap%401.0.0\asap.js" />
+    <Content Include="jspm_packages\npm\bluebird%403.4.1.js" />
     <Content Include="jspm_packages\npm\bluebird%403.4.1\js\browser\bluebird.core.js" />
     <Content Include="jspm_packages\npm\bluebird%403.4.1\js\browser\bluebird.core.min.js" />
     <Content Include="jspm_packages\npm\bluebird%403.4.1\js\browser\bluebird.js" />
@@ -166,10 +169,12 @@
     <Content Include="jspm_packages\npm\bluebird%403.4.1\js\release\timers.js" />
     <Content Include="jspm_packages\npm\bluebird%403.4.1\js\release\using.js" />
     <Content Include="jspm_packages\npm\bluebird%403.4.1\js\release\util.js" />
+    <Content Include="jspm_packages\npm\font-awesome%404.6.3.js" />
     <Content Include="jspm_packages\npm\font-awesome%404.6.3\css\font-awesome.css" />
     <Content Include="jspm_packages\npm\font-awesome%404.6.3\css\font-awesome.min.css" />
     <Content Include="jspm_packages\npm\font-awesome%404.6.3\fonts\fontawesome-webfont.svg" />
     <Content Include="jspm_packages\npm\font-awesome%404.6.3\HELP-US-OUT.txt" />
+    <Content Include="jspm_packages\npm\google-maps-api%402.0.1.js" />
     <Content Include="jspm_packages\npm\google-maps-api%402.0.1\examples\geocode\basic.js" />
     <Content Include="jspm_packages\npm\google-maps-api%402.0.1\geocode.js" />
     <Content Include="jspm_packages\npm\google-maps-api%402.0.1\geocode\index.js" />
@@ -183,9 +188,11 @@
     <Content Include="jspm_packages\npm\google-maps-api%402.0.1\test\geocode\index.js" />
     <Content Include="jspm_packages\npm\google-maps-api%402.0.1\test\map.js" />
     <Content Include="jspm_packages\npm\google-maps-api%402.0.1\test\map\index.js" />
+    <Content Include="jspm_packages\npm\process%400.11.8.js" />
     <Content Include="jspm_packages\npm\process%400.11.8\browser.js" />
     <Content Include="jspm_packages\npm\process%400.11.8\index.js" />
     <Content Include="jspm_packages\npm\process%400.11.8\test.js" />
+    <Content Include="jspm_packages\npm\promise%406.1.0.js" />
     <Content Include="jspm_packages\npm\promise%406.1.0\core.js" />
     <Content Include="jspm_packages\npm\promise%406.1.0\index.js" />
     <Content Include="jspm_packages\npm\promise%406.1.0\lib\core.js" />
@@ -194,6 +201,7 @@
     <Content Include="jspm_packages\npm\promise%406.1.0\lib\node-extensions.js" />
     <Content Include="jspm_packages\npm\promise%406.1.0\polyfill-done.js" />
     <Content Include="jspm_packages\npm\promise%406.1.0\polyfill.js" />
+    <Content Include="jspm_packages\npm\scriptjs%402.5.8.js" />
     <Content Include="jspm_packages\npm\scriptjs%402.5.8\benchmarks\headjs.html" />
     <Content Include="jspm_packages\npm\scriptjs%402.5.8\benchmarks\labjs.html" />
     <Content Include="jspm_packages\npm\scriptjs%402.5.8\benchmarks\scriptjs.html" />
@@ -227,6 +235,7 @@
     <Content Include="jspm_packages\npm\scriptjs%402.5.8\vendor\pathb.js" />
     <Content Include="jspm_packages\npm\scriptjs%402.5.8\vendor\pathc.js" />
     <Content Include="jspm_packages\npm\scriptjs%402.5.8\vendor\yui-utilities.js" />
+    <Content Include="jspm_packages\system.js" />
     <Content Include="karma.conf.js" />
     <Content Include="protractor.conf.js" />
     <Content Include="robots.txt" />
