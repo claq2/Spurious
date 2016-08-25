@@ -9,9 +9,12 @@ namespace SpuriousApi
 {
     public class WebApiApplication : System.Web.HttpApplication
     {
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         protected void Application_Start()
         {
             GlobalConfiguration.Configure(WebApiConfig.Register);
+            logger.Info("Starting app");
         }
     }
 }
