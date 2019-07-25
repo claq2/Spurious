@@ -21,6 +21,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpuriousApi", "..\Spurious\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpuriousApi.FunctionalTests", "..\Spurious\SpuriousApi.FunctionalTests\SpuriousApi.FunctionalTests.csproj", "{1B96EB84-BB93-4D93-8CE3-4486FC4A7093}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{BD10A097-8E98-475C-A211-DD58628DFF7E}"
+	ProjectSection(SolutionItems) = preProject
+		..\pgsetup.sh = ..\pgsetup.sh
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
